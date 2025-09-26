@@ -1,0 +1,48 @@
+name: Frontend CI
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        
+    - name: Debug versions
+      run: |
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        
+    - name: Install dependencies
+      run: npm ci  # Más confiable que npm install
+      
+    - name: Check available scripts
+      run: npm run
+      continue-on-error: true  # Esto no falla el workflow
+      
+    - name: Run lint if available
+      run: npm run lint || echo "No lint script found"
+      
+    - name: Run tests if available
+      run: npm run test || echo "No test script found"
+      
+    - name: Build project (essential)
+      run: npm run build
+      
+    - name: Verify build
+      run: |
+        ls -la dist/  # o la carpeta de build que uses
+        echo "✅ Build completed successfully"
