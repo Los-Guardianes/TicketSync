@@ -1,26 +1,28 @@
-import React from 'react'
+import "./Login.css"
+import { NavLink } from 'react-router-dom'
 
 export const Login = () => {
   return (
     <>
-      <div className='w-100'>
-        <img className='w-100 position-absolute h-100' src="src/assets/wallhaven-4gjdrd.jpg"
-          alt="tuticketLogo" />
-        <div className='container px-5 py-4 bg-light position-relative shadow rounded'>
-          <h2 className='text-center'>Iniciar sesion</h2>
-          <form>
-            <div className='form-group row mx-auto d-flex align-items-center'>
-              <label htmlFor="inpEmail" className='col-2 text-start'>Dirección de correo electronico</label>
-              <div className='col-7'>
-                <input className='form-control col-7' type="email" id='inpEmail' />
-              </div>
-              <p className='col text-end'>
-                <span className='text-danger h5'>*</span>La dirección de correo electrónico
-                es su nombre de usuario
-              </p>
-            </div>
-
+      <div className='login-container'>
+        <div className='login-form'>
+          <img className='login-logo' src="/tuticket_logo.png" alt="TuTicket Logo" />
+          <h2>Iniciar sesión</h2>
+          <form className="login-inputs">
+              <label htmlFor="inpEmail"></label>
+              <input className='input-form' type="email" id='inpEmail' placeholder="Correo electrónico"/>
+              <label htmlFor="inpPassword"></label>
+              <input className='input-form' type="password" id='inpPassword' placeholder="Contraseña"/>
+              <p>Correo o contraseña incorrectos. Intente de nuevo.</p>
           </form>
+          <a className="forgot-password" href="#">¿Olvidaste tu contraseña?</a>
+          <a href="/" className='btn btn-primary btn-lg mt-3'>Iniciar sesión</a>
+          <hr className='my-3' />
+          <a href="/register" className='btn btn-secondary btn-lg mt-3'>Registrate</a>
+          <button className='btn btn-secondary btn-lg mt-3 justify-content-center d-flex align-items-center'>
+            <img src="/icon_google.svg" alt="Google Logo" style={{ width: '20px', marginRight: '8px' }} />
+            O registrate con Google
+          </button>
         </div>
       </div>
     </>
