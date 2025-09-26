@@ -17,7 +17,7 @@ public class Dpto {
     private String nombre;
 
     @Column
-    private Boolean activo;
+    private Boolean activo = true;
 
     public void setIdDpto(Integer idDpto) {
         this.idDpto = idDpto;

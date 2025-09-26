@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.controller;
 
-import com.guardianes.TuTicket.model.CategoriaEvento;
+import com.guardianes.TuTicket.model.CatEvento;
 import com.guardianes.TuTicket.service.CatEventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -16,9 +16,9 @@ public class CatEventoController {
     private CatEventoService service;
 
     @PostMapping("/catevento")
-    public ResponseEntity<?> addCatEvento(@RequestBody CategoriaEvento catEvento) {
+    public ResponseEntity<?> addCatEvento(@RequestBody CatEvento catEvento) {
         try {
-            CategoriaEvento nuevo = service.addCategoria(catEvento);
+            CatEvento nuevo = service.addCategoria(catEvento);
             return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -26,13 +26,13 @@ public class CatEventoController {
     }
 
     @GetMapping("/catevento")
-    public ResponseEntity<List<CategoriaEvento>> getAllCatEventos() {
+    public ResponseEntity<List<CatEvento>> getAllCatEventos() {
         return ResponseEntity.ok(service.getAllCategorias());
     }
 
     @GetMapping("/catevento/{id}")
     public ResponseEntity<?> getCatEventoById(@PathVariable Integer id) {
-        CategoriaEvento catEvento = service.getCategoriaById(id);
+        CatEvento catEvento = service.getCategoriaById(id);
         if (catEvento == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoría de evento no encontrada");
         }
@@ -40,10 +40,10 @@ public class CatEventoController {
     }
 
     @PutMapping("/catevento/{id}")
-    public ResponseEntity<?> updateCatEvento(@PathVariable Integer id, @RequestBody CategoriaEvento catEvento) {
+    public ResponseEntity<?> updateCatEvento(@PathVariable Integer id, @RequestBody CatEvento catEvento) {
         try {
             catEvento.setIdCategoria(id);
-            CategoriaEvento actualizado = service.updateCategoria(catEvento);
+            CatEvento actualizado = service.updateCategoria(catEvento);
             return ResponseEntity.ok(actualizado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

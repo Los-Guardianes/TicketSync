@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CategoriaEvento {
+public class CatEvento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
