@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.service;
 
-import com.guardianes.TuTicket.model.Departamento;
+import com.guardianes.TuTicket.model.Dpto;
 import com.guardianes.TuTicket.repo.DptoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,23 +14,23 @@ public class DptoService {
     @Autowired
     private DptoRepo repo;
 
-    public List<Departamento> getAllDepartamentos() {
+    public List<Dpto> getAllDptos() {
         return repo.findAll();
     }
 
-    public Departamento getDepartamentoById(Integer id) {
+    public Dpto getDptoById(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
-    public Departamento addDepartamento(Departamento departamento) {
-        return repo.save(departamento);
+    public Dpto addDpto(Dpto dpto) {
+        return repo.save(dpto);
     }
 
-    public Departamento updateDepartamento(Departamento departamento) {
-        return repo.save(departamento);
+    public Dpto updateDpto(Dpto dpto) {
+        return repo.save(dpto);
     }
 
-    public void deleteDepartamento(Integer id) {
+    public void deleteDpto(Integer id) {
         repo.deleteById(id);
     }
 }

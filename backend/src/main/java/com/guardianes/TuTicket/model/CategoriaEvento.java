@@ -21,6 +21,9 @@ public class CategoriaEvento {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal comision;
 
+    @Column
+    private Boolean activo = true;
+
     public void setIdCategoria(Integer idCategoria) {
         this.idCategoria = idCategoria;
     }

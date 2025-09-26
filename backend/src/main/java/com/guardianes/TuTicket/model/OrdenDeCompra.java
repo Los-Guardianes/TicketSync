@@ -22,8 +22,8 @@ public class OrdenDeCompra {
     @Column(nullable = false, length = 50)
     private String metodoPago;
 
-    @Column(nullable = false)
-    private Boolean usado;
+    @Column
+    private Boolean activo = true;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")

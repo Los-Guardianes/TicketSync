@@ -1,7 +1,7 @@
 package com.guardianes.TuTicket.service;
 
 import com.guardianes.TuTicket.model.Ciudad;
-import com.guardianes.TuTicket.model.Departamento;
+import com.guardianes.TuTicket.model.Dpto;
 import com.guardianes.TuTicket.repo.CiudadRepo;
 import com.guardianes.TuTicket.repo.DptoRepo;
 import org.springframework.beans.factory.annotation.Autowired;

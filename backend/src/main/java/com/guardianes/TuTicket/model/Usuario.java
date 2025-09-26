@@ -26,7 +26,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false, length = 255)
-    private String hashContrasena;
+    private String hashCtr;
 
     @Column
     private Boolean verificado = false;
