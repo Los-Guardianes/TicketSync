@@ -17,21 +17,24 @@ public class Ciudad {
     private String nombre;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "idDepartamento", nullable = false)
-    private Departamento departamento;
+    @JoinColumn(name = "idDpto", nullable = false)
+    private Dpto dpto;
 
     @Column(length = 10)
-    private String codigoPostal;
+    private String codPostal;
+
+    @Column
+    private Boolean activo = true;
 
     public void setIdCiudad(Integer idCiudad) {
         this.idCiudad = idCiudad;
     }
 
-    public Departamento getDepartamento() {
-        return departamento;
+    public Dpto getDpto() {
+        return dpto;
     }
 
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public void setDpto(Dpto dpto) {
+        this.dpto = dpto;
     }
 }

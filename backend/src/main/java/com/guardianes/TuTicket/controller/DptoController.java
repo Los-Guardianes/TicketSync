@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.controller;
 
-import com.guardianes.TuTicket.model.Departamento;
+import com.guardianes.TuTicket.model.Dpto;
 import com.guardianes.TuTicket.service.DptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -16,9 +16,9 @@ public class DptoController {
     private DptoService service;
 
     @PostMapping("/dpto")
-    public ResponseEntity<?> addDepartamento(@RequestBody Departamento departamento) {
+    public ResponseEntity<?> addDpto(@RequestBody Dpto dpto) {
         try {
-            Departamento nuevo = service.addDepartamento(departamento);
+            Dpto nuevo = service.addDpto(dpto);
             return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -26,25 +26,25 @@ public class DptoController {
     }
 
     @GetMapping("/dpto")
-    public ResponseEntity<List<Departamento>> getAllDepartamentos() {
-        List<Departamento> departamentos = service.getAllDepartamentos();
-        return new ResponseEntity<>(departamentos, HttpStatus.OK);
+    public ResponseEntity<List<Dpto>> getAllDptos() {
+        List<Dpto> dptos = service.getAllDptos();
+        return new ResponseEntity<>(dptos, HttpStatus.OK);
     }
 
     @GetMapping("/dpto/{id}")
-    public ResponseEntity<?> getDepartamentoById(@PathVariable Integer id) {
-        Departamento departamento = service.getDepartamentoById(id);
-        if (departamento == null) {
+    public ResponseEntity<?> getDptoById(@PathVariable Integer id) {
+        Dpto dpto = service.getDptoById(id);
+        if (dpto == null) {
             return new ResponseEntity<>("Departamento no encontrado", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(departamento, HttpStatus.OK);
+        return new ResponseEntity<>(dpto, HttpStatus.OK);
     }
 
     @PutMapping("/dpto/{id}")
-    public ResponseEntity<?> updateDepartamento(@PathVariable Integer id, @RequestBody Departamento departamento) {
+    public ResponseEntity<?> updateDpto(@PathVariable Integer id, @RequestBody Dpto dpto) {
         try {
-            departamento.setIdDepartamento(id);
-            Departamento actualizado = service.updateDepartamento(departamento);
+            dpto.setIdDpto(id);
+            Dpto actualizado = service.updateDpto(dpto);
             return new ResponseEntity<>(actualizado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,9 +52,9 @@ public class DptoController {
     }
 
     @DeleteMapping("/dpto/{id}")
-    public ResponseEntity<?> deleteDepartamento(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteDpto(@PathVariable Integer id) {
         try {
-            service.deleteDepartamento(id);
+            service.deleteDpto(id);
             return new ResponseEntity<>("Departamento eliminado", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

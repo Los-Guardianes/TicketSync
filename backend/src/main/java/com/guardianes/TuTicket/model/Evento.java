@@ -18,20 +18,23 @@ public class Evento {
     @Column(nullable = false, length = 150)
     private String nombre;
 
-    @Column(nullable = false)
-    private LocalDate fechaInicio;
+    // @Column(nullable = false)
+    // private LocalDate fechaInicio;
 
-    @Column(nullable = false)
-    private LocalDate fechaFin;
+    // @Column(nullable = false)
+    // private LocalDate fechaFin;
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(columnDefinition = "TEXT")
-    private String informacionAdic;
+    private String informAdic;
 
     @Column(columnDefinition = "TEXT")
     private String restricciones;
+
+    @Column
+    private Boolean activo = true;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
@@ -40,4 +43,8 @@ public class Evento {
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
     private CategoriaEvento categoria;
+
+    public void setIdEvento(Integer idEvento) {
+        this.idEvento = idEvento;
+    }
 }
