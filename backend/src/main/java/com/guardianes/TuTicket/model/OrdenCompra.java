@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class OrdenDeCompra {
+public class OrdenCompra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

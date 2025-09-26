@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.service;
 
-import com.guardianes.TuTicket.model.OrdenDeCompra;
+import com.guardianes.TuTicket.model.OrdenCompra;
 import com.guardianes.TuTicket.repo.OrdenCompraRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,20 +13,20 @@ public class OrdenCompraService {
     @Autowired
     private OrdenCompraRepo repo;
 
-    public List<OrdenDeCompra> getAllOrdenes() {
+    public List<OrdenCompra> getAllOrdenes() {
         return repo.findAll();
     }
 
-    public OrdenDeCompra getOrdenById(Integer id) {
+    public OrdenCompra getOrdenById(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
-    public OrdenDeCompra addOrden(OrdenDeCompra ordenDeCompra) {
-        return repo.save(ordenDeCompra);
+    public OrdenCompra addOrden(OrdenCompra ordenCompra) {
+        return repo.save(ordenCompra);
     }
 
-    public OrdenDeCompra updateOrden(OrdenDeCompra ordenDeCompra) {
-        return repo.save(ordenDeCompra);
+    public OrdenCompra updateOrden(OrdenCompra ordenCompra) {
+        return repo.save(ordenCompra);
     }
 
     public void deleteOrden(Integer id) {

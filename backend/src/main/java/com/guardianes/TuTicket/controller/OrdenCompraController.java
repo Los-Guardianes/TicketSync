@@ -1,8 +1,7 @@
 package com.guardianes.TuTicket.controller;
 
-import com.guardianes.TuTicket.model.OrdenDeCompra;
+import com.guardianes.TuTicket.model.OrdenCompra;
 import com.guardianes.TuTicket.model.Usuario;
-import com.guardianes.TuTicket.repo.UsuarioRepo;
 import com.guardianes.TuTicket.service.OrdenCompraService;
 import com.guardianes.TuTicket.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class OrdenCompraController {
 
 
     @PostMapping("/orden")
-    public ResponseEntity<?> addOrden(@RequestBody OrdenDeCompra orden) {
+    public ResponseEntity<?> addOrden(@RequestBody OrdenCompra orden) {
         try {
             Integer idUsuario = orden.getUsuario().getIdUsuario();
             Usuario usuario = usuarioService.getUsuarioById(idUsuario);
@@ -31,7 +30,7 @@ public class OrdenCompraController {
                 return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
             }
             orden.setUsuario(usuario);
-            OrdenDeCompra nueva = service.addOrden(orden);
+            OrdenCompra nueva = service.addOrden(orden);
             return new ResponseEntity<>(nueva, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,13 +38,13 @@ public class OrdenCompraController {
     }
 
     @GetMapping("/orden")
-    public ResponseEntity<List<OrdenDeCompra>> getAllOrdenes() {
+    public ResponseEntity<List<OrdenCompra>> getAllOrdenes() {
         return ResponseEntity.ok(service.getAllOrdenes());
     }
 
     @GetMapping("/orden/{id}")
     public ResponseEntity<?> getOrdenById(@PathVariable Integer id) {
-        OrdenDeCompra orden = service.getOrdenById(id);
+        OrdenCompra orden = service.getOrdenById(id);
         if (orden == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orden de compra no encontrada");
         }
@@ -53,10 +52,10 @@ public class OrdenCompraController {
     }
 
     @PutMapping("/orden/{id}")
-    public ResponseEntity<?> updateOrden(@PathVariable Integer id, @RequestBody OrdenDeCompra orden) {
+    public ResponseEntity<?> updateOrden(@PathVariable Integer id, @RequestBody OrdenCompra orden) {
         try {
             orden.setIdOrdenCompra(id);
-            OrdenDeCompra actualizada = service.updateOrden(orden);
+            OrdenCompra actualizada = service.updateOrden(orden);
             return ResponseEntity.ok(actualizada);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
