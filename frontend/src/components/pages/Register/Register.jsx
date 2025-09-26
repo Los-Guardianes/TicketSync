@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getCiudades } from '../../../services/CiudadService';
 
 export const Register = () => {
     const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
+
+    const [ciudad, setCiudad] = useState([]);
+
+    // Al momento de iniciar la pagina (primera vez) se ejecuta el get de las ciudades
+    useEffect(() => {
+        const getCiudad = async () => {
+            const data = await getCiudades();
+            setCiudad(data);
+        };
+        getCiudad();
+    }, []);
 
     const btnSuccess = () => {
         response("/home");
@@ -56,6 +68,36 @@ export const Register = () => {
                         <input className='form-control col-7' type="email" id='inpApMaterno' />
                     </div>
                 </div>
+                <div className='form-group row my-3 mx-auto d-flex align-items-center'>
+                    <label htmlFor="inpDni" className='col-2 text-start'>DNI</label>
+                    <div className='col-7'>
+                        <input className='form-control col-7' type="number" id='inpDni' />
+                    </div>
+                </div>
+                <div className="form-group row my-3 mx-auto d-flex align-items-center">
+                    <label htmlFor="inpCiudad" className="col-2 text-start">Ciudad</label>
+                    <div className="col-7">
+                        <div className="dropdown">
+                            <button className="btn btn-light dropdown-toggle"
+                                type="button"
+                                id="dropdownMenuButton"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Seleccionar ciudad
+                            </button>
+                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                {ciudad.map((itemCiudad) => (
+                                    <li key={itemCiudad.idciudad}>
+                                        <a className="dropdown-item" href="#">
+                                            {itemCiudad.nombre}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </form>
             <div className='row d-flex align-items-center mt-5 border-top'>
                 <div className='col my-4'>
