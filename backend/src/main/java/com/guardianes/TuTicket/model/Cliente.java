@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 @PrimaryKeyJoinColumn(name = "idUsuario")
+@Table(name = "cliente")
 public class Cliente extends Usuario {
 
     @Column(nullable = false, length = 8, unique = true)

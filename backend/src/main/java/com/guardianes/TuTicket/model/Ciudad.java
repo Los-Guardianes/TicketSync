@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table (name ="ciudad")
 public class Ciudad {
 
     @Id
