@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table (name = "admint")
 @NoArgsConstructor
 @Data
 @PrimaryKeyJoinColumn(name = "idUsuario")
