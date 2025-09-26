@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,18 @@ public class OrdenDeCompra {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
+
+    public void setIdOrdenCompra(Integer idOrdenCompra) {
+        this.idOrdenCompra = idOrdenCompra;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

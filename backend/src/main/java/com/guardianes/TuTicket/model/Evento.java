@@ -40,4 +40,8 @@ public class Evento {
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
     private CategoriaEvento categoria;
+
+    public void setIdEvento(Integer idEvento) {
+        this.idEvento = idEvento;
+    }
 }
