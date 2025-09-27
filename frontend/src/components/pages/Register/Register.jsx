@@ -5,7 +5,27 @@ import { getCiudades } from '../../../services/CiudadService';
 export const Register = () => {
     const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
 
+    const [id,setId] = useState(33);
     const [ciudad, setCiudad] = useState([]);
+    const [cliente, setNuevoCliente] = useState({
+        nombre: "",
+        apellido: "",
+        email: "",
+        hashCtr: "",
+        verificado: false,
+        telefono: "",
+        activo: true,
+        ciudad: {
+            "idCiudad": 3
+        },
+        dni: "",
+        fechaNacimiento: "2000-05-15"
+    });
+
+    //Este es quien modifica al instante cada vez que se agregue algo en el input
+    const manejarNuevoUsuario = ({target: {name,value}}) => {
+        setNuevoCliente({...cliente, [name]:value});
+    }
 
     // Al momento de iniciar la pagina (primera vez) se ejecuta el get de las ciudades
     useEffect(() => {
@@ -26,7 +46,7 @@ export const Register = () => {
                 <div className='form-group row mx-auto d-flex align-items-center'>
                     <label htmlFor="inpEmail" className='col-2 text-start'>Dirección de correo electronico</label>
                     <div className='col-7'>
-                        <input className='form-control col-7' type="email" id='inpEmail' />
+                        <input className='form-control col-7' type="email" id='inpEmail'/>
                     </div>
                     <p className='col text-end'>
                         <span className='text-danger h5'>*</span>La dirección de correo electrónico
