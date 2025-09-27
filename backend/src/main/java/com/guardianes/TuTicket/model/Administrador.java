@@ -7,6 +7,7 @@ import lombok.*;
 @Table (name = "admint")
 @NoArgsConstructor
 @Data
+@Table(name = "admint")
 @PrimaryKeyJoinColumn(name = "idUsuario")
 public class Administrador extends Usuario {
 

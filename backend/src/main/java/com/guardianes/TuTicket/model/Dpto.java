@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table (name ="dpto")
 public class Dpto {
 
     @Id
