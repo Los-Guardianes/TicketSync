@@ -1,13 +1,16 @@
 package com.guardianes.TuTicket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Entity
+@Table(name = "usuario")
+@Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario {
 
     @Id
@@ -24,7 +27,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false, length = 255)
-    private String hashContrasena;
+    private String hashCtr;
 
     @Column
     private Boolean verificado = false;
@@ -41,5 +44,9 @@ public class Usuario {
 
     public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 }

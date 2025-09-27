@@ -3,8 +3,6 @@ package com.guardianes.TuTicket.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,20 +16,32 @@ public class Evento {
     @Column(nullable = false, length = 150)
     private String nombre;
 
-    @Column(nullable = false)
-    private LocalDate fechaInicio;
+    // @Column(nullable = false)
+    // private LocalDate fechaInicio;
 
-    @Column(nullable = false)
-    private LocalDate fechaFin;
+    // @Column(nullable = false)
+    // private LocalDate fechaFin;
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(columnDefinition = "TEXT")
-    private String informacionAdic;
+    private String informAdic;
 
     @Column(columnDefinition = "TEXT")
     private String restricciones;
+
+    @Column(nullable = false, length = 255)
+    private String urlImagen;
+
+    @Column(nullable = false, length = 255)
+    private String urlMapa;
+
+    @Column(nullable = false, length = 255)
+    private String direccion;
+
+    @Column
+    private Boolean activo = true;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
@@ -39,5 +49,9 @@ public class Evento {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
-    private CategoriaEvento categoria;
+    private CatEvento categoria;
+
+    public void setIdEvento(Integer idEvento) {
+        this.idEvento = idEvento;
+    }
 }

@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.service;
 
-import com.guardianes.TuTicket.model.CategoriaEvento;
+import com.guardianes.TuTicket.model.CatEvento;
 import com.guardianes.TuTicket.repo.CatEventoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,20 +13,20 @@ public class CatEventoService {
     @Autowired
     private CatEventoRepo repo;
 
-    public List<CategoriaEvento> getAllCategorias() {
+    public List<CatEvento> getAllCategorias() {
         return repo.findAll();
     }
 
-    public CategoriaEvento getCategoriaById(Integer id) {
+    public CatEvento getCategoriaById(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
-    public CategoriaEvento addCategoria(CategoriaEvento categoriaEvento) {
-        return repo.save(categoriaEvento);
+    public CatEvento addCategoria(CatEvento catEvento) {
+        return repo.save(catEvento);
     }
 
-    public CategoriaEvento updateCategoria(CategoriaEvento categoriaEvento) {
-        return repo.save(categoriaEvento);
+    public CatEvento updateCategoria(CatEvento catEvento) {
+        return repo.save(catEvento);
     }
 
     public void deleteCategoria(Integer id) {
