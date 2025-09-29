@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.service;
 
-import com.guardianes.TuTicket.model.Administrador;
+import com.guardianes.TuTicket.model.Admin;
 import com.guardianes.TuTicket.repo.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,20 +13,20 @@ public class AdminService {
     @Autowired
     private AdminRepo repo;
 
-    public List<Administrador> getAllAdministradores() {
+    public List<Admin> getAllAdministradores() {
         return repo.findAll();
     }
 
-    public Administrador getAdministradorById(Integer id) {
+    public Admin getAdministradorById(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
-    public Administrador addAdministrador(Administrador administrador) {
-        return repo.save(administrador);
+    public Admin addAdministrador(Admin admin) {
+        return repo.save(admin);
     }
 
-    public Administrador updateAdministrador(Administrador administrador) {
-        return repo.save(administrador);
+    public Admin updateAdministrador(Admin admin) {
+        return repo.save(admin);
     }
 
     public void deleteAdministrador(Integer id) {
