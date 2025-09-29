@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   frontend:
-    build: ./frontend
+    build: .
     container_name: TuTicket-Front
     ports:
       - "80:80"
