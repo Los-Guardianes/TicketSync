@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom'
 
 export const Register = () => {
     const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
-
+    const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
     const [ciudad, setCiudad] = useState([]);
     const [newClient, setNewClient] = useState({
         nombre: "",
@@ -17,7 +17,7 @@ export const Register = () => {
         telefono: "",
         activo: true,
         ciudad: {
-            "idCiudad": 3
+            "idCiudad": null
         },
         dni: "",
         fechaNacimiento: "2000-05-15"
@@ -45,6 +45,12 @@ export const Register = () => {
     const formCreateNewClient = async (event) => {
         event.preventDefault();
         // Aqui hago el fetch para hacer post
+        //Aquí deben ir validaciones
+            // Validación ciudad
+        if (!newClient.ciudad.idCiudad) {
+            alert("Debe seleccionar una ciudad");
+            return;
+        }
         try {
             await postClient(newClient); // Llamo al service
             alert("Cliente registrado correctamente");
@@ -64,7 +70,7 @@ export const Register = () => {
             telefono: "",
             activo: true,
             ciudad: {
-                "idCiudad": 3
+                "idCiudad": null
             },
             dni: "",
             fechaNacimiento: "2000-05-15" //Cambiar, colocar un nuevo input
@@ -143,12 +149,19 @@ export const Register = () => {
                                         id="dropdownMenuButton"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        Seleccionar ciudad
+                                        {selectedCiudad}
                                     </button>
                                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {ciudad.map((itemCiudad) => (
                                             <li key={itemCiudad.idCiudad}>
-                                                <a className="dropdown-item" href="#">
+                                                <a className="dropdown-item" href="#"
+                                                onClick={() => {
+                                                    setSelectedCiudad(itemCiudad.nombre);
+                                                    setNewClient({
+                                                        ...newClient,
+                                                        ciudad: { idCiudad: itemCiudad.idCiudad }
+                                                    });
+                                                }}>
                                                     {itemCiudad.nombre}
                                                 </a>
                                             </li>
