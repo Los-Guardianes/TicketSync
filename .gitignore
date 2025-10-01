@@ -55,3 +55,4 @@
 # -------------------------------
 .DS_Store
 Thumbs.db
+backend/src/main/resources/application.properties
