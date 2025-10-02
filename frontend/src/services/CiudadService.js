@@ -1,0 +1,15 @@
+const API_URL = "http://44.219.158.128:80/api/ciudad";
+
+export async function getCiudades() {
+  try {
+    // Se hace el get a la api
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error("Error al obtener ciudades: " + response.status);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetch ciudades:", error);
+    return [];
+  }
+}
