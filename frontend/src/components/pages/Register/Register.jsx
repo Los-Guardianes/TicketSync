@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom'
 
 export const Register = () => {
     const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
-
+    const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
     const [ciudad, setCiudad] = useState([]);
     const [newClient, setNewClient] = useState({
         nombre: "",
@@ -17,7 +17,7 @@ export const Register = () => {
         telefono: "",
         activo: true,
         ciudad: {
-            "idCiudad": 3
+            "idCiudad": null
         },
         dni: "",
         fechaNacimiento: "2000-05-15"
@@ -45,6 +45,12 @@ export const Register = () => {
     const formCreateNewClient = async (event) => {
         event.preventDefault();
         // Aqui hago el fetch para hacer post
+        //Aquí deben ir validaciones
+            // Validación ciudad
+        if (!newClient.ciudad.idCiudad) {
+            alert("Debe seleccionar una ciudad");
+            return;
+        }
         try {
             await postClient(newClient); // Llamo al service
             alert("Cliente registrado correctamente");
@@ -64,7 +70,7 @@ export const Register = () => {
             telefono: "",
             activo: true,
             ciudad: {
-                "idCiudad": 3
+                "idCiudad": null
             },
             dni: "",
             fechaNacimiento: "2000-05-15" //Cambiar, colocar un nuevo input
@@ -75,7 +81,7 @@ export const Register = () => {
         <div className='row vh-100 w-100 mx-0' style={{ overflow: "hidden" }}>
             <div className='col-6 px-5 py-4 bg-light shadow rounded'>
                 <div className='w-100 m-0 p-0 d-flex justify-content-center'>
-                    <img src="src/assets/TUTICKET_PNG_SIN_ESPACIOS.png"
+                    <img src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png"
                         alt="tuticketLogo" style={{ width: "10rem" }} />
                 </div>
                 <h2 className='text-center mt-4 mb-4' style={{ color: "#2EA062" }}>Bienvenidos a tu ticket</h2>
@@ -143,12 +149,19 @@ export const Register = () => {
                                         id="dropdownMenuButton"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        Seleccionar ciudad
+                                        {selectedCiudad}
                                     </button>
                                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {ciudad.map((itemCiudad) => (
                                             <li key={itemCiudad.idCiudad}>
-                                                <a className="dropdown-item" href="#">
+                                                <a className="dropdown-item" href="#"
+                                                onClick={() => {
+                                                    setSelectedCiudad(itemCiudad.nombre);
+                                                    setNewClient({
+                                                        ...newClient,
+                                                        ciudad: { idCiudad: itemCiudad.idCiudad }
+                                                    });
+                                                }}>
                                                     {itemCiudad.nombre}
                                                 </a>
                                             </li>
@@ -174,7 +187,7 @@ export const Register = () => {
 
             </div>
             <div className='p-0 m-0 col-6'>
-                <img className='h-100 w-100' src="src/assets/wallhaven-4gjdrd.jpg"
+                <img className='h-100 w-100' src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/wallhaven-4gjdrd.jpg"
                     alt="tuticketLogo" style={{ maxHeight: "100vh", objectFit: "cover" }} />
             </div>
         </div>
