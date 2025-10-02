@@ -7,7 +7,7 @@ export const UbicacionEvento = () => {
   const [departamento, setDepartamento] = useState("");
   const [ciudad, setCiudad] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [referencia, setReferencia] = useState("");
+  // const [referencia, setReferencia] = useState("");
   const [mapa, setMapa] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const dragCounter = useRef(0);
@@ -81,19 +81,7 @@ export const UbicacionEvento = () => {
                 placeholder="Escribe la dirección del evento"
               />
             </div>
-            <div className="campo referencia-campo">
-              <label htmlFor="referencia">Referencia</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <input
-                  id="referencia"
-                  type="text"
-                  value={referencia}
-                  onChange={e => setReferencia(e.target.value)}
-                  placeholder="Agrega una referencia"
-                />
-                <button type="button" className="agregar-referencia">+</button>
-              </div>
-            </div>
+            {/* Campo referencia eliminado */}
           </div>
           <div className="form-right">
             <div className="campo">
