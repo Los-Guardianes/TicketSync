@@ -3,6 +3,7 @@ import { Home } from "../components/pages/Home/Home";
 import { Login } from "../components/pages/LogIn/Login";
 import { Register } from "../components/pages/Register/Register";
 import { GoogleVerification } from "../components/pages/GoogleVerification/GoogleVerification";
+import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -14,6 +15,7 @@ export const ClienteRoutes = () => {
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="verification" element={<GoogleVerification />} />
+      <Route path="create-event" element={<CreateEvent />} />
     </Routes>
   );
 };

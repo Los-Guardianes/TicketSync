@@ -1,0 +1,179 @@
+
+/* Contenedor principal */
+.crear-evento-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 32px 40px 24px 40px;
+}
+
+/* Encabezado */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.step {
+  background: #219653;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 8px 18px;
+  margin-right: 18px;
+}
+.header h2 {
+  color: #219653;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Layout de columnas */
+.evento-form {
+  display: flex;
+  flex-direction: column;
+}
+.form-content {
+  display: flex;
+  gap: 32px;
+}
+.form-left, .form-right {
+  flex: 1;
+}
+
+/* Campos */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+.campo label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #222;
+}
+.campo input,
+.campo select,
+.campo textarea {
+  background: #eaf6ea;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  margin-bottom: 0;
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  box-shadow: 0 0 0 2px #21965333;
+}
+.campo textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+/* Funciones */
+.funciones-section {
+  background: #eaf6ea;
+  border-radius: 8px;
+  padding: 18px 18px 10px 18px;
+  margin-bottom: 18px;
+}
+.funciones-header {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.agregar-funcion {
+  color: #219653;
+  cursor: pointer;
+  font-weight: 500;
+}
+.eliminar-funcion {
+  color: #d32f2f;
+  cursor: pointer;
+  font-weight: 500;
+}
+.funcion {
+  margin-bottom: 12px;
+}
+.funcion-label {
+  font-weight: 500;
+  color: #219653;
+  margin-bottom: 6px;
+}
+.fechas {
+  display: flex;
+  gap: 24px;
+}
+.fecha-hora {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fecha-hora label {
+  font-size: 0.95rem;
+  color: #222;
+  margin-bottom: 2px;
+}
+.fecha-hora input {
+  width: 140px;
+}
+
+/* Imagen y info adicional */
+.form-right .campo {
+  margin-bottom: 24px;
+}
+.imagen-placeholder {
+  background: #eaf6ea;
+  border-radius: 12px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #219653;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+/* Botones de acción */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+.form-actions .cancel {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.form-actions .cancel:hover {
+  background: #333;
+}
+.form-actions .next {
+  background: #219653;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.form-actions .next:hover {
+  background: #176c3a;
+}
