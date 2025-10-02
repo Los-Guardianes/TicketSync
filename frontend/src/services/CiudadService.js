@@ -1,7 +1,9 @@
+const API_URL = "http://localhost:8080/api/ciudad";
+
 export async function getCiudades() {
   try {
     // Se hace el get a la api
-    const response = await fetch("http://localhost:8080/api/ciudad");
+    const response = await fetch(API_URL);
     if (!response.ok) {
       throw new Error("Error al obtener ciudades: " + response.status);
     }
