@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getCiudades } from '../../../services/CiudadService';
-import { postClient } from '../../../services/ClienteService';
+import { postOrganizador } from '../../../services/OrganizadorService';
 import { NavLink } from 'react-router-dom'
 
-export const Register = () => {
-    const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
+export const RegisterOrganizer = () => {
+    const response = useNavigate(); 
     const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
     const [ciudad, setCiudad] = useState([]);
 
-    // Fecha actual en formato YYYY-MM-DD
-    const today = new Date().toISOString().split("T")[0];
-
-    const [newClient, setNewClient] = useState({
+    const [newOrganizer, setNewOrganizer] = useState({
         nombre: "",
         apellido: "",
         email: "",
@@ -20,18 +17,16 @@ export const Register = () => {
         verificado: false,
         telefono: "",
         activo: true,
-        ciudad: {
-            "idCiudad": null
-        },
-        dni: "",
-        rol: "cliente",
-        fechaNacimiento: today  
+        ciudad: { "idCiudad": null },
+        rol: "organizador",
+        ruc: "",
+        razonSocial: ""
     });
 
     // Para validar confirmación de contraseña
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const { nombre, apellido, email, hashCtr, telefono, dni, fechaNacimiento } = newClient;
+    const { nombre, apellido, email, hashCtr, telefono, ruc, razonSocial } = newOrganizer;
 
     useEffect(() => {
         const getCiudad = async () => {
@@ -41,36 +36,32 @@ export const Register = () => {
         getCiudad();
     }, []);
 
-    //Este es quien modifica al instante cada vez que se agregue algo en el input
-    const manejarNuevoUsuario = ({ target: { name, value } }) => {
-        // Hace une nueva copia y cada nuevo valor es 
-        // reemplazado por cada vez que cambie el input
-        setNewClient({ ...newClient, [name]: value });
+    const manejarNuevoOrganizador = ({ target: { name, value } }) => {
+        setNewOrganizer({ ...newOrganizer, [name]: value });
     }
 
     // Validaciones simples
     const validar = () => {
         const emailOk = /^\S+@\S+\.\S+$/.test((email || '').trim());
-        const dniOk = /^\d{8}$/.test((dni || '').trim());
-        const celOk = /^\d{9}$/.test((telefono || '').trim());
         const passOk = (hashCtr || '').length >= 8;
         const passMatch = hashCtr === confirmPassword;
-        const ciudadOk = !!newClient.ciudad.idCiudad;
-        const fechaOk = !!fechaNacimiento && fechaNacimiento <= today;
+        const rucOk = /^\d{11}$/.test((ruc || '').trim());
+        const celOk = /^\d{9}$/.test((telefono || '').trim());
+        const ciudadOk = !!newOrganizer.ciudad.idCiudad;
 
         if (!(nombre || '').trim()) return 'El nombre es obligatorio.';
         if (!(apellido || '').trim()) return 'El apellido es obligatorio.';
         if (!emailOk) return 'Ingresa un correo válido.';
         if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
         if (!passMatch) return 'Las contraseñas no coinciden.';
-        if (!dniOk) return 'El DNI debe tener 8 dígitos.';
+        if (!rucOk) return 'El RUC debe tener 11 dígitos.';
+        if (!(razonSocial || '').trim()) return 'La razón social es obligatoria.';
         if (!celOk) return 'El celular debe tener 9 dígitos.';
-        if (!fechaOk) return 'Selecciona una fecha de nacimiento válida.';
         if (!ciudadOk) return 'Debes seleccionar una ciudad.';
         return null;
     };
 
-    const formCreateNewClient = async (event) => {
+    const formCreateNewOrganizer = async (event) => {
         event.preventDefault();
 
         const error = validar();
@@ -79,7 +70,6 @@ export const Register = () => {
             return;
         }
 
-        
         const payload = {
             nombre: (nombre || '').replace(/\s+/g, ' ').trim(),
             apellido: (apellido || '').replace(/\s+/g, ' ').trim(),
@@ -88,22 +78,21 @@ export const Register = () => {
             verificado: false,
             telefono: (telefono || '').replace(/\D/g, ''), // solo dígitos
             activo: true,
-            ciudad: { idCiudad: newClient.ciudad.idCiudad },
-            dni: (dni || '').replace(/\D/g, ''), // solo dígitos
-            rol: "cliente",
-            fechaNacimiento
+            ciudad: { idCiudad: newOrganizer.ciudad.idCiudad },
+            rol: "organizador",
+            ruc: (ruc || '').replace(/\D/g, ''),           // solo dígitos
+            razonSocial: (razonSocial || '').replace(/\s+/g, ' ').trim()
         };
 
         try {
-            await postClient(payload); // Llamo al service
-            alert("Cliente registrado correctamente");
-            response("/home"); // Redirige al home
+            await postOrganizador(payload);
+            alert("Organizador registrado correctamente");
+            response("/home");
         } catch (error) {
-            alert("Hubo un error: " + error.message);
+            alert("Hubo un error: " + (error?.message || 'Error desconocido'));
         }
 
-        // Reset
-        setNewClient({
+        setNewOrganizer({
             nombre: "",
             apellido: "",
             email: "",
@@ -112,9 +101,8 @@ export const Register = () => {
             telefono: "",
             activo: true,
             ciudad: { "idCiudad": null },
-            dni: "",
-            rol: "cliente",
-            fechaNacimiento: today 
+            ruc: "",
+            razonSocial: ""
         });
         setConfirmPassword("");
         setSelectedCiudad("Seleccionar ciudad");
@@ -127,43 +115,43 @@ export const Register = () => {
                     <img src="src/assets/TUTICKET_PNG_SIN_ESPACIOS.png"
                         alt="tuticketLogo" style={{ width: "10rem" }} />
                 </div>
-                <h2 className='text-center mt-4 mb-4' style={{ color: "#2EA062" }}>Bienvenidos a tu ticket</h2>
-                <form onSubmit={formCreateNewClient}>
+                <h2 className='text-center mt-4 mb-4' style={{ color: "#2EA062" }}>Registro de organizador</h2>
+                <form onSubmit={formCreateNewOrganizer}>
                     <div className='d-grid gap-2 form-group container mx-auto'>
                         <div className='row'>
                             <div className='col'>
-                                <label htmlFor="inpNombre" className='col-3 text-start'>Nombre</label>
+                                <label htmlFor="inpNombre" className='text-start'>Nombre</label>
                                 <input className='form-control border-0'
                                     type="text" id='inpNombre' placeholder='Ingrese su nombre' name='nombre'
-                                    value={nombre} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={nombre} style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                             <div className='col'>
-                                <label htmlFor="inpApellido" className='col-3 text-start'>Apellido</label>
+                                <label htmlFor="inpApellido" className='text-start'>Apellido</label>
                                 <input className='form-control border-0'
                                     type="text" id='inpApellido' placeholder='Ingrese su apellido' name='apellido'
-                                    value={apellido} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={apellido} style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col'>
-                                <label htmlFor="inpEmail" className='col-3 text-start'>Correo</label>
+                                <label htmlFor="inpEmail" className='text-start'>Correo</label>
                                 <input className='form-control border-0' type="email"
                                     id='inpEmail' placeholder='Ingrese un correo electronico' name='email'
                                     value={email}
-                                    style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col'>
-                                <label htmlFor="inpPassword" className='col-3 text-start'>Contraseña</label>
+                                <label htmlFor="inpPassword" className='text-start'>Contraseña</label>
                                 <input className='form-control border-0' type="password"
                                     id='inpPassword' placeholder='Ingrese una contraseña' name='hashCtr'
-                                    value={hashCtr} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={hashCtr} style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col'>
-                                <label htmlFor="inpConfirmPassword" className='col-3 text-start'>Confirmar contraseña</label>
+                                <label htmlFor="inpConfirmPassword" className='text-start'>Confirmar contraseña</label>
                                 <input className='form-control border-0' type="password"
                                     id='inpConfirmPassword' placeholder='Confirme su contraseña'
                                     style={{ background: "#EBF5EB" }}
@@ -173,35 +161,26 @@ export const Register = () => {
                         </div>
                         <div className='row'>
                             <div className='col'>
-                                <label htmlFor="inpDNI" className='text-start'>DNI</label>
+                                <label htmlFor="inpRUC" className='text-start'>RUC</label>
                                 <input className='form-control border-0' type="text"
-                                    id='inpDNI' placeholder='Ingrese su número de indetidad' name='dni'
-                                    value={dni} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    id='inpRUC' placeholder='Ingrese su RUC' name='ruc'
+                                    value={ruc} style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                             <div className='col'>
                                 <label htmlFor="inpCelular" className='text-start'>Celular</label>
                                 <input className='form-control border-0' type="text"
                                     id='inpCelular' placeholder='Ingrese su número celular' name='telefono'
-                                    value={telefono} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={telefono} style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                         </div>
-
                         <div className='row'>
                             <div className='col'>
-                                <label htmlFor="inpFechaNac" className='text-start'>Fecha de nacimiento</label>
-                                <input
-                                    className='form-control border-0'
-                                    type="date"
-                                    id='inpFechaNac'
-                                    name='fechaNacimiento'
-                                    value={fechaNacimiento}
-                                    max={today}
-                                    style={{ background: "#EBF5EB" }}
-                                    onChange={manejarNuevoUsuario}
-                                />
+                                <label htmlFor="inpRazon" className='text-start'>Razón social</label>
+                                <input className='form-control border-0' type="text"
+                                    id='inpRazon' placeholder='Ingrese su razón social' name='razonSocial'
+                                    value={razonSocial} style={{ background: "#EBF5EB" }} onChange={manejarNuevoOrganizador} />
                             </div>
                         </div>
-
                         <div className='row d-flex align-items-center mt-2'>
                             <label htmlFor="inpCiudad" className="col-2 text-start">Ciudad</label>
                             <div className="col">
@@ -219,8 +198,8 @@ export const Register = () => {
                                                 <a className="dropdown-item" href="#"
                                                     onClick={() => {
                                                         setSelectedCiudad(itemCiudad.nombre);
-                                                        setNewClient({
-                                                            ...newClient,
+                                                        setNewOrganizer({
+                                                            ...newOrganizer,
                                                             ciudad: { idCiudad: itemCiudad.idCiudad }
                                                         });
                                                     }}>
@@ -246,7 +225,6 @@ export const Register = () => {
                         <button className='btn btn-success' type='submit'>Registrar</button>
                     </div>
                 </form>
-
             </div>
             <div className='p-0 m-0 col-6'>
                 <img className='h-100 w-100' src="src/assets/wallhaven-4gjdrd.jpg"

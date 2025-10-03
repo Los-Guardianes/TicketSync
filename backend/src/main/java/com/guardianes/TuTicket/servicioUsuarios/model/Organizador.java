@@ -7,10 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table (name = "organizador")
 @PrimaryKeyJoinColumn(name = "idUsuario")
 public class Organizador extends Usuario {
 
-    @Column(nullable = false, length = 10, unique = true)
+    @Column(nullable = false, length = 11, unique = true)
     private String ruc;
 
     @Column(nullable = false, length = 150)
