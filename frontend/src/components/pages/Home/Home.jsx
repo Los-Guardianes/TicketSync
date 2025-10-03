@@ -9,7 +9,7 @@ export const Home = () => {
   const datosPrueba = Array(15).fill({
     ubicacion : "Av. La Marina 3477, San Miguel",
     titulo : "Peru VS Nueva Zelanda",
-    dia : "Sabadoi 13 de set. - 7:00 pm",
+    dia : "Sabado 13 de set. - 7:00 pm",
   })
 
   return (

@@ -3,6 +3,8 @@ import { Home } from "../components/pages/Home/Home";
 import { Login } from "../components/pages/LogIn/Login";
 import { Register } from "../components/pages/Register/Register";
 import { GoogleVerification } from "../components/pages/GoogleVerification/GoogleVerification";
+import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
+import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
 
@@ -14,7 +16,9 @@ export const ClienteRoutes = () => {
       <Route path="/" element={<Navigate to="/home" />} />
       <Route path="home" element={<Home />} />
       <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
+      <Route path="/register" element={<RegisterOptions />} />
+      <Route path="/register-client" element={<Register />} />
+      <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
       <Route path="create-event" element={<CreateEvent />} />
       <Route path="ubicacion-evento" element={<UbicacionEvento />} />
