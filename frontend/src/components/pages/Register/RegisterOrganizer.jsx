@@ -18,6 +18,7 @@ export const RegisterOrganizer = () => {
         telefono: "",
         activo: true,
         ciudad: { "idCiudad": null },
+        rol: "organizador",
         ruc: "",
         razonSocial: ""
     });
@@ -78,6 +79,7 @@ export const RegisterOrganizer = () => {
             telefono: (telefono || '').replace(/\D/g, ''), // solo dígitos
             activo: true,
             ciudad: { idCiudad: newOrganizer.ciudad.idCiudad },
+            rol: "organizador",
             ruc: (ruc || '').replace(/\D/g, ''),           // solo dígitos
             razonSocial: (razonSocial || '').replace(/\s+/g, ' ').trim()
         };
