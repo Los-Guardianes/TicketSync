@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import logo from "../../../assets/TUTICKET_PNG_SIN_ESPACIOS.png";
 import { useNavigate } from "react-router-dom";
 import "./UbicacionEvento.css";
 
@@ -43,12 +44,16 @@ export const UbicacionEvento = () => {
   };
 
   return (
-    <div className="ubicacion-evento-container">
-      <div className="header">
-        <span className="step">2</span>
-        <h2>Ubicación</h2>
+    <>
+      <div className="top-bar">
+        <img src={logo} alt="Logo TuTicket" className="logo-bar-small" />
       </div>
-      <form className="ubicacion-form">
+      <div className="ubicacion-evento-container">
+        <div className="header">
+          <span className="step">2</span>
+          <h2>Ubicación</h2>
+        </div>
+        <form className="ubicacion-form">
         <div className="form-content">
           <div className="form-left">
             <div className="campo">
@@ -177,5 +182,6 @@ export const UbicacionEvento = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };

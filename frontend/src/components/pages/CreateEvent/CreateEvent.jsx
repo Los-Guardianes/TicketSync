@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import logo from "../../../assets/TUTICKET_PNG_SIN_ESPACIOS.png";
 import { useNavigate } from "react-router-dom";
 import "./CreateEvent.css";
 
@@ -67,7 +68,11 @@ export const CreateEvent = () => {
   };
 
   return (
-    <div className="crear-evento-container">
+    <>
+      <div className="top-bar">
+        <img src={logo} alt="Logo TuTicket" className="logo-bar-small" />
+      </div>
+      <div className="crear-evento-container">
       {/* Encabezado */}
       <div className="header">
         <span className="step">1</span>
@@ -299,5 +304,6 @@ export const CreateEvent = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
