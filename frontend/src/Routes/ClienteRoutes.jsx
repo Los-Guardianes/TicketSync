@@ -5,6 +5,8 @@ import { Register } from "../components/pages/Register/Register";
 import { GoogleVerification } from "../components/pages/GoogleVerification/GoogleVerification";
 import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
 import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
+import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
+import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -18,6 +20,8 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+      <Route path="create-event" element={<CreateEvent />} />
+      <Route path="ubicacion-evento" element={<UbicacionEvento />} />
     </Routes>
   );
 };

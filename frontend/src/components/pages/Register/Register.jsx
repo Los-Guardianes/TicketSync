@@ -124,7 +124,7 @@ export const Register = () => {
         <div className='row vh-100 w-100 mx-0' style={{ overflow: "hidden" }}>
             <div className='col-6 px-5 py-4 bg-light shadow rounded'>
                 <div className='w-100 m-0 p-0 d-flex justify-content-center'>
-                    <img src="src/assets/TUTICKET_PNG_SIN_ESPACIOS.png"
+                    <img src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png"
                         alt="tuticketLogo" style={{ width: "10rem" }} />
                 </div>
                 <h2 className='text-center mt-4 mb-4' style={{ color: "#2EA062" }}>Bienvenidos a tu ticket</h2>
@@ -249,7 +249,7 @@ export const Register = () => {
 
             </div>
             <div className='p-0 m-0 col-6'>
-                <img className='h-100 w-100' src="src/assets/wallhaven-4gjdrd.jpg"
+                <img className='h-100 w-100' src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/wallhaven-4gjdrd.jpg"
                     alt="tuticketLogo" style={{ maxHeight: "100vh", objectFit: "cover" }} />
             </div>
         </div>
