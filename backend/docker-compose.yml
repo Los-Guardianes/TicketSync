@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  backend:
+    build: .
+    container_name: TuTicket-back
+    ports: 
+      - "80:8080" #Expone backend en http://<host>:80
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
