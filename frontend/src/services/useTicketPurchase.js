@@ -5,6 +5,7 @@ export const useTicketPurchase = () => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [zonas, setZonas] = useState([]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -22,11 +23,29 @@ export const useTicketPurchase = () => {
         }
     };
 
+    const fetchZonas = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/zona/evento/1");
+            if (!response.ok) {
+                throw new Error("Error al obtener las zonas");
+            }
+            const dataZona = await response.json();
+            setZonas(dataZona);
+            console.log(dataZona.nombre);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+
+
     return {
         formData,
         errors,
         isLoading,
         message,
-        handleInputChange
+        zonas,
+        handleInputChange,
+        fetchZonas
     };
 }

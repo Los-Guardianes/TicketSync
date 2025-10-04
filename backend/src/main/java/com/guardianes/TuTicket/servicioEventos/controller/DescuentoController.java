@@ -56,6 +56,7 @@ public class DescuentoController {
     }
     // Eliminar un descuento
     @DeleteMapping("/descuento/{id}")
+    //api/descuento/1
     public ResponseEntity<?> deleteDescuento(@PathVariable Integer id) {
         try {
             service.deleteDescuento(id);
@@ -68,6 +69,7 @@ public class DescuentoController {
     @GetMapping("descuento/verify")
     /*FALTAN MÁS FUNCINOALIDADES DE VERIFICACIÓN (LIMITE POR USUARIO, LIMITE GLOBAL, ES GLOBAL, ETC)
     Por ahora, si el nombre del código está bien, funciona bien.
+    /api/descuento/verify?nombre="CODIGO"
      */
     public ResponseEntity<?> verifyDescuento(@RequestParam String codigo){
         try{

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { Header } from '../../../../common/Header'
 import { useParams } from 'react-router-dom'
 import "./TicketPurchase.css"
@@ -6,23 +6,31 @@ import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
 
 export const TicketPurchase = () => {
 
-    const [ciudad, setCiudad] = useState([]);
+    
+    const {id} = useParams();
+    const [cantidadEntradas, setCantidadEntradas] = useState(1);
+    const [precio, setPrecio] = useState(0.0);
+    const [comision, setComision] = useState(0);
+    const [discount, setDiscount] = useState(0.0);
+    const [total, setTotal] = useState(0.0);
+
+    const [selectedZona, setSelectedZona] = useState("Seleccionar");
 
     const {
         formData,
         errors,
         isLoading,
         message,
-        handleInputChange
+        zonas,
+        handleInputChange,
+        fetchZonas
     } = useTicketPurchase();
 
-    const {id} = useParams();
-    
-    const [cantidadEntradas, setCantidadEntradas] = useState(1);
-    const [precio, setPrecio] = useState(0.0);
-    const [comision, setComision] = useState(0);
-    const [discount, setDiscount] = useState(0.0);
-    const [total, setTotal] = useState(0.0);
+    useEffect(() => {
+        fetchZonas();
+    }, []);
+
+
 
     const incrementar = () => {
         setCantidadEntradas(prev => prev + 1);
@@ -159,40 +167,34 @@ export const TicketPurchase = () => {
                              */}
                             </div>
                         </div>
-                    
                         <h2>Zona</h2>
-                        {/*Dropdown de Zona */}
                         <div className="col">
                             <div className="dropdown">
-                            
-                                <button className="btn btn-light dropdown-toggle " style={{ background: "#EBF5EB" }}
+                                <button 
+                                    className="btn btn-light dropdown-toggle"
+                                    style={{ background: "#EBF5EB" }}
                                     type="button"
                                     id="dropdownMenuButton"
                                     data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                        Seleccionar
+                                    aria-expanded="false"
+                                >
+                                    {selectedZona}
                                 </button>
-                            {/*
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {tipoTickets.map((itemTipo) => (
-                                        <li key={itemTipo.idTipo}>
-                                            <a className="dropdown-item" href="#"
-                                            onClick={() => {
-                                                setSelectedTipoTicket(itemTipo.nombre);
-                                                setDetalleCompra({
-                                                    ...newDetalleCompra,
-                                                    tipoTicket: { idTipo: itemTipo.idTipo }
-                                                });
-                                            }}>
-                                            {itemTipo.nombre}
+                                    {zonas.map((zona) => (
+                                        <li key={zona.id}>
+                                            <a 
+                                                className="dropdown-item" 
+                                                href="#"
+                                                onClick={() => setSelectedZona(zona.nombre)}
+                                            >
+                                                {zona.nombre}
                                             </a>
                                         </li>
-                                        ))}
+                                    ))}
                                 </ul>
-                             */}
                             </div>
                         </div>
-
                         <h2>Canjear código</h2>
                         <form onSubmit={handleDiscount}>
                             <input 
