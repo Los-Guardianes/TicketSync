@@ -1,7 +1,7 @@
 import "./Login.css"
 import { useNavigate } from 'react-router-dom';
-import { useLogin } from './useLogin';
-import { loginService } from './loginService';
+import { useLogin } from '../../../services/useLogin';
+import { loginService } from '../../../services/loginService';
 
 export const Login = () => {
 

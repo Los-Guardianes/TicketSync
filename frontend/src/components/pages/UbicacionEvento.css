@@ -1,0 +1,15 @@
+/* Franja superior y logo */
+.top-bar {
+  width: 100%;
+  background: #fff;
+  border-bottom: 2px solid #219653;
+  display: flex;
+  align-items: center;
+  padding: 8px 0 8px 32px;
+  margin-bottom: 0;
+}
+.logo-bar-small {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}

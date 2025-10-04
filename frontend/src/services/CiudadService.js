@@ -1,4 +1,4 @@
-const API_URL = "http://44.219.158.128:80/api/ciudad";
+const API_URL = "http://localhost:8080/api/ciudad";
 
 export async function getCiudades() {
   try {
