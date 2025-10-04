@@ -13,5 +13,5 @@ import java.math.BigDecimal;
 public class Admin extends Usuario {
 
     @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal comisionGloblal;
+    private BigDecimal comisionGlobal;
 }

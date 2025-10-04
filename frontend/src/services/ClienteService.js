@@ -1,4 +1,4 @@
-const API_URL = "http://44.219.158.128:80/api/cliente";
+const API_URL = "http://localhost:8080/api/cliente";
 
 export const postClient = async (cliente) => {
     try {
