@@ -8,7 +8,7 @@ export const Card = ({titulo, dia, ubicacion}) => {
 
     return (
         <div className='card' style={{width: "15rem"}}>
-            <img className='card-img-top' src="src/assets/maxresdefault.jpg"
+            <img className='card-img-top' src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/maxresdefault.jpg"
                     alt="tuticketLogo"/>
             <div className='card-body'>
                 <p className='card-text' >{ubicacion}</p>
