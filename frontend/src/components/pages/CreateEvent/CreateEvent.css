@@ -82,6 +82,7 @@
   outline: none;
   transition: box-shadow 0.2s;
 }
+
 .campo input:focus,
 .campo select:focus,
 .campo textarea:focus {
