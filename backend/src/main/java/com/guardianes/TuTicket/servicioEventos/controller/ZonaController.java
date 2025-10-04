@@ -60,4 +60,14 @@ public class ZonaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+
+    @GetMapping("/zona/evento/{id_evento}")
+    public ResponseEntity<?> getZonasByEvento(@PathVariable Integer id_evento) {
+        try{
+            return ResponseEntity.ok(service.getZonasByEventId(id_evento));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

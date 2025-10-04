@@ -7,6 +7,7 @@ import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
 import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
+import { TicketPurchase } from "../components/pages/Me/Tickets/TicketPurchase/TicketPurchase";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -22,6 +23,9 @@ export const ClienteRoutes = () => {
       <Route path="verification" element={<GoogleVerification />} />
       <Route path="create-event" element={<CreateEvent />} />
       <Route path="ubicacion-evento" element={<UbicacionEvento />} />
+
+
+      <Route path="/ticket-purchase/:id" element={<TicketPurchase/>} />
     </Routes>
   );
 };
