@@ -19,7 +19,9 @@ export const Home = () => {
       <div className='my-4 mx-auto w-75 d-flex justify-content-around flex-wrap gap-3'>
         {
           datosPrueba.map((item) =>
-            <Card ubicacion={item.ubicacion}
+            <Card
+              id={1} 
+              ubicacion={item.ubicacion}
               titulo={item.titulo}
               dia={item.dia} />)
           // Este codigo es en JavaScript, es una iteracion
