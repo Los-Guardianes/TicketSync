@@ -1,6 +1,4 @@
 .buy-ticket{
-    width: 100vw;
-    height: 100vh;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -20,7 +18,7 @@
 }
 
 #buy-ticket-data h1{
-    color: #2EA062;
+    color: var(--primary-color);
 }
 
 #data_purchase{

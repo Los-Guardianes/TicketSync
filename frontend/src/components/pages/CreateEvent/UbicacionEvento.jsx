@@ -45,9 +45,6 @@ export const UbicacionEvento = () => {
 
   return (
     <>
-      <div className="top-bar">
-        <img src={logo} alt="Logo TuTicket" className="logo-bar-small" />
-      </div>
       <div className="ubicacion-evento-container">
         <div className="header">
           <span className="step">2</span>

@@ -1,5 +1,5 @@
 import { use, useEffect, useState } from 'react'
-import { Header } from '../../../../common/Header'
+import { Header } from '../../../../common/Header/Header'
 import { useParams } from 'react-router-dom'
 import "./TicketPurchase.css"
 import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
@@ -9,12 +9,14 @@ export const TicketPurchase = () => {
     
     const {id} = useParams();
     const [cantidadEntradas, setCantidadEntradas] = useState(1);
+    const [maximoEntradas, setMaximoEntradas] = useState(1);
     const [precio, setPrecio] = useState(0.0);
     const [comision, setComision] = useState(0);
     const [discount, setDiscount] = useState(0.0);
     const [total, setTotal] = useState(0.0);
 
     const [selectedZona, setSelectedZona] = useState("Seleccionar");
+    const [selectedTemporada, setSelectedTemporada] = useState("Seleccionar");
 
     const {
         formData,
@@ -22,12 +24,15 @@ export const TicketPurchase = () => {
         isLoading,
         message,
         zonas,
+        temporadas,
         handleInputChange,
-        fetchZonas
+        fetchZonas,
+        fetchTemporadas
     } = useTicketPurchase();
 
     useEffect(() => {
         fetchZonas();
+        fetchTemporadas();
     }, []);
 
 
@@ -71,7 +76,11 @@ export const TicketPurchase = () => {
                 setIsLoading(false);
             }
                 */
-        };
+    };
+
+    const addTicketToList = () => {
+
+    }
     // Lista de sectores por evento
 
     // Lista de temporada por evento
@@ -85,53 +94,9 @@ export const TicketPurchase = () => {
     // Verificar código
 
     // Funcion para obtener la comisión
-
-    /*
-    const [tipoTickets, setTipoTickets] = useState();
-    const [selectedTipoTicket, setSelectedTipoTicket] = useState("Seleccionar");
-
-    const [newTicket, setNewTicket] = useState({
-        tipoTicket: -1,
-        codigoCanje: "",
-        precioCalculado: 0
-    });
-
-    const {tipoTicket, codigoCanje, precioCalculado } = newTicket;
-
-    const [event, setEvent] = useState({
-        nombre: "",
-        descripcion: "",
-        informacionAdic: "",
-        imagen: "",
-        direccion: ""
-    });
-
-    const [tipoEntrada, setTipoEntrada] = useState({
-        nombre: "",
-        moneda: "",
-        precioBase: 0.0,
-        cantidad_maxima: 0
-    });
     
-    const [newDetalleCompra, setDetalleCompra] = useState({
-        cantidad: 0,
-        total: 0.0,
-        entradas: []
-    });
-    */
-
-    /*
-    useEffect(() => {
-        const getTipoTickets = async () => {
-            const data = await getTipoTickets();
-            setTipoTickets(data);
-        };
-        getTipoTickets();
-    }, []);
-    */
     return (
         <main className="buy-ticket">
-            <Header/>
             <div id="buy-ticket-data">
                 <h1>Comprar ticket</h1>
                 <section id="data_purchase">
@@ -228,26 +193,21 @@ export const TicketPurchase = () => {
                                     id="dropdownMenuButton"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                        Seleccionar
+                                        {selectedTemporada}
                                 </button>
-                            {/*
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {tipoTickets.map((itemTipo) => (
-                                        <li key={itemTipo.idTipo}>
-                                            <a className="dropdown-item" href="#"
-                                            onClick={() => {
-                                                setSelectedTipoTicket(itemTipo.nombre);
-                                                setDetalleCompra({
-                                                    ...newDetalleCompra,
-                                                    tipoTicket: { idTipo: itemTipo.idTipo }
-                                                });
-                                            }}>
-                                            {itemTipo.nombre}
+                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {temporadas.map((temporada) => (
+                                        <li key={temporada.id}>
+                                            <a 
+                                                className="dropdown-item" 
+                                                href="#"
+                                                onClick={() => setSelectedTemporada(temporada.nombre)}
+                                            >
+                                                {temporada.nombre}
                                             </a>
                                         </li>
-                                        ))}
+                                    ))}
                                 </ul>
-                             */}
                             </div>
                         </div>
                         <h2>Cantidad de entradas</h2>
@@ -256,12 +216,12 @@ export const TicketPurchase = () => {
                             <button 
                                 className='btn rounded-full' 
                                 style={{ background: "#EBF5EB", fontWeight: "700"}}
-                                onClick={incrementar}>+</button>
+                                onClick={decrementar}>-</button>
                             {cantidadEntradas}
                             <button 
                                 className='btn rounded-full' 
                                 style={{ background: "#EBF5EB", fontWeight: "700" }}
-                                onClick={decrementar}>-</button>
+                                onClick={incrementar}>+</button>
                         </div>
 
                     </li>
@@ -269,7 +229,12 @@ export const TicketPurchase = () => {
 
                 <section id="purchase_actions">
                     <button className='btn btn-secondary'>Regresar</button>
-                    <button className='btn btn-primary'>Agregar</button>
+                    <button 
+                        className='btn btn-primary'
+                        onClick={addTicketToList}
+                        >
+                            Agregar
+                    </button>
                 </section>
 
                 <hr></hr>
@@ -284,11 +249,13 @@ export const TicketPurchase = () => {
                     ):(
                     <div className="shopping-list">
                         {/* Aquí va tu lista dinámica de compras */}
+                        {/*
                         {detalleCompras.map(producto => (
                             <div key={producto.id} className="product-item">
                                 {producto.nombre} - ${producto.precio}
                             </div>
                         ))}
+                            */}
                     </div>
                     )}
                 </section>

@@ -69,9 +69,6 @@ export const CreateEvent = () => {
 
   return (
     <>
-      <div className="top-bar">
-        <img src={logo} alt="Logo TuTicket" className="logo-bar-small" />
-      </div>
       <div className="crear-evento-container">
       {/* Encabezado */}
       <div className="header">

@@ -1,5 +1,4 @@
 import React from 'react'
-import { NavBar } from '../../common/NavBar'
 import { Card } from './components/Card'
 import { PrimImage } from './components/PrimImage'
 
@@ -14,7 +13,6 @@ export const Home = () => {
 
   return (
     <>
-      <NavBar />
       <PrimImage />
       <div className='my-4 mx-auto w-75 d-flex justify-content-around flex-wrap gap-3'>
         {

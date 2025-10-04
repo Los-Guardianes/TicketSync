@@ -6,6 +6,7 @@ export const useTicketPurchase = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
     const [zonas, setZonas] = useState([]);
+    const [temporadas, setTemporadas] = useState([]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -37,6 +38,19 @@ export const useTicketPurchase = () => {
         }
     };
 
+    const fetchTemporadas = async () => {
+        try{
+            const response = await fetch();
+            if (!response.ok) {
+                throw new Error("Error al obtener las temporadas");
+            }
+            const dataTemporada = await response.json();
+            setTemporadas(dataTemporada);
+        } catch (error) {
+            console.error("Error", error); // Reemplazar por metodo de mensaje
+        }
+    };
+
 
 
     return {
@@ -45,7 +59,9 @@ export const useTicketPurchase = () => {
         isLoading,
         message,
         zonas,
+        temporadas,
         handleInputChange,
-        fetchZonas
+        fetchZonas,
+        fetchTemporadas
     };
 }
