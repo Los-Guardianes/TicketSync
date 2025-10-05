@@ -1,6 +1,5 @@
 package com.guardianes.TuTicket.servicioEventos.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "evento")
 public class Evento {
 
     @Id
@@ -50,12 +48,10 @@ public class Evento {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Ciudad ciudad;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private CatEvento categoria;
 
 

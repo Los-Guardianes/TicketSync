@@ -2,7 +2,6 @@ package com.guardianes.TuTicket.servicioPedidos.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
-import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,8 +33,5 @@ public class OrdenCompra {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "idFuncion", referencedColumnName = "idFuncion")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Funcion funcion;
+
 }

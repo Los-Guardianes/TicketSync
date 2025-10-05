@@ -8,10 +8,6 @@ export const Register = () => {
     const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
     const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
     const [ciudad, setCiudad] = useState([]);
-
-    // Fecha actual en formato YYYY-MM-DD
-    const today = new Date().toISOString().split("T")[0];
-
     const [newClient, setNewClient] = useState({
         nombre: "",
         apellido: "",
@@ -24,15 +20,13 @@ export const Register = () => {
             "idCiudad": null
         },
         dni: "",
-        rol: "cliente",
-        fechaNacimiento: today  
+        fechaNacimiento: "2000-05-15"
     });
 
-    // Para validar confirmación de contraseña
-    const [confirmPassword, setConfirmPassword] = useState("");
+    // Saco las variables importantes de nuevo cliente, aca se guardan los values de input
+    const { nombre, apellido, email, hashCtr, telefono, dni } = newClient;
 
-    const { nombre, apellido, email, hashCtr, telefono, dni, fechaNacimiento } = newClient;
-
+    // Al momento de iniciar la pagina (primera vez) se ejecuta el get de las ciudades
     useEffect(() => {
         const getCiudad = async () => {
             const data = await getCiudades();
@@ -48,61 +42,25 @@ export const Register = () => {
         setNewClient({ ...newClient, [name]: value });
     }
 
-    // Validaciones simples
-    const validar = () => {
-        const emailOk = /^\S+@\S+\.\S+$/.test((email || '').trim());
-        const dniOk = /^\d{8}$/.test((dni || '').trim());
-        const celOk = /^\d{9}$/.test((telefono || '').trim());
-        const passOk = (hashCtr || '').length >= 8;
-        const passMatch = hashCtr === confirmPassword;
-        const ciudadOk = !!newClient.ciudad.idCiudad;
-        const fechaOk = !!fechaNacimiento && fechaNacimiento <= today;
-
-        if (!(nombre || '').trim()) return 'El nombre es obligatorio.';
-        if (!(apellido || '').trim()) return 'El apellido es obligatorio.';
-        if (!emailOk) return 'Ingresa un correo válido.';
-        if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
-        if (!passMatch) return 'Las contraseñas no coinciden.';
-        if (!dniOk) return 'El DNI debe tener 8 dígitos.';
-        if (!celOk) return 'El celular debe tener 9 dígitos.';
-        if (!fechaOk) return 'Selecciona una fecha de nacimiento válida.';
-        if (!ciudadOk) return 'Debes seleccionar una ciudad.';
-        return null;
-    };
-
     const formCreateNewClient = async (event) => {
         event.preventDefault();
-
-        const error = validar();
-        if (error) {
-            alert(error);
+        // Aqui hago el fetch para hacer post
+        //Aquí deben ir validaciones
+            // Validación ciudad
+        if (!newClient.ciudad.idCiudad) {
+            alert("Debe seleccionar una ciudad");
             return;
         }
-
-        
-        const payload = {
-            nombre: (nombre || '').replace(/\s+/g, ' ').trim(),
-            apellido: (apellido || '').replace(/\s+/g, ' ').trim(),
-            email: (email || '').trim().toLowerCase(),
-            hashCtr, // el backend debe hashear
-            verificado: false,
-            telefono: (telefono || '').replace(/\D/g, ''), // solo dígitos
-            activo: true,
-            ciudad: { idCiudad: newClient.ciudad.idCiudad },
-            dni: (dni || '').replace(/\D/g, ''), // solo dígitos
-            rol: "cliente",
-            fechaNacimiento
-        };
-
         try {
-            await postClient(payload); // Llamo al service
+            await postClient(newClient); // Llamo al service
             alert("Cliente registrado correctamente");
             response("/home"); // Redirige al home
         } catch (error) {
             alert("Hubo un error: " + error.message);
         }
 
-        // Reset
+        // Vuelvo a colocar en blanco todos los 
+        // casilleros una vez que se envia el form
         setNewClient({
             nombre: "",
             apellido: "",
@@ -111,13 +69,12 @@ export const Register = () => {
             verificado: false,
             telefono: "",
             activo: true,
-            ciudad: { "idCiudad": null },
+            ciudad: {
+                "idCiudad": null
+            },
             dni: "",
-            rol: "cliente",
-            fechaNacimiento: today 
+            fechaNacimiento: "2000-05-15" //Cambiar, colocar un nuevo input
         });
-        setConfirmPassword("");
-        setSelectedCiudad("Seleccionar ciudad");
     }
 
     return (
@@ -166,9 +123,7 @@ export const Register = () => {
                                 <label htmlFor="inpConfirmPassword" className='col-3 text-start'>Confirmar contraseña</label>
                                 <input className='form-control border-0' type="password"
                                     id='inpConfirmPassword' placeholder='Confirme su contraseña'
-                                    style={{ background: "#EBF5EB" }}
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)} />
+                                    style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
                             </div>
                         </div>
                         <div className='row'>
@@ -185,23 +140,6 @@ export const Register = () => {
                                     value={telefono} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
                             </div>
                         </div>
-
-                        <div className='row'>
-                            <div className='col'>
-                                <label htmlFor="inpFechaNac" className='text-start'>Fecha de nacimiento</label>
-                                <input
-                                    className='form-control border-0'
-                                    type="date"
-                                    id='inpFechaNac'
-                                    name='fechaNacimiento'
-                                    value={fechaNacimiento}
-                                    max={today}
-                                    style={{ background: "#EBF5EB" }}
-                                    onChange={manejarNuevoUsuario}
-                                />
-                            </div>
-                        </div>
-
                         <div className='row d-flex align-items-center mt-2'>
                             <label htmlFor="inpCiudad" className="col-2 text-start">Ciudad</label>
                             <div className="col">
@@ -217,13 +155,13 @@ export const Register = () => {
                                         {ciudad.map((itemCiudad) => (
                                             <li key={itemCiudad.idCiudad}>
                                                 <a className="dropdown-item" href="#"
-                                                    onClick={() => {
-                                                        setSelectedCiudad(itemCiudad.nombre);
-                                                        setNewClient({
-                                                            ...newClient,
-                                                            ciudad: { idCiudad: itemCiudad.idCiudad }
-                                                        });
-                                                    }}>
+                                                onClick={() => {
+                                                    setSelectedCiudad(itemCiudad.nombre);
+                                                    setNewClient({
+                                                        ...newClient,
+                                                        ciudad: { idCiudad: itemCiudad.idCiudad }
+                                                    });
+                                                }}>
                                                     {itemCiudad.nombre}
                                                 </a>
                                             </li>
