@@ -1,0 +1,71 @@
+/* src/index.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+  position: relative;
+}
+
+:root {
+  --background-color: #f5f5f5;
+  --primary-color: #2EA062;
+  --primary-color-hover: #1e7a4f;
+  --secondary-color: #333333;
+  --secondary-color-hover: #5a6268;
+  --border-radius: 14px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 1);
+  --margin-top-header: 100px;
+}
+
+/* Tus estilos globales */
+.global-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.btn-primary:disabled {
+    background-color: var(--primary-color-hover);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color-hover);
+}
+
