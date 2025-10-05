@@ -1,0 +1,12 @@
+.header-general{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--margin-top-header);
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
+    background: white;
+    padding: 0 5%;
+}

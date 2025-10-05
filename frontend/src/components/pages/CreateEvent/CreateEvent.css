@@ -24,12 +24,6 @@
   padding: 32px 40px 24px 40px;
 }
 
-/* Encabezado */
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 32px;
-}
 .step {
   background: #219653;
   color: #fff;

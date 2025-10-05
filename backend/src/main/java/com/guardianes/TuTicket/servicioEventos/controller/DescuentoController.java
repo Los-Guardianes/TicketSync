@@ -54,14 +54,27 @@ public class DescuentoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
     // Eliminar un descuento
     @DeleteMapping("/descuento/{id}")
+    //api/descuento/1
     public ResponseEntity<?> deleteDescuento(@PathVariable Integer id) {
         try {
             service.deleteDescuento(id);
             return ResponseEntity.ok("Descuento eliminado");
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("descuento/verify")
+    /*FALTAN MÁS FUNCINOALIDADES DE VERIFICACIÓN (LIMITE POR USUARIO, LIMITE GLOBAL, ES GLOBAL, ETC)
+    Por ahora, si el nombre del código está bien, funciona bien.
+    /api/descuento/verify?nombre="CODIGO"
+     */
+    public ResponseEntity<?> verifyDescuento(@RequestParam String codigo){
+        try{
+            return ResponseEntity.ok(service.verificarCodigo(codigo));
+        }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

@@ -7,6 +7,8 @@ import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
 import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
+import { TicketPurchase } from "../components/pages/Me/Tickets/TicketPurchase/TicketPurchase";
+import Layout from "../components/Layout";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -14,14 +16,21 @@ export const ClienteRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
-      <Route path="home" element={<Home />} />
+
+      {/* SIN Layout */}
       <Route path="login" element={<Login />} />
       <Route path="/register" element={<RegisterOptions />} />
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
-      <Route path="create-event" element={<CreateEvent />} />
-      <Route path="ubicacion-evento" element={<UbicacionEvento />} />
+
+      {/* CON Layout - Rutas anidadas */}
+      <Route path="/*" element={<Layout />}>
+        <Route path="home" element={<Home />} />
+        <Route path="create-event" element={<CreateEvent />} />
+        <Route path="ubicacion-evento" element={<UbicacionEvento />} />
+        <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
+      </Route>
     </Routes>
   );
 };
