@@ -1,7 +1,7 @@
 import "./Login.css"
 import { useNavigate } from 'react-router-dom';
-import { useLogin } from './useLogin';
-import { loginService } from './loginService';
+import { useLogin } from '../../../services/useLogin';
+import { loginService } from '../../../services/loginService';
 
 export const Login = () => {
 
@@ -64,7 +64,7 @@ export const Login = () => {
     <>
       <div className='login-container'>
         <div className='login-form'>
-          <img className='login-logo' src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/tuticket_logo.png" alt="TuTicket Logo" />
+          <img className='login-logo' src="/tuticket_logo.png" alt="TuTicket Logo" />
           <h2>Iniciar sesión</h2>
           <form className="login-inputs" onSubmit={handleLogin}>
               <input 

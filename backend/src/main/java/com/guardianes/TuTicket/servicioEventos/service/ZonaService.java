@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import com.guardianes.TuTicket.servicioEventos.repo.ZonaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,11 @@ public class ZonaService {
 
     public void deleteZona(Integer id) {
         repo.deleteById(id);
+    }
+
+    public List<Zona> getZonasByEventId(Integer id_evento) {
+        Evento evento = new Evento();
+        evento.setIdEvento(id_evento);
+        return repo.findByEvento(evento);
     }
 }
