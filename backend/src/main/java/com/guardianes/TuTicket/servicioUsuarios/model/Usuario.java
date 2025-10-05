@@ -39,12 +39,8 @@ public class Usuario {
     @Column
     private Boolean activo = true;
 
-    @Column(nullable = false, length = 20)
-    private String rol;
-
     @ManyToOne
     @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Ciudad ciudad;
 
 }

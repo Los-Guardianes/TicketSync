@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "catevento")
 public class CatEvento {
 
     @Id

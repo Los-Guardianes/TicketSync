@@ -6,8 +6,8 @@ export const NavBar = () => {
     return (
         <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success d-flex justify-content-around'>
             <NavLink href="#" className='navbar-brand'>
-                <img src="/tuticket_logo_name.png"
-                    alt="tuticketLogo" style={{ width: "7rem" }} />
+                <img src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/tuticket_logo_name.png"
+                    alt="tuticketLogo" style={{ width: "5rem" }} />
             </NavLink>
             <ul className='navbar-nav'>
                 <li className='nav-item'>
