@@ -3,7 +3,7 @@ import { Header } from '../../../../common/Header/Header'
 import { useParams } from 'react-router-dom'
 import "./TicketPurchase.css"
 import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
-
+import { getEventosById } from '../../../../../services/EventoService';
 export const TicketPurchase = () => {
 
     
@@ -17,7 +17,7 @@ export const TicketPurchase = () => {
 
     const [selectedZona, setSelectedZona] = useState("Seleccionar");
     const [selectedTemporada, setSelectedTemporada] = useState("Seleccionar");
-
+    const [evento, setEvento] = useState(null); 
     const {
         formData,
         errors,
@@ -28,14 +28,22 @@ export const TicketPurchase = () => {
         handleInputChange,
         fetchZonas,
         fetchTemporadas
-    } = useTicketPurchase();
+    } = useTicketPurchase(id);
 
     useEffect(() => {
         fetchZonas();
         fetchTemporadas();
-    }, []);
+    }, [id]);
 
-
+ 
+    useEffect(() => {
+        const fetchEvento = async () => {
+            const data = await getEventosById(id);
+            setEvento(data);
+        };
+        fetchEvento();
+    }, [id]);
+    
 
     const incrementar = () => {
         setCantidadEntradas(prev => prev + 1);
@@ -262,9 +270,11 @@ export const TicketPurchase = () => {
             </div>
 
             <div id="info-event-ticket">
-                <h2>Nombre del evento:</h2>
+                <h2>{evento?.nombre || 'Cargando...'}</h2>
                 <img src="/tuticket_logo.png"/>
-                <hr></hr>
+                <hr>
+                    
+                </hr>
                 <ul>
                     <li>
                         <h3>Precio:</h3>

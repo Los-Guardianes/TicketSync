@@ -60,7 +60,15 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-	</dependencies>
+
+        <!-- Dependencia para el S3, de preferencia en futuro migrarlo a un microservicio independiente -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.773</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioUsuarios.controller;
 
+import com.guardianes.TuTicket.servicioUsuarios.DTO.LoginDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,16 @@ public class UsuarioController {
             return new ResponseEntity<>("Usuario eliminado", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO credenciales) {
+        try{
+            Usuario validado = service.validarCredenciales(credenciales);
+            return new ResponseEntity<>(validado, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 }
