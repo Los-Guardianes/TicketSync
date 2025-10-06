@@ -61,7 +61,7 @@ public class TemporadaController {
         }
     }
 
-    @GetMapping("temporada/zona/{id_evento}")
+    @GetMapping("temporada/evento/{id_evento}")
     public ResponseEntity<?> getTemporadasByEvent(@PathVariable Integer id_evento) {
         try{
             return ResponseEntity.ok(service.getTemporadasByEventId(id_evento));

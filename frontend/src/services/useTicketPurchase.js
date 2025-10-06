@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useTicketPurchase = () => {
+export const useTicketPurchase = (idevento) => {
     const [formData, setFormData] = useState({discount: ''});
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -23,10 +23,10 @@ export const useTicketPurchase = () => {
             }));
         }
     };
-
+    //Fetch de zonas por evento
     const fetchZonas = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/zona/evento/1");
+            const response = await fetch(`http://localhost:8080/api/zona/evento/${idevento}`);
             if (!response.ok) {
                 throw new Error("Error al obtener las zonas");
             }
@@ -37,10 +37,10 @@ export const useTicketPurchase = () => {
             console.error("Error:", error);
         }
     };
-
+    //Fetch de temporadas por evento
     const fetchTemporadas = async () => {
         try{
-            const response = await fetch();
+            const response = await fetch(`http://localhost:8080/api/temporada/evento/${idevento}`);
             if (!response.ok) {
                 throw new Error("Error al obtener las temporadas");
             }

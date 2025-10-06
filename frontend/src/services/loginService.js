@@ -1,37 +1,114 @@
-// Simulación de servicio de login
-export const loginService = {
-    // Simular login
-    login: async (email, password) => {
-        // Simular delay de red
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // En un caso real, aquí harías una petición a tu API
-        // Por ahora simulamos credenciales específicas
-        if (email === 'usuario@ejemplo.com' && password === '123456') {
-            return { 
-                success: true, 
-                message: '¡Inicio de sesión exitoso!',
-                user: {
-                    id: 1,
-                    name: 'Usuario Ejemplo',
-                    email: email
-                }
-            };
-        } else {
-            return { 
-                success: false, 
-                message: 'Correo o contraseña incorrectos. Intente de nuevo.' 
-            };
-        }
-    },
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext'; //Importa el hook de autenticación
+export const loginService = () => {
 
-    // Simular recuperación de contraseña
-    forgotPassword: async () => {
-        await new Promise(resolve => setTimeout(resolve, 1500));
+    const { login } = useAuth(); //Obtenemos la función login del contexto
+    // --- ESTADOS DEL FORMULARIO ---
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState({ text: '', type: '' });
+
+    // --- MANEJO DE INPUTS Y MENSAJES ---
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
         
-        return { 
-            success: true, 
-            message: 'Se ha enviado un enlace de recuperación a tu correo electrónico.' 
-        };
-    }
+        // Limpiar error del campo al empezar a escribir
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
+        }
+    };
+
+    const showMessage = (text, type = '') => {
+        setMessage({ text, type });
+    };
+
+    const clearMessage = () => {
+        setMessage({ text: '', type: '' });
+    };
+
+    // --- VALIDACIÓN DEL FORMULARIO ---
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!formData.email) {
+            newErrors.email = 'El correo electrónico es requerido';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = 'El correo electrónico no es válido';
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'La contraseña es requerida';
+        } else if (formData.password.length < 6) {
+            newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    // --- LÓGICA DE LOGIN CON FETCH (Anteriormente en loginService.js) ---
+    const handleLoginSubmit = async () => {
+        // 1. Validar el formulario antes de enviar
+        if (!validateForm()) {
+            return false; // Indica que el envío falló por validación
+        }
+
+        // 2. Iniciar estado de carga y limpiar mensajes previos
+        setIsLoading(true);
+        clearMessage();
+
+        try {
+            // 3. Realizar la petición a la API de PostgreSQL
+            const response = await fetch('http://localhost:8080/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
+
+            const result = await response.json();
+
+            // 4. Si la API responde con un error (ej: 401, 400)
+            if (!response.ok) {
+                showMessage(result.message || 'Correo o contraseña incorrectos.', 'error');
+                return false; // Indica que el login falló
+            }
+
+            // 5. Si la API responde con éxito
+            login(result);
+            showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
+                                // Aquí podrías guardar el token de sesión si la API lo devuelve:
+                                // localStorage.setItem('authToken', result.token);
+            console.log(result);
+            return true; // Indica que el login fue exitoso
+
+        // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+            // 6. Capturar errores de red o de la petición
+            showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
+            return false; // Indica que el login falló
+        } finally {
+            // 7. Detener el estado de carga
+            setIsLoading(false);
+        }
+    };
+    
+    // --- VALORES Y FUNCIONES RETORNADOS POR EL HOOK ---
+    return {
+        formData,
+        errors,
+        isLoading,
+        message,
+        handleInputChange,
+        handleLoginSubmit, // La nueva función que el componente usará para el submit
+    };
 };
