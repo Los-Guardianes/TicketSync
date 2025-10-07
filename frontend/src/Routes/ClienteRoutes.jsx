@@ -17,7 +17,7 @@ export const ClienteRoutes = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
 
-      {/* SIN Layout */}
+    
       <Route path="login" element={<Login />} />
       <Route path="/register" element={<RegisterOptions />} />
       <Route path="/register-client" element={<Register />} />
