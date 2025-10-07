@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'; //Importa el hook de login
 export const NavBar = () => {
     const { user, logout } = useAuth(); //Usuario y la función logout
-    // El to es el redirigimiento
     return (
         <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success d-flex justify-content-around'>
             <NavLink href="#" className='navbar-brand'>
