@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { useAuth } from "../context/AuthContext"
 export const useTicketPurchase = (idevento) => {
     const [formData, setFormData] = useState({discount: ''});
     const [errors, setErrors] = useState({});
@@ -7,7 +7,8 @@ export const useTicketPurchase = (idevento) => {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [zonas, setZonas] = useState([]);
     const [temporadas, setTemporadas] = useState([]);
-
+    const { user } = useAuth();
+    const token = user.bearer;
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -26,7 +27,14 @@ export const useTicketPurchase = (idevento) => {
     //Fetch de zonas por evento
     const fetchZonas = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/zona/evento/${idevento}`);
+            const response = await fetch(`http://localhost:8080/api/zona/evento/${idevento}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
             if (!response.ok) {
                 throw new Error("Error al obtener las zonas");
             }
@@ -40,7 +48,14 @@ export const useTicketPurchase = (idevento) => {
     //Fetch de temporadas por evento
     const fetchTemporadas = async () => {
         try{
-            const response = await fetch(`http://localhost:8080/api/temporada/evento/${idevento}`);
+            const response = await fetch(`http://localhost:8080/api/temporada/evento/${idevento}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
             if (!response.ok) {
                 throw new Error("Error al obtener las temporadas");
             }

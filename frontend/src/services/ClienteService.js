@@ -1,5 +1,5 @@
 const API_URL = "http://localhost:8080/api/cliente";
-
+import { useAuth } from "../context/AuthContext"
 export const postClient = async (cliente) => {
     try {
         const response = await fetch(API_URL, {
