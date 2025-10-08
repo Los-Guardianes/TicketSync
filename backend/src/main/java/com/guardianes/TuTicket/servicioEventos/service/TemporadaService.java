@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Temporada;
 import com.guardianes.TuTicket.servicioEventos.repo.TemporadaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,11 @@ public class TemporadaService {
 
     public void deleteTemporada(Integer id) {
         repo.deleteById(id);
+    }
+
+    public List<Temporada> getTemporadasByEventId(Integer idEvento) {
+        Evento e = new Evento();
+        e.setIdEvento(idEvento);
+        return repo.findByEvento(e);
     }
 }

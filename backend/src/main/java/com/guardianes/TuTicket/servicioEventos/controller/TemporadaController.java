@@ -60,4 +60,14 @@ public class TemporadaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("temporada/evento/{id_evento}")
+    public ResponseEntity<?> getTemporadasByEvent(@PathVariable Integer id_evento) {
+        try{
+            return ResponseEntity.ok(service.getTemporadasByEventId(id_evento));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }
