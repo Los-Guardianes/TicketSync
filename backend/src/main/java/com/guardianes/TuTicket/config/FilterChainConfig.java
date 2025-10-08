@@ -45,6 +45,7 @@ public class FilterChainConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Ojalá funcione xd
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()   // GET /api/evento también público
                         .anyRequest().authenticated()            // el resto requiere JWT
                 )
