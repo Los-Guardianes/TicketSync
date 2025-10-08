@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Card } from './components/Card'
 import { PrimImage } from './components/PrimImage'
 import { getEventos } from '../../../services/EventoService'
-
+//Luis come pene
 export const Home = () => {
   const [eventos, setEventos] = useState([])
 
