@@ -1,8 +1,10 @@
 package com.guardianes.TuTicket.servicioUsuarios.controller;
 
+import com.guardianes.TuTicket.servicioAutenticacion.service.AuthService;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.LoginDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService service;
+    private final UsuarioService service;
+    private final AuthService auth;
 
     @PostMapping("/usuario")
     public ResponseEntity<?> addUsuario(@RequestBody Usuario usuario) {
@@ -65,12 +68,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO credenciales) {
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         try{
-            Usuario validado = service.validarCredenciales(credenciales);
-            return new ResponseEntity<>(validado, HttpStatus.OK);
+            return ResponseEntity.ok(auth.verify(loginDTO));
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

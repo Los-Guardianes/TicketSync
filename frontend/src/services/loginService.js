@@ -51,19 +51,17 @@ export const loginService = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // --- LÓGICA DE LOGIN CON FETCH (Anteriormente en loginService.js) ---
+    // --- LÓGICA DE LOGIN CON FETCH (Anteriormente en loginService.js)
     const handleLoginSubmit = async () => {
         // 1. Validar el formulario antes de enviar
         if (!validateForm()) {
             return false; // Indica que el envío falló por validación
         }
-
-        // 2. Iniciar estado de carga y limpiar mensajes previos
+        //Iniciar estado de carga y limpiar mensajes previos
         setIsLoading(true);
         clearMessage();
 
         try {
-            // 3. Realizar la petición a la API de PostgreSQL
             const response = await fetch('http://localhost:8080/api/login', {
                 method: 'POST',
                 headers: {
@@ -74,30 +72,22 @@ export const loginService = () => {
                     password: formData.password,
                 }),
             });
-
             const result = await response.json();
-
-            // 4. Si la API responde con un error (ej: 401, 400)
             if (!response.ok) {
                 showMessage(result.message || 'Correo o contraseña incorrectos.', 'error');
                 return false; // Indica que el login falló
             }
-
-            // 5. Si la API responde con éxito
-            login(result);
+            login(result); //Se guarda en el AuthContext
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
-                                // Aquí podrías guardar el token de sesión si la API lo devuelve:
-                                // localStorage.setItem('authToken', result.token);
-            console.log(result);
-            return true; // Indica que el login fue exitoso
+            return true;
 
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
-            // 6. Capturar errores de red o de la petición
+            //Capturar errores de red o de la petición
             showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
             return false; // Indica que el login falló
         } finally {
-            // 7. Detener el estado de carga
+            //Detener el estado de carga
             setIsLoading(false);
         }
     };

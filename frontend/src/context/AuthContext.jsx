@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 
 import { createContext, useState, useContext, useEffect } from 'react';
 
@@ -10,7 +9,7 @@ export const useAuth = () => {
     return useContext(AuthContext);
 };
 
-// 2. Creamos el proveedor del contexto
+// Creamos el proveedor del contexto
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -26,11 +25,8 @@ export const AuthProvider = ({ children }) => {
     const login = (userData) => {
         // Guardamos el usuario en localStorage
         localStorage.setItem('user', JSON.stringify(userData));
-        // Actualizamos el estado del usuario
         setUser(userData);
     };
-
-    // Función para cerrar sesión
     const logout = () => {
         // Removemos el usuario de localStorage
         localStorage.removeItem('user');

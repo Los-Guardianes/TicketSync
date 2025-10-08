@@ -24,9 +24,7 @@ export const Login = () => {
         
         // Si el hook indica que el login fue exitoso, entonces navegamos
         if (loginSuccess) {
-            setTimeout(() => {
-                navigate('/');
-            }, 2000); // Redirigir tras 2 segundos
+            navigate('/');
         }
     };
 
