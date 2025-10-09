@@ -32,4 +32,6 @@ public class DetalleCompraService {
     public void deleteDetalleCompra(Integer id) {
         repo.deleteById(id);
     }
+
+    public List<DetalleCompra> getDetallesByOrdenCompra(Integer idOrdenCompra) { return repo.findByOrdenCompraIdOrdenCompra(idOrdenCompra); }
 }
