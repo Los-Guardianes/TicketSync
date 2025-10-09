@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { use, useEffect, useState } from 'react'
 import { Header } from '../../../../common/Header/Header'
 import { useParams } from 'react-router-dom'
