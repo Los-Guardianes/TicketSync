@@ -4,8 +4,6 @@ export const useTicketPurchase = (idevento) => {
 
     const [formData, setFormData] = useState({discount: ''});
     const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
     const [zonas, setZonas] = useState([]);
     const [temporadas, setTemporadas] = useState([]);
     const [evento, setEvento] = useState(null); 
