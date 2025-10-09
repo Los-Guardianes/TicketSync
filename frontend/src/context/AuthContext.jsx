@@ -1,45 +1,34 @@
 
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
-// 1. Creamos el contexto
-const AuthContext = createContext();
+const AuthContext = createContext(null);
+export const useAuth = () => useContext(AuthContext);
 
-// Hook personalizado para consumir el contexto fácilmente
-export const useAuth = () => {
-    return useContext(AuthContext);
+const readAuth = () => {
+  try { return JSON.parse(localStorage.getItem('auth')) || null; }
+  catch { return null; }
 };
 
-// Creamos el proveedor del contexto
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+  const [auth, setAuth] = useState(readAuth()); // { user, token, exp? }
 
-    // useEffect para cargar el usuario desde localStorage al iniciar la app
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
+  const login = (user, token, exp) => {
+    const payload = { user, token, exp };
+    localStorage.setItem('auth', JSON.stringify(payload));
+    setAuth(payload);
+  };
 
-    // Función para iniciar sesión
-    const login = (userData) => {
-        // Guardamos el usuario en localStorage
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
-    };
-    const logout = () => {
-        // Removemos el usuario de localStorage
-        localStorage.removeItem('user');
-        // Limpiamos el estado del usuario
-        setUser(null);
-    };
+  const logout = () => {
+    localStorage.removeItem('auth');
+    setAuth(null);
+  };
 
-    // El valor que proveeremos a los componentes hijos
-    const value = {
-        user,
-        login,
-        logout,
-    };
+  const value = useMemo(() => ({
+    user: auth?.user ?? null,
+    token: auth?.token ?? null,
+    isAuthenticated: Boolean(auth?.token),
+    login, logout,
+  }), [auth]);
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,8 +31,9 @@ public class FilterChainConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             //Para la página de registro y loginh
             "/api/login",
+             "/api/cliente",
             "/api/register",
-
+            "/api/organizador",
             //Para la página del home
             "/api/evento/**",
             "/api/zona/**",
@@ -41,11 +44,13 @@ public class FilterChainConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
+                .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Ojalá funcione xd
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()   // GET /api/evento también público
                         .anyRequest().authenticated()            // el resto requiere JWT
                 )
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

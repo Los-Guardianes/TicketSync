@@ -7,6 +7,7 @@ import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
 import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
+import { CreateTicket } from "../components/pages/CreateEvent/CreateTicket";
 import { TicketPurchase } from "../components/pages/Me/Tickets/TicketPurchase/TicketPurchase";
 import Layout from "../components/Layout";
 
@@ -23,12 +24,14 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+      
 
       {/* CON Layout - Rutas anidadas */}
       <Route path="/*" element={<Layout />}>
         <Route path="home" element={<Home />} />
         <Route path="create-event" element={<CreateEvent />} />
         <Route path="ubicacion-evento" element={<UbicacionEvento />} />
+        <Route path="create-ticket" element={<CreateTicket />} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
       </Route>
     </Routes>
