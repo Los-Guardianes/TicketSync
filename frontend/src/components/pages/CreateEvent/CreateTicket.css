@@ -1,3 +1,40 @@
+.header h2 {
+    color: #219653;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.funciones-section {
+    background: #eaf6ea;
+    border-radius: 8px;
+    padding: 18px 18px 10px 18px;
+    margin-bottom: 18px;
+}
+
+.funciones-header {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.eliminar-temporada {
+    color: #d32f2f;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+/* Contenedor principal */
+.crear-ticket-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 32px 40px 24px 40px;
+}
+
 /* Layout base */
 .fe-page {
     min-height: 100vh;
@@ -67,8 +104,10 @@
     gap: 8px;
     padding: 6px 10px;
     border-radius: 10px;
-    background: #eaf7ef;          /* verde muy claro */
-    color: #15803d;                /* verde */
+    background: #eaf7ef;
+    /* verde muy claro */
+    color: #15803d;
+    /* verde */
     font-weight: 600;
 }
 

@@ -175,7 +175,7 @@ export const UbicacionEvento = () => {
         </div>
         <div className="form-actions">
           <button type="button" className="cancel" onClick={() => navigate("/create-event")}>Regresar</button>
-          <button type="submit" className="next">Siguiente</button>
+          <button type="submit" className="next" onClick={() => navigate("/create-ticket")}>Siguiente</button>
         </div>
       </form>
     </div>
