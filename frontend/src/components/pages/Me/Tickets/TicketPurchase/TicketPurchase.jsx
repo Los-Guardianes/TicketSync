@@ -7,6 +7,10 @@ import { Zona } from '../../../../../models/Zona'
 import { Temporada } from '../../../../../models/Temporada'
 import { TipoEntrada } from '../../../../../models/TipoEntrada'
 import { DetalleCompra } from '../../../../../models/DetalleCompra'
+import { DropdownOptions } from './dropdownOptions'
+import { TicketQuantitySelector } from './ticketQuantitySelector'
+import { ShoppingDetails } from './ShoppingDetails'
+import { InfoEventTicket } from './InfoEventTicket'
 
 export const TicketPurchase = () => {
 
@@ -42,7 +46,6 @@ export const TicketPurchase = () => {
 
  
     useEffect(() => {
-
         fetchEvento();
         fetchZonas();
         fetchTemporadas();
@@ -59,10 +62,6 @@ export const TicketPurchase = () => {
     const handleDiscount = async (e) => {
         e.preventDefault();
     };
-    
-    const searchTipoEntrada = () => {
-        
-    }
 
     const agregarIncrementarDetalle = () => {
         const precioCalculadoLocal = selectedZona.tipoEntrada.precioBase * (1 - selectedTemporada.porcentajeDesc / 100);
@@ -74,37 +73,27 @@ export const TicketPurchase = () => {
             detalle.zona.idZona === selectedZona.idZona && 
             detalle.temporada.idTemporada === selectedTemporada.idTemporada
         );
-
-        console.log(indexExistente);
-
         if (indexExistente >= 0) {
-            // Incrementar cantidad del existente
             const nuevaLista = [...listaActual];
             const detalleExistente = nuevaLista[indexExistente];
             detalleExistente.precioDetalle += precioDetalleLocal;
             detalleExistente.cantidad += cantidadEntradas;
-            console.log(nuevaLista);
             setListaDetalles(nuevaLista);
         } else {
-            // Crear nuevo detalle
             const nuevoDetalle = new DetalleCompra(
                 selectedZona, 
                 selectedTemporada, 
                 precioDetalleLocal, 
                 cantidadEntradas
-            );
-            console.log([...listaActual, nuevoDetalle]);
+            );            
             setListaDetalles([...listaActual, nuevoDetalle]);
         }
 
         setTotalDetalle(totalDetalle+precioDetalleLocal);
-
         setMontoComision((comision/100)*(totalDetalle+precioDetalleLocal));
         setMontoFinal((1+comision/100)*(totalDetalle+precioDetalleLocal));
-
         setPrecioCalculado(precioCalculadoLocal);
         setPrecioDetalle(precioDetalleLocal);
-
         setSelectedZona(null);
         setSelectedTemporada(null);
         setCantidadEntradas(1);
@@ -116,34 +105,13 @@ export const TicketPurchase = () => {
                 <h1>Comprar ticket</h1>
                 <section id="data_purchase">
                     <div>                        
-                        <h2>Zona</h2>
-                        <div className="col">
-                            <div className="dropdown">
-                                <button 
-                                    className="btn btn-light dropdown-toggle"
-                                    style={{ background: "#EBF5EB" }}
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    {selectedZona ? selectedZona.nombre : "Seleccionar"}
-                                </button>
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {zonas.map((zona) => (
-                                        <li key={zona.id}>
-                                            <a 
-                                                className="dropdown-item" 
-                                                href="#"
-                                                onClick={() => setSelectedZona(zona)}
-                                            >
-                                                {zona.nombre} (${zona.tipoEntrada.precioBase})
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                        <h2>Zona</h2>                        
+                        <DropdownOptions                        
+                            options={zonas}
+                            setSelectedOption={setSelectedZona}
+                            selectedOption={selectedZona}    
+                            price={selectedZona?.tipoEntrada?.precioBase}
+                        />
                         <h2>Canjear código</h2>
                         <form onSubmit={handleDiscount}>
                             <input 
@@ -164,55 +132,25 @@ export const TicketPurchase = () => {
                             </button>
                         </form>
                         {errors.discount && <div className="error-form">{errors.discount}</div>}
-                    </div>
-                
+                    </div>                
                     <div>
                         <h2>Temporada</h2>
-                        {/*Dropdown de Zona */}
-                        <div className="col">
-                            <div className="dropdown">
-                            
-                                <button className="btn btn-light dropdown-toggle " style={{ background: "#EBF5EB" }}
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                        {selectedTemporada ? selectedTemporada.nombre : "Seleccionar"}
-                                </button>
-                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {temporadas.map((temporada) => (
-                                        <li key={temporada.id}>
-                                            <a 
-                                                className="dropdown-item" 
-                                                href="#"
-                                                onClick={() => setSelectedTemporada(temporada)}
-                                            >
-                                                {temporada.nombre}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                        {selectedZona != "Seleccionar" ? (
-                            <>
-                            <h2>Cantidad de entradas</h2>
-                            <div>
-                                <button 
-                                    className='btn rounded-full' 
-                                    style={{ background: "#EBF5EB", fontWeight: "700"}}
-                                    onClick={decrementar}>-</button>
-                                {cantidadEntradas}
-                                <button 
-                                    className='btn rounded-full' 
-                                    style={{ background: "#EBF5EB", fontWeight: "700" }}
-                                    onClick={incrementar}>+</button>
-                            </div>
-                        </>
-                        ):(<></>)}
+                        <DropdownOptions                        
+                            options={temporadas}
+                            setSelectedOption={setSelectedTemporada}
+                            selectedOption={selectedTemporada}
+                        />
+                        {selectedZona ? (
+                            <TicketQuantitySelector
+                                cantidadEntradas={cantidadEntradas}
+                                incrementar={incrementar}
+                                decrementar={decrementar}
+                            >
+                                <h2>Cantidad de entradas</h2>
+                            </TicketQuantitySelector>                        
+                        ) : null}
                     </div>
                 </section>
-
                 <section id="purchase_actions">
                     <button className='btn btn-secondary'>Regresar</button>
                     <button 
@@ -222,69 +160,28 @@ export const TicketPurchase = () => {
                         Agregar
                     </button>
                 </section>
-
                 <section id="list_purchase">
-                    {totalDetalle === 0 ? (
-                        <div className="empty-state">
-                            <img src="/tuticket_logo_name.png" alt="Carrito vacío" />
-                            <p>Agregue entradas</p>
-                        </div>
-                    ):(
-                    <div className="shopping-list">
-                        {/* Aquí va tu lista dinámica de compras */}
-                        {listaDetalles.map((detalle,index) => (
-                            <div key={index} className={`entrada-card`}>
-                                <div className="entrada-header">
-                                    <h3>{detalle.zona.nombre}</h3>
-                                    <span>
-                                        {detalle.temporada.nombre}
-                                    </span>
-                                </div>
-                                
-                                <div className="entrada-details">
-                                    <div className="detail-row">
-                                        <span>Cantidad:</span>
-                                        <strong>{detalle.GetCantidad()}</strong>
-                                    </div>
-                                    <div className="detail-row">
-                                        <span>Precio:</span>
-                                        <span>${detalle.GetPrecioDetalle()}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    )}
+                    <ShoppingDetails 
+                        totalDetalle={totalDetalle}
+                        listaDetalles={listaDetalles}
+                    />
                 </section>
             </div>
-
-            <div id="info-event-ticket">
-                <h2>{evento?.nombre || 'Cargando...'}</h2>
-                <img src="/tuticket_logo.png"/>
-                <ul>
-                    <li>
-                        <h3>Total detalles:</h3>
-                        <p>S/ {totalDetalle}</p>
-                        
-                    </li>
-                    <li>
-                        <h3>Descuento:</h3>
-                        <p>S/ {montoDescuento}</p>
-                        
-                    </li>
-                    <li>
-                        <h3>Comisión:</h3>
-                        <p>S/ {montoComision}</p>                        
-                    </li>
-                    <li>
-                        <h3>Monto Final</h3>
-                        <p>S/ {montoFinal}</p>                        
-                    </li>
-                </ul>
-                <button 
-                    className='btn btn-primary'
-                    >Pagar</button>
-            </div>
+            <section id="info-event-ticket">
+                <InfoEventTicket 
+                    evento={evento}
+                    totalDetalle={totalDetalle}
+                    montoDescuento={montoDescuento}
+                    montoComision={montoComision}
+                    montoFinal={montoFinal}
+                />
+            </section>
+            
+            <button 
+                className='btn btn-primary'
+            >
+                Pagar
+            </button>
         </main>
     )
 }
