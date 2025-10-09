@@ -56,8 +56,6 @@ export const useTicketPurchase = (idevento) => {
     return {
         formData,
         errors,
-        isLoading,
-        message,
         zonas,
         temporadas,
         evento,
