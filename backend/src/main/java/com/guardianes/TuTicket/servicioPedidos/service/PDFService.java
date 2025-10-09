@@ -1,5 +1,9 @@
 package com.guardianes.TuTicket.servicioPedidos.service;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioPedidos.repo.OrdenCompraRepo;
@@ -28,6 +32,13 @@ public class PDFService {
 
     @Autowired
     private DetalleCompraService dcService;
+
+    public Image generarQR(String contenido) throws Exception {
+        BitMatrix matrix = new MultiFormatWriter().encode(contenido, BarcodeFormat.QR_CODE, 100, 100);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(matrix, "PNG", baos);
+        return Image.getInstance(baos.toByteArray());
+    }
 
     public byte[] generarComprobantePDF(OrdenCompra orden) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -71,6 +82,38 @@ public class PDFService {
         fechaParrafo.setAlignment(Element.ALIGN_RIGHT);
         document.add(new Paragraph(" "));
         document.add(fechaParrafo);
+
+        document.close();
+        return baos.toByteArray();
+    }
+
+    public byte[] generarTicketPDF(String codigoTicket) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Rectangle ticketSize = new Rectangle(300, 200); // tamaño compacto
+        Document document = new Document(ticketSize);
+        PdfWriter.getInstance(document, baos);
+        document.open();
+
+        Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+        logo.scaleToFit(60, 60);
+        logo.setAlignment(Image.ALIGN_CENTER);
+        document.add(logo);
+
+        // Título del evento
+        Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+        Paragraph titulo = new Paragraph("Entrada para: Concierto XYZ", tituloFont);
+        titulo.setAlignment(Element.ALIGN_CENTER);
+        document.add(titulo);
+
+        // Datos del ticket
+        document.add(new Paragraph("Nombre: Juan Pérez"));
+        document.add(new Paragraph("Zona: VIP"));
+        document.add(new Paragraph("Código: " + codigoTicket));
+
+        // Código QR
+        Image qr = generarQR(codigoTicket);
+        qr.setAlignment(Image.ALIGN_CENTER);
+        document.add(qr);
 
         document.close();
         return baos.toByteArray();

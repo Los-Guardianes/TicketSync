@@ -38,7 +38,8 @@ public class FilterChainConfig {
             "/api/evento/**",
             "/api/zona/**",
             "/api/ciudad/**",
-            "/api/comp/**"
+            "/api/comp/**",
+            "/api/miticket/**"
     };
 
     @Bean
