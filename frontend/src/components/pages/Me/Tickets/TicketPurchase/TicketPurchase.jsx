@@ -3,7 +3,7 @@ import { Header } from '../../../../common/Header/Header'
 import { useParams } from 'react-router-dom'
 import "./TicketPurchase.css"
 import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
-import { getEventosById } from '../../../../../services/EventoService';
+
 export const TicketPurchase = () => {
 
     
@@ -17,7 +17,7 @@ export const TicketPurchase = () => {
 
     const [selectedZona, setSelectedZona] = useState("Seleccionar");
     const [selectedTemporada, setSelectedTemporada] = useState("Seleccionar");
-    const [evento, setEvento] = useState(null); 
+
     const {
         formData,
         errors,
@@ -25,23 +25,18 @@ export const TicketPurchase = () => {
         message,
         zonas,
         temporadas,
+        evento,
         handleInputChange,
         fetchZonas,
-        fetchTemporadas
+        fetchTemporadas,
+        fetchEvento
     } = useTicketPurchase(id);
-
-    useEffect(() => {
-        fetchZonas();
-        fetchTemporadas();
-    }, [id]);
 
  
     useEffect(() => {
-        const fetchEvento = async () => {
-            const data = await getEventosById(id);
-            setEvento(data);
-        };
         fetchEvento();
+        fetchZonas();
+        fetchTemporadas();
     }, [id]);
     
 
@@ -108,38 +103,7 @@ export const TicketPurchase = () => {
             <div id="buy-ticket-data">
                 <h1>Comprar ticket</h1>
                 <section id="data_purchase">
-                    <li>
-                        <h2>Tipo de ticket</h2>
-                        <div className="col">
-                            <div className="dropdown">
-                            
-                                <button className="btn btn-light dropdown-toggle " style={{ background: "#EBF5EB" }}
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                        Seleccionar
-                                </button>
-                            {/*
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {tipoTickets.map((itemTipo) => (
-                                        <li key={itemTipo.idTipo}>
-                                            <a className="dropdown-item" href="#"
-                                            onClick={() => {
-                                                setSelectedTipoTicket(itemTipo.nombre);
-                                                setDetalleCompra({
-                                                    ...newDetalleCompra,
-                                                    tipoTicket: { idTipo: itemTipo.idTipo }
-                                                });
-                                            }}>
-                                            {itemTipo.nombre}
-                                            </a>
-                                        </li>
-                                        ))}
-                                </ul>
-                             */}
-                            </div>
-                        </div>
+                    <div>                        
                         <h2>Zona</h2>
                         <div className="col">
                             <div className="dropdown">
@@ -188,9 +152,9 @@ export const TicketPurchase = () => {
                             </button>
                         </form>
                         {errors.discount && <div className="error-form">{errors.discount}</div>}
-                    </li>
+                    </div>
                 
-                    <li>
+                    <div>
                         <h2>Temporada</h2>
                         {/*Dropdown de Zona */}
                         <div className="col">
@@ -219,7 +183,6 @@ export const TicketPurchase = () => {
                             </div>
                         </div>
                         <h2>Cantidad de entradas</h2>
-                        {/* */}
                         <div>
                             <button 
                                 className='btn rounded-full' 
@@ -231,8 +194,7 @@ export const TicketPurchase = () => {
                                 style={{ background: "#EBF5EB", fontWeight: "700" }}
                                 onClick={incrementar}>+</button>
                         </div>
-
-                    </li>
+                    </div>
                 </section>
 
                 <section id="purchase_actions">
@@ -240,15 +202,11 @@ export const TicketPurchase = () => {
                     <button 
                         className='btn btn-primary'
                         onClick={addTicketToList}
-                        >
-                            Agregar
+                    >
+                        Agregar
                     </button>
                 </section>
-
-                <hr></hr>
-                
                 <section id="list_purchase">
-                    {/* Conteniene lo agregado */}
                     {total === 0 ? (
                         <div className="empty-state">
                             <img src="/tuticket_logo_name.png" alt="Carrito vacío" />
@@ -272,32 +230,24 @@ export const TicketPurchase = () => {
             <div id="info-event-ticket">
                 <h2>{evento?.nombre || 'Cargando...'}</h2>
                 <img src="/tuticket_logo.png"/>
-                <hr>
-                    
-                </hr>
                 <ul>
                     <li>
                         <h3>Precio:</h3>
-                        <p>S/ </p>
-                        {precio}
+                        <p>S/ {precio}</p>
+                        
                     </li>
-
                     <li>
                         <h3>Comisión:</h3>
-                        <p>S/ </p>
-                        {comision}
+                        <p>S/ {comision}</p>                        
                     </li>
-
                     <li>
                         <h3>Descuento:</h3>
-                        <p>S/ </p>
-                        {discount}
+                        <p>S/ {discount}</p>
+                        
                     </li>
-
                     <li>
                         <h3>TOTAL</h3>
-                        <p>S/ </p>
-                        {total}
+                        <p>S/ {total}</p>                        
                     </li>
                 </ul>
                 
