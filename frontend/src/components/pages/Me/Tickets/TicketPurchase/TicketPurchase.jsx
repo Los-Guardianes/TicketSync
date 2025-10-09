@@ -3,20 +3,28 @@ import { Header } from '../../../../common/Header/Header'
 import { useParams } from 'react-router-dom'
 import "./TicketPurchase.css"
 import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
+import { Zona } from '../../../../../models/Zona'
+import { Temporada } from '../../../../../models/Temporada'
+import { TipoEntrada } from '../../../../../models/TipoEntrada'
+import { DetalleCompra } from '../../../../../models/DetalleCompra'
 
 export const TicketPurchase = () => {
 
-    
     const {id} = useParams();
     const [cantidadEntradas, setCantidadEntradas] = useState(1);
-    const [maximoEntradas, setMaximoEntradas] = useState(1);
-    const [precio, setPrecio] = useState(0.0);
-    const [comision, setComision] = useState(0);
+    const [maximoEntradas, setMaximoEntradas] = useState(5);
+    const [precioCalculado, setPrecioCalculado] = useState(0.0);
+    const [precioDetalle, setPrecioDetalle] = useState(0.0);
     const [discount, setDiscount] = useState(0.0);
-    const [total, setTotal] = useState(0.0);
+    const [montoDescuento, setMontoDescuento] = useState(0.0);
+    const [comision, setComision] = useState(10);
+    const [montoComision, setMontoComision] = useState(0.0);
+    const [totalDetalle, setTotalDetalle] = useState(0.0);
+    const [montoFinal, setMontoFinal] = useState(0.0);
+    const [listaDetalles, setListaDetalles] = useState([]);
 
-    const [selectedZona, setSelectedZona] = useState("Seleccionar");
-    const [selectedTemporada, setSelectedTemporada] = useState("Seleccionar");
+    const [selectedZona, setSelectedZona] = useState(null);
+    const [selectedTemporada, setSelectedTemporada] = useState(null);
 
     const {
         formData,
@@ -29,19 +37,19 @@ export const TicketPurchase = () => {
         handleInputChange,
         fetchZonas,
         fetchTemporadas,
-        fetchEvento
+        fetchEvento,
     } = useTicketPurchase(id);
 
  
     useEffect(() => {
+
         fetchEvento();
         fetchZonas();
         fetchTemporadas();
     }, [id]);
     
-
     const incrementar = () => {
-        setCantidadEntradas(prev => prev + 1);
+        if (cantidadEntradas < maximoEntradas)setCantidadEntradas(prev => prev + 1);
     };
 
     const decrementar = () => {
@@ -49,54 +57,58 @@ export const TicketPurchase = () => {
     };
 
     const handleDiscount = async (e) => {
-            e.preventDefault();
-            
-            /*
-            if (!validateForm()) {
-                return;
-            }
-    
-            setIsLoading(true);
-            clearMessage();
-    
-            try {
-                const result = await loginService.login(formData.email, formData.password);
-                
-                if (result.success) {
-                    showMessage(result.message, 'success');
-                    
-                    // Redirigir a la página principal después de 2 segundos
-                    setTimeout(() => {
-                        navigate('/');
-                    }, 2000);
-                } else {
-                    showMessage(result.message, 'error');
-                }
-            // eslint-disable-next-line no-unused-vars
-            } catch (e) {
-                showMessage('Error al iniciar sesión. Por favor, intenta nuevamente.', 'error');
-            } finally {
-                setIsLoading(false);
-            }
-                */
+        e.preventDefault();
     };
-
-    const addTicketToList = () => {
-
+    
+    const searchTipoEntrada = () => {
+        
     }
-    // Lista de sectores por evento
 
-    // Lista de temporada por evento
+    const agregarIncrementarDetalle = () => {
+        const precioCalculadoLocal = selectedZona.tipoEntrada.precioBase * (1 - selectedTemporada.porcentajeDesc / 100);
+        const precioDetalleLocal = precioCalculadoLocal * cantidadEntradas;
 
-    // Lista de entradas por sector
+        const listaActual = listaDetalles;
 
-    // Maximo de entradas general
+        const indexExistente = listaActual.findIndex(detalle => 
+            detalle.zona.idZona === selectedZona.idZona && 
+            detalle.temporada.idTemporada === selectedTemporada.idTemporada
+        );
 
-    // Maximo de entradas por entrada
+        console.log(indexExistente);
 
-    // Verificar código
+        if (indexExistente >= 0) {
+            // Incrementar cantidad del existente
+            const nuevaLista = [...listaActual];
+            const detalleExistente = nuevaLista[indexExistente];
+            detalleExistente.precioDetalle += precioDetalleLocal;
+            detalleExistente.cantidad += cantidadEntradas;
+            console.log(nuevaLista);
+            setListaDetalles(nuevaLista);
+        } else {
+            // Crear nuevo detalle
+            const nuevoDetalle = new DetalleCompra(
+                selectedZona, 
+                selectedTemporada, 
+                precioDetalleLocal, 
+                cantidadEntradas
+            );
+            console.log([...listaActual, nuevoDetalle]);
+            setListaDetalles([...listaActual, nuevoDetalle]);
+        }
 
-    // Funcion para obtener la comisión
+        setTotalDetalle(totalDetalle+precioDetalleLocal);
+
+        setMontoComision((comision/100)*(totalDetalle+precioDetalleLocal));
+        setMontoFinal((1+comision/100)*(totalDetalle+precioDetalleLocal));
+
+        setPrecioCalculado(precioCalculadoLocal);
+        setPrecioDetalle(precioDetalleLocal);
+
+        setSelectedZona(null);
+        setSelectedTemporada(null);
+        setCantidadEntradas(1);
+    };
     
     return (
         <main className="buy-ticket">
@@ -115,7 +127,7 @@ export const TicketPurchase = () => {
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
-                                    {selectedZona}
+                                    {selectedZona ? selectedZona.nombre : "Seleccionar"}
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {zonas.map((zona) => (
@@ -123,9 +135,9 @@ export const TicketPurchase = () => {
                                             <a 
                                                 className="dropdown-item" 
                                                 href="#"
-                                                onClick={() => setSelectedZona(zona.nombre)}
+                                                onClick={() => setSelectedZona(zona)}
                                             >
-                                                {zona.nombre}
+                                                {zona.nombre} (${zona.tipoEntrada.precioBase})
                                             </a>
                                         </li>
                                     ))}
@@ -165,7 +177,7 @@ export const TicketPurchase = () => {
                                     id="dropdownMenuButton"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                        {selectedTemporada}
+                                        {selectedTemporada ? selectedTemporada.nombre : "Seleccionar"}
                                 </button>
                                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {temporadas.map((temporada) => (
@@ -173,7 +185,7 @@ export const TicketPurchase = () => {
                                             <a 
                                                 className="dropdown-item" 
                                                 href="#"
-                                                onClick={() => setSelectedTemporada(temporada.nombre)}
+                                                onClick={() => setSelectedTemporada(temporada)}
                                             >
                                                 {temporada.nombre}
                                             </a>
@@ -182,18 +194,22 @@ export const TicketPurchase = () => {
                                 </ul>
                             </div>
                         </div>
-                        <h2>Cantidad de entradas</h2>
-                        <div>
-                            <button 
-                                className='btn rounded-full' 
-                                style={{ background: "#EBF5EB", fontWeight: "700"}}
-                                onClick={decrementar}>-</button>
-                            {cantidadEntradas}
-                            <button 
-                                className='btn rounded-full' 
-                                style={{ background: "#EBF5EB", fontWeight: "700" }}
-                                onClick={incrementar}>+</button>
-                        </div>
+                        {selectedZona != "Seleccionar" ? (
+                            <>
+                            <h2>Cantidad de entradas</h2>
+                            <div>
+                                <button 
+                                    className='btn rounded-full' 
+                                    style={{ background: "#EBF5EB", fontWeight: "700"}}
+                                    onClick={decrementar}>-</button>
+                                {cantidadEntradas}
+                                <button 
+                                    className='btn rounded-full' 
+                                    style={{ background: "#EBF5EB", fontWeight: "700" }}
+                                    onClick={incrementar}>+</button>
+                            </div>
+                        </>
+                        ):(<></>)}
                     </div>
                 </section>
 
@@ -201,13 +217,14 @@ export const TicketPurchase = () => {
                     <button className='btn btn-secondary'>Regresar</button>
                     <button 
                         className='btn btn-primary'
-                        onClick={addTicketToList}
+                        onClick={agregarIncrementarDetalle}
                     >
                         Agregar
                     </button>
                 </section>
+
                 <section id="list_purchase">
-                    {total === 0 ? (
+                    {totalDetalle === 0 ? (
                         <div className="empty-state">
                             <img src="/tuticket_logo_name.png" alt="Carrito vacío" />
                             <p>Agregue entradas</p>
@@ -215,13 +232,27 @@ export const TicketPurchase = () => {
                     ):(
                     <div className="shopping-list">
                         {/* Aquí va tu lista dinámica de compras */}
-                        {/*
-                        {detalleCompras.map(producto => (
-                            <div key={producto.id} className="product-item">
-                                {producto.nombre} - ${producto.precio}
+                        {listaDetalles.map((detalle,index) => (
+                            <div key={index} className={`entrada-card`}>
+                                <div className="entrada-header">
+                                    <h3>{detalle.zona.nombre}</h3>
+                                    <span>
+                                        {detalle.temporada.nombre}
+                                    </span>
+                                </div>
+                                
+                                <div className="entrada-details">
+                                    <div className="detail-row">
+                                        <span>Cantidad:</span>
+                                        <strong>{detalle.GetCantidad()}</strong>
+                                    </div>
+                                    <div className="detail-row">
+                                        <span>Precio:</span>
+                                        <span>${detalle.GetPrecioDetalle()}</span>
+                                    </div>
+                                </div>
                             </div>
                         ))}
-                            */}
                     </div>
                     )}
                 </section>
@@ -232,25 +263,27 @@ export const TicketPurchase = () => {
                 <img src="/tuticket_logo.png"/>
                 <ul>
                     <li>
-                        <h3>Precio:</h3>
-                        <p>S/ {precio}</p>
+                        <h3>Total detalles:</h3>
+                        <p>S/ {totalDetalle}</p>
+                        
+                    </li>
+                    <li>
+                        <h3>Descuento:</h3>
+                        <p>S/ {montoDescuento}</p>
                         
                     </li>
                     <li>
                         <h3>Comisión:</h3>
-                        <p>S/ {comision}</p>                        
+                        <p>S/ {montoComision}</p>                        
                     </li>
                     <li>
-                        <h3>Descuento:</h3>
-                        <p>S/ {discount}</p>
-                        
-                    </li>
-                    <li>
-                        <h3>TOTAL</h3>
-                        <p>S/ {total}</p>                        
+                        <h3>Monto Final</h3>
+                        <p>S/ {montoFinal}</p>                        
                     </li>
                 </ul>
-                
+                <button 
+                    className='btn btn-primary'
+                    >Pagar</button>
             </div>
         </main>
     )

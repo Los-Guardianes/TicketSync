@@ -55,8 +55,6 @@ export const useTicketPurchase = (idevento) => {
         }
     };
 
-
-
     return {
         formData,
         errors,
@@ -68,6 +66,6 @@ export const useTicketPurchase = (idevento) => {
         handleInputChange,
         fetchZonas,
         fetchTemporadas,
-        fetchEvento
+        fetchEvento,
     };
 }
