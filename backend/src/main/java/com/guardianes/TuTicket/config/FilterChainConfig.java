@@ -38,6 +38,7 @@ public class FilterChainConfig {
             "/api/evento/**",
             "/api/zona/**",
             "/api/ciudad/**",
+            "/api/dpto/**"
             "/api/temporada/**",
             "/api/funcion/**"
     };

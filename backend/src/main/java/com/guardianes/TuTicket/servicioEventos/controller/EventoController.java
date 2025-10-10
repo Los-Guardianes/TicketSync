@@ -1,6 +1,8 @@
 package com.guardianes.TuTicket.servicioEventos.controller;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
+import com.guardianes.TuTicket.servicioEventos.service.EventoCompletoService;
 import com.guardianes.TuTicket.servicioEventos.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,4 +62,21 @@ public class EventoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    // Experimento, funcionará?
+    @Autowired
+    private EventoCompletoService eventoCompletoService; //Nuevo servicio
+
+    @PostMapping("/evento/completo")
+    public ResponseEntity<?> addEventoCompleto(@RequestBody EventoCompletoDTO eventoCompletoDTO) {
+        try {
+            Evento nuevoEvento = eventoCompletoService.crearEventoCompleto(eventoCompletoDTO);
+            return new ResponseEntity<>(nuevoEvento, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Es bueno loggear el error para depuración
+            // logger.error("Error al crear evento completo: ", e);
+            return new ResponseEntity<>("Error en el servidor: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

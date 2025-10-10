@@ -319,3 +319,32 @@
     font-size: 12px;
     color: #6b7280;
 }
+
+/* En CreateTicket.css */
+
+.funciones-section .funcion-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas de igual tamaño */
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #eaf7ef; /* El fondo verde claro */
+    border-radius: 8px;
+}
+
+.funciones-section .entrada-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas de igual tamaño */
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #eaf7ef; /* El fondo verde claro */
+    border-radius: 8px;
+}
+
+.entrada-grid .grid-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.entrada-grid .descripcion {
+    grid-column: span 3; /* La descripción ocupa las 3 columnas */
+}
