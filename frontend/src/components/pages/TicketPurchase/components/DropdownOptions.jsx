@@ -1,6 +1,18 @@
-export const DropdownOptions = ({ options = [], setSelectedOption, selectedOption, price}) => {
-
+export const DropdownOptions = ({ 
+        options = [], 
+        setSelectedOption, 
+        selectedOption, 
+        price,
+        nombre = "nombre"
+    }) => {
+        
+    const getNombre = (option) => {
+        return option[nombre] || "";
+    }
     return (
+
+ 
+
         <div className="col">
             <div className="dropdown">
                 <button
@@ -11,7 +23,7 @@ export const DropdownOptions = ({ options = [], setSelectedOption, selectedOptio
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                 >
-                    {selectedOption ? selectedOption.nombre : "Seleccionar"}
+                    {selectedOption ? getNombre(selectedOption) : "Seleccionar"}
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {options.map((option, index) => (
@@ -21,7 +33,7 @@ export const DropdownOptions = ({ options = [], setSelectedOption, selectedOptio
                                 type="button"
                                 onClick={() => setSelectedOption(option)}
                             >
-                                {option.nombre}                                                     
+                                {getNombre(option)}                                                     
                                 {price !== undefined && (
                                     <> — ${price}</>
                                 )}

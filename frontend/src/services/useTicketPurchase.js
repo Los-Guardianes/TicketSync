@@ -12,10 +12,10 @@ export const useTicketPurchase = (idevento) => {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [zonas, setZonas] = useState([]);
     const [temporadas, setTemporadas] = useState([]);
+    const [funciones, setFunciones] = useState([]);
     const [evento, setEvento] = useState(null); 
+    
 
-    const { user } = useAuth();
-    const token = user.bearer;
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -45,6 +45,12 @@ export const useTicketPurchase = (idevento) => {
         setTemporadas(data || []);
     };
 
+    const fetchFunciones = async () => {
+        const data = await apiFetch(`/api/funcion/evento/${idevento}`);
+        console.log(data);
+        setFunciones(data || []);
+    }
+
     return {
         formData,
         errors,
@@ -53,9 +59,11 @@ export const useTicketPurchase = (idevento) => {
         zonas,
         temporadas,
         evento,
+        funciones,
         handleInputChange,
         fetchZonas,
         fetchTemporadas,
         fetchEvento,
+        fetchFunciones
     };
 }

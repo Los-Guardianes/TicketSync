@@ -26,6 +26,8 @@ export const TicketPurchase = () => {
 
     const [selectedZona, setSelectedZona] = useState(null);
     const [selectedTemporada, setSelectedTemporada] = useState(null);
+    const [selectedFuncion, setSelectedFuncion] = useState(null);
+
     const navigate = useNavigate();
     const {
         formData,
@@ -35,17 +37,19 @@ export const TicketPurchase = () => {
         zonas,
         temporadas,
         evento,
+        funciones,
         handleInputChange,
         fetchZonas,
         fetchTemporadas,
         fetchEvento,
+        fetchFunciones
     } = useTicketPurchase(id);
-
  
     useEffect(() => {
         fetchEvento();
         fetchZonas();
         fetchTemporadas();
+        fetchFunciones();
     }, [id]);
     
     const incrementar = () => {
@@ -112,43 +116,58 @@ export const TicketPurchase = () => {
         <main className="buy-ticket">
             <div id="buy-ticket-data">
                 <h1>Comprar ticket</h1>
-                <section id="data_purchase">
-                    <div>                        
-                        <h2>Zona</h2>                        
-                        <DropdownOptions                        
-                            options={zonas}
-                            setSelectedOption={setSelectedZona}
-                            selectedOption={selectedZona}    
-                            price={selectedZona?.tipoEntrada?.precioBase}
-                        />
-                        <h2>Canjear código</h2>
-                        <form onSubmit={handleDiscount}>
-                            <input 
-                                className={`input-form ${errors.discount ? 'error' : ''}`}
-                                name='discount'
-                                placeholder='Ingresa el código de descuento'
-                                maxLength={100}
-                                value={formData.discount}
-                                onChange={handleInputChange}
-                                disabled={isLoading}/>
-
-                            <button 
-                                type="submit" 
-                                className='btn btn-secondary btn-lg mt-3'
-                                disabled={isLoading}
-                            >
-                                {isLoading ? 'Verificando...' : 'Aplicar'}
-                            </button>
-                        </form>
-                        {errors.discount && <div className="error-form">{errors.discount}</div>}
+                <section>
+                    <div className="data_purchase">
+                        <div>
+                            <h2>Zona</h2>                        
+                            <DropdownOptions                        
+                                options={zonas}
+                                setSelectedOption={setSelectedZona}
+                                selectedOption={selectedZona}    
+                                price={selectedZona?.tipoEntrada?.precioBase}
+                            />    
+                        </div>                        
+                        <div>
+                            <h2>Temporada</h2>
+                            <DropdownOptions                        
+                                options={temporadas}
+                                setSelectedOption={setSelectedTemporada}
+                                selectedOption={selectedTemporada}
+                            />
+                        </div>
+                        <div>
+                            <h2>Funciones</h2>
+                            <DropdownOptions                        
+                                options={funciones}
+                                setSelectedOption={setSelectedFuncion}
+                                selectedOption={selectedFuncion}
+                                nombre='horaInicio'
+                            />
+                        </div>                         
                     </div>                
-                    <div>
-                        <h2>Temporada</h2>
-                        <DropdownOptions                        
-                            options={temporadas}
-                            setSelectedOption={setSelectedTemporada}
-                            selectedOption={selectedTemporada}
-                        />
+                    <div className="data_purchase">
+                        <div>                    
+                            <h2>Canjear código</h2>
+                            <form className="form-discount" onSubmit={handleDiscount}>
+                                <input 
+                                    className={`input-form ${errors.discount ? 'error' : ''}`}
+                                    name='discount'
+                                    placeholder='Ingresa el código de descuento'
+                                    maxLength={100}
+                                    value={formData.discount}
+                                    onChange={handleInputChange}
+                                    disabled={isLoading}
+                                />
+                                <button 
+                                    type="submit" 
+                                    className='btn btn-secondary btn-lg mt-3'
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Verificando...' : 'Aplicar'}
+                                </button>
+                            </form>                        
+                            {errors.discount && <div className="error-form">{errors.discount}</div>}
+                        </div>              
                         {selectedZona ? (
                             <TicketQuantitySelector
                                 cantidadEntradas={cantidadEntradas}

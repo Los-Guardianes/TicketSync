@@ -6,8 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UsuarioDTO {
-    @com.fasterxml.jackson.annotation.JsonProperty("token")
-    private String Bearer;
+    private String token;
     private Integer idUsuario;
     private String email;
     private String rol;
