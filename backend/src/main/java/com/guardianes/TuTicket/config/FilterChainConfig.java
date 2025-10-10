@@ -39,7 +39,7 @@ public class FilterChainConfig {
             "/api/zona/**",
             "/api/ciudad/**",
             "/api/comp/**",
-            "/api/miticket/**"
+            "/api/miticket/**",
             "/api/temporada/**",
             "/api/funcion/**"
     };
