@@ -71,8 +71,13 @@ export const TicketPurchase = () => {
             return;
         }
         navigate("/ticket-pay", { state: {
-            listaDetalles: listaDetalles,
-            totalDetalle: totalDetalle,
+            listaDetalles: listaDetalles.map(detalle => ({
+                        cantidad: detalle.cantidad,
+                        idZona: detalle.zona.idZona,
+                        idTemporada: detalle.temporada.idTemporada,
+            })),    
+            montoFinal: montoFinal,
+            funcion: selectedFuncion,
         }});
     }
 

@@ -1,12 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { OrdenCompra } from "./models/ordenCompra";
+import { OrdenCompra } from "./models/OrdenCompra";
 import "./TicketPay.css"
 import { useAuth } from "../../../context/AuthContext";
 export const TicketPay = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { listaDetalles = [], totalDetalle = 0 } = location.state || {};
+    const { listaDetalles = [], montoFinal = 0, funcion } = location.state || {};
     const {user} = useAuth();
 
     const handleReturn = (e) => {
@@ -32,8 +32,8 @@ export const TicketPay = () => {
     const handlePay = (e) => {
         e.preventDefault();
         if(!validateForm()) return;
-        const ordenCompra = new OrdenCompra(new Date(), formData.metodoPago, user.idUsuario);
-        
+        const ordenCompra = new OrdenCompra(new Date(), formData.metodoPago, user.idUsuario, funcion.idFuncion, listaDetalles);
+        console.log(ordenCompra);        
     }
 
     const handleInputChange = (onChangeEvent) => {
@@ -53,10 +53,10 @@ export const TicketPay = () => {
             <h1>Pasarela de pagos (simulada)</h1>
 
             <section>
-                <h3>Total general: S/ {totalDetalle}</h3>
+                <h3>Total general: S/ {montoFinal}</h3>
             </section>
 
-            <form className="tp-form">
+            <form className="tp-form" onSubmit={handlePay}>
                 <h2>Datos de pago</h2>
 
                 <div className="tp-form-row">
