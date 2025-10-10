@@ -60,4 +60,13 @@ public class FuncionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/funcion/evento/{idEvento}")
+    public ResponseEntity<?> getFuncionByEventId(@PathVariable Integer idEvento) {
+        List<Funcion> funciones = service.getFuncionByEvento(idEvento);
+        if (funciones == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Función no encontrada");
+        }
+        return ResponseEntity.ok(funciones);
+    }
 }

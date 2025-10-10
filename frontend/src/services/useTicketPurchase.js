@@ -1,12 +1,20 @@
 import { useState } from 'react';
+import { getEventosById } from "../services/EventoService";
+import { useAuth } from "../context/AuthContext"
+
+import { apiFetch } from './API';
 
 export const useTicketPurchase = (idevento) => {
+
     const [formData, setFormData] = useState({discount: ''});
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
     const [zonas, setZonas] = useState([]);
     const [temporadas, setTemporadas] = useState([]);
+    const [funciones, setFunciones] = useState([]);
+    const [evento, setEvento] = useState(null); 
+    
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -14,8 +22,6 @@ export const useTicketPurchase = (idevento) => {
             ...prev,
             [name]: value
         }));
-        
-        // Limpiar error del campo cuando el usuario empiece a escribir
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -23,35 +29,27 @@ export const useTicketPurchase = (idevento) => {
             }));
         }
     };
-    //Fetch de zonas por evento
+
+    const fetchEvento = async () => {
+        const data = await getEventosById(idevento);
+        setEvento(data);
+    };
+
     const fetchZonas = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/zona/evento/${idevento}`);
-            if (!response.ok) {
-                throw new Error("Error al obtener las zonas");
-            }
-            const dataZona = await response.json();
-            setZonas(dataZona);
-            console.log(dataZona.nombre);
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        const data = await apiFetch(`/api/zona/evento/${idevento}`);
+        setZonas(data || []);
     };
-    //Fetch de temporadas por evento
+
     const fetchTemporadas = async () => {
-        try{
-            const response = await fetch(`http://localhost:8080/api/temporada/evento/${idevento}`);
-            if (!response.ok) {
-                throw new Error("Error al obtener las temporadas");
-            }
-            const dataTemporada = await response.json();
-            setTemporadas(dataTemporada);
-        } catch (error) {
-            console.error("Error", error); // Reemplazar por metodo de mensaje
-        }
+        const data = await apiFetch(`/api/temporada/evento/${idevento}`);
+        setTemporadas(data || []);
     };
 
-
+    const fetchFunciones = async () => {
+        const data = await apiFetch(`/api/funcion/evento/${idevento}`);
+        console.log(data);
+        setFunciones(data || []);
+    }
 
     return {
         formData,
@@ -60,8 +58,12 @@ export const useTicketPurchase = (idevento) => {
         message,
         zonas,
         temporadas,
+        evento,
+        funciones,
         handleInputChange,
         fetchZonas,
-        fetchTemporadas
+        fetchTemporadas,
+        fetchEvento,
+        fetchFunciones
     };
 }

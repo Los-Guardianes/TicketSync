@@ -5,6 +5,7 @@ import { Footer } from './common/Footer';
 import { useState, useEffect } from 'react';
 import { getEventos } from '../services/EventoService'; // ruta desde /components
 
+import { EventCreationProvider } from '../context/EventCreationContext'; // 👈 1. Importa el Provider
 const Layout = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/home';
@@ -50,8 +51,10 @@ const Layout = () => {
       )}
 
       <main style={isHomePage ? {} : { paddingTop: 'var(--margin-top-header)' }}>
-        {/* Home (y otras páginas) leen los filtros aquí */}
-        <Outlet context={{ search, precio, ubicacion, fecha }} />
+        <EventCreationProvider>
+          {/* Home (y otras páginas) leen los filtros aquí */}
+          <Outlet context={{ search, precio, ubicacion, fecha }} />
+        </EventCreationProvider>
       </main>
 
       <Footer />

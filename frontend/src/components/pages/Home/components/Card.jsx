@@ -1,21 +1,21 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from "../../../../context/AuthContext";
 export const Card = ({id, titulo, dia, ubicacion,ulrimagen}) => {
 
     // Tengan en cuenta que esta card posee parametros, deben
     // Insertarse los argumentos en el componente para que se imprima
 
     const navigate = useNavigate();
-
+    const { isAuthenticated } = useAuth();
     const start_purchase = () => {
-        navigate(`/ticket-purchase/${id}`);
+        const target = `/ticket-purchase/${id}`;
+        if (!isAuthenticated) navigate('/login', { state: { from: target } });
+        else navigate(target);
     }
 
     return (
         <div className='card' style={{width: "15rem"}}>
-            {/*<img className='card-img-top' src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/maxresdefault.jpg"
-                    alt="tuticketLogo"/>*/}
             <img className='card-img-top' src={ulrimagen} alt="ImagenDeEvento"/>
             <div className='card-body'>
                 <p className='card-text' >{ubicacion}</p>

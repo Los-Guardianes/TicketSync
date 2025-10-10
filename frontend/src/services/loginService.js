@@ -77,7 +77,17 @@ export const loginService = () => {
                 showMessage(result.message || 'Correo o contraseña incorrectos.', 'error');
                 return false; // Indica que el login falló
             }
-            login(result); //Se guarda en el AuthContext
+            // COSAS NUEVAS
+            const token = result.token;
+            const user  = {
+                idUsuario:       result.idUsuario,
+                email:    result.email,
+                rol:      result.rol,
+                nombre:   result.nombre,
+                apellido: result.apellido,
+            };
+            //
+            login(user, token, result.exp); //Cambio acá también
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
             return true;
 

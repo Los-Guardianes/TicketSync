@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UsuarioDTO {
-    private String Bearer;
-    private Integer id_usuario;
+    private String token;
+    private Integer idUsuario;
     private String email;
     private String rol;
     private String nombre;
