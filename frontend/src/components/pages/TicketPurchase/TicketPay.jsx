@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { OrdenCompra } from "./models/OrdenCompra";
+import { OrdenCompra } from "./models/ordenCompra";
 import "./TicketPay.css"
 import { useAuth } from "../../../context/AuthContext";
 export const TicketPay = () => {
