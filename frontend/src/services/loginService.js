@@ -78,9 +78,9 @@ export const loginService = () => {
                 return false; // Indica que el login falló
             }
             // COSAS NUEVAS
-            const token = result.token ?? result.Bearer;
+            const token = result.token;
             const user  = {
-                id:       result.id_usuario,
+                idUsuario:       result.idUsuario,
                 email:    result.email,
                 rol:      result.rol,
                 nombre:   result.nombre,
