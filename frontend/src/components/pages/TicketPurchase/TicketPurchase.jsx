@@ -1,16 +1,13 @@
 import { use, useEffect, useState } from 'react'
-import { Header } from '../../../../common/Header/Header'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useTicketPurchase } from "../../../services/useTicketPurchase"
+import { DetalleCompra } from "./models/DetalleCompra"
+import { DropdownOptions } from "./components/DropdownOptions"
+import { TicketQuantitySelector } from './components/ticketQuantitySelector'
+import { ShoppingDetails } from './components/ShoppingDetails'
+import { InfoEventTicket } from './components/InfoEventTicket'
+
 import "./TicketPurchase.css"
-import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
-import { Zona } from '../../../../../models/Zona'
-import { Temporada } from '../../../../../models/Temporada'
-import { TipoEntrada } from '../../../../../models/TipoEntrada'
-import { DetalleCompra } from '../../../../../models/DetalleCompra'
-import { DropdownOptions } from './dropdownOptions'
-import { TicketQuantitySelector } from './ticketQuantitySelector'
-import { ShoppingDetails } from './ShoppingDetails'
-import { InfoEventTicket } from './InfoEventTicket'
 
 export const TicketPurchase = () => {
 
@@ -29,7 +26,7 @@ export const TicketPurchase = () => {
 
     const [selectedZona, setSelectedZona] = useState(null);
     const [selectedTemporada, setSelectedTemporada] = useState(null);
-
+    const navigate = useNavigate();
     const {
         formData,
         errors,
@@ -56,12 +53,24 @@ export const TicketPurchase = () => {
     };
 
     const decrementar = () => {
-        setCantidadEntradas(prev => Math.max(1, prev - 1)); // No permite menos de 1
+        setCantidadEntradas(prev => Math.max(1, prev - 1));
     };
 
     const handleDiscount = async (e) => {
         e.preventDefault();
     };
+
+    const handleContinueToPay = () => {
+        //falta verificar que la listaDetalles no este vacia
+        if (listaDetalles.length === 0) {
+            alert("Agrega al menos un detalle de compra antes de continuar.");
+            return;
+        }
+        navigate("/ticket-pay", { state: {
+            listaDetalles: listaDetalles,
+            totalDetalle: totalDetalle,
+        }});
+    }
 
     const agregarIncrementarDetalle = () => {
         const precioCalculadoLocal = selectedZona.tipoEntrada.precioBase * (1 - selectedTemporada.porcentajeDesc / 100);
@@ -175,13 +184,13 @@ export const TicketPurchase = () => {
                     montoComision={montoComision}
                     montoFinal={montoFinal}
                 />
-            </section>
-            
-            <button 
+                <button 
                 className='btn btn-primary'
-            >
-                Pagar
-            </button>
+                onClick={handleContinueToPay}
+                >
+                    Continuar
+                </button>
+            </section>
         </main>
     )
 }
