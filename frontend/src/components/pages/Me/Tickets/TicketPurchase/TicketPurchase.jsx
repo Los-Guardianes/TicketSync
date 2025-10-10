@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import "./TicketPurchase.css"
 import { useTicketPurchase } from '../../../../../services/useTicketPurchase'
 import { getEventosById } from '../../../../../services/EventoService';
+
 export const TicketPurchase = () => {
 
     

@@ -9,6 +9,7 @@ import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
 import { CreateTicket } from "../components/pages/CreateEvent/CreateTicket";
 import { TicketPurchase } from "../components/pages/Me/Tickets/TicketPurchase/TicketPurchase";
+import { EventCreationProvider } from '../context/EventCreationContext';
 import Layout from "../components/Layout";
 
 export const ClienteRoutes = () => {
