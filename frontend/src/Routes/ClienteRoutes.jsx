@@ -7,6 +7,7 @@ import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
 import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
+import { ComprobanteTest } from "../components/pages/ComprobanteTest/ComprobanteTest";
 import { CreateTicket } from "../components/pages/CreateEvent/CreateTicket";
 import { TicketPay } from "../components/pages/TicketPurchase/TicketPay";
 import { TicketPurchase } from "../components/pages/TicketPurchase/TicketPurchase";
@@ -34,6 +35,7 @@ export const ClienteRoutes = () => {
         <Route path="ubicacion-evento" element={<UbicacionEvento />} />
         <Route path="create-ticket" element={<CreateTicket />} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
+        <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<TicketPay />} />
       </Route>
     </Routes>
