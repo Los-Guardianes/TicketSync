@@ -1,9 +1,11 @@
+import "./InfoEventTicket.css"
+
 export const InfoEventTicket = ({evento, totalDetalle, montoDescuento, montoComision, montoFinal}) => {
     return (
         <>
             <h2>{evento?.nombre || 'Cargando...'}</h2>
             <img src="/tuticket_logo.png"/>
-            <ul>
+            <ul className="info-event">
                 <li>
                     <h3>Total detalles:</h3>
                     <p>S/ {totalDetalle}</p>
