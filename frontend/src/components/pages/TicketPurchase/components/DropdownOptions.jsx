@@ -10,9 +10,6 @@ export const DropdownOptions = ({
         return option[nombre] || "";
     }
     return (
-
- 
-
         <div className="col">
             <div className="dropdown">
                 <button

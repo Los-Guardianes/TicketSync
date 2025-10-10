@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useTicketPurchase } from "../../../services/useTicketPurchase"
 import { DetalleCompra } from "./models/DetalleCompra"
 import { DropdownOptions } from "./components/DropdownOptions"
-import { TicketQuantitySelector } from './components/ticketQuantitySelector'
+import { TicketQuantitySelector } from './components/TicketQuantitySelector'
 import { ShoppingDetails } from './components/ShoppingDetails'
 import { InfoEventTicket } from './components/InfoEventTicket'
 
