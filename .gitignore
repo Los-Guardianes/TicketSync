@@ -56,3 +56,4 @@
 .DS_Store
 Thumbs.db
 .env
+backend/logs/tuticket.log

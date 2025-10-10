@@ -9,4 +9,5 @@
     border-bottom: 2px solid var(--primary-color);
     background: white;
     padding: 0 5%;
+    z-index: 1;
 }

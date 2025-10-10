@@ -8,8 +8,8 @@ import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganize
 import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
 import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
 import { CreateTicket } from "../components/pages/CreateEvent/CreateTicket";
-import { TicketPurchase } from "../components/pages/Me/Tickets/TicketPurchase/TicketPurchase";
-import { EventCreationProvider } from '../context/EventCreationContext';
+import { TicketPay } from "../components/pages/TicketPurchase/TicketPay";
+import { TicketPurchase } from "../components/pages/TicketPurchase/TicketPurchase";
 import Layout from "../components/Layout";
 
 export const ClienteRoutes = () => {
@@ -34,6 +34,7 @@ export const ClienteRoutes = () => {
         <Route path="ubicacion-evento" element={<UbicacionEvento />} />
         <Route path="create-ticket" element={<CreateTicket />} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
+        <Route path="ticket-pay" element={<TicketPay />} />
       </Route>
     </Routes>
   );
