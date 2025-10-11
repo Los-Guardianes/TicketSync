@@ -29,13 +29,16 @@ public class OrdenCompra {
     @Column
     private Boolean activo = true;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idFuncion", referencedColumnName = "idFuncion")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Funcion funcion;
+
+    // Constructor problemático ELIMINADO
+    // Ya no lo necesitas porque creas la orden manualmente en el servicio
 }

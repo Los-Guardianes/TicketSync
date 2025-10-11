@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,4 +30,10 @@ public class DetalleCompra {
     @JoinColumn(name = "idEntrada", referencedColumnName = "idEntrada")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Entrada entrada;
+
+    public DetalleCompra(OrdenCompra ordenCompra, Entrada entrada, Integer cantidad){
+        this.ordenCompra = ordenCompra;
+        this.entrada = entrada;
+        this.cantidad = cantidad;
+    }
 }

@@ -44,4 +44,8 @@ public class CiudadService {
     public void deleteCiudad(Integer id) {
         repo.deleteById(id);
     }
+
+    public List<Ciudad> getCiudadesByDptoId(Integer idDpto) {
+        return repo.findByDpto_IdDpto(idDpto);
+    }
 }

@@ -1,28 +1,93 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'; //Importa el hook de login
-export const NavBar = () => {
-    const { user, logout } = useAuth(); //Usuario y la función logout
-    return (
-        <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success d-flex justify-content-around'>
-            <NavLink href="#" className='navbar-brand'>
-                <img src="/tuticket_logo_name.png"
-                    alt="tuticketLogo" style={{ width: "7rem" }} />
-            </NavLink>
-            <ul className='navbar-nav'>
-                <li className='nav-item'>
-                    <NavLink className={'nav-link'}>Precio</NavLink>
-                </li>
-                <li className='nav-item'>
-                    <NavLink className={'nav-link'} to={"/"} >Ubicacion</NavLink>
-                </li>
-                <li className='nav-item'>
-                    <NavLink className={'nav-link'} to={"/"} >Categoria</NavLink>
-                </li>
-                <li className='nav-item'>
-                    <NavLink className={'nav-link'} to={"/"} >Fechas</NavLink>
-                </li>
-                {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
+import { useAuth } from '../../context/AuthContext';
+
+export const NavBar = ({
+  search, setSearch,
+  precio, setPrecio,
+  ubicacion, setUbicacion,
+  fecha, setFecha,
+  ubicacionesDisponibles
+}) => {
+  const { user, logout } = useAuth();
+
+  return (
+    <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
+      {/* Logo */}
+      <NavLink to="/" className='navbar-brand'>
+        <img
+          src="/tuticket_logo_name.png"
+          alt="tuticketLogo"
+          style={{ width: "7rem" }}
+        />
+      </NavLink>
+
+      {/* Barra de búsqueda */}
+      <form className="d-flex mx-auto" style={{ width: "40%" }}>
+        <input
+          className="form-control me-2"
+          type="search"
+          placeholder="Encuentra eventos..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </form>
+
+      {/* Filtros */}
+      <ul className="navbar-nav ms-auto d-flex align-items-center">
+
+        {/* Precio */}
+        <li className="nav-item dropdown">
+          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+            Precio
+          </NavLink>
+          <ul className="dropdown-menu p-3">
+            <label>Precio hasta: S/ {precio}</label>
+            <input
+              type="range"
+              min="0"
+              max="1000"
+              value={precio}
+              onChange={(e) => setPrecio(Number(e.target.value))}
+              className="form-range"
+            />
+          </ul>
+        </li>
+
+        {/* Ubicación dinámica */}
+        <li className="nav-item dropdown">
+          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+            Ubicación
+          </NavLink>
+          <ul className="dropdown-menu p-3">
+            <select
+              className="form-select"
+              value={ubicacion}
+              onChange={(e) => setUbicacion(e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              {ubicacionesDisponibles.map((ubi, idx) => (
+                <option key={idx} value={ubi}>{ubi}</option>
+              ))}
+            </select>
+          </ul>
+        </li>
+
+        {/* Fecha */}
+        <li className="nav-item dropdown">
+          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+            Fecha
+          </NavLink>
+          <ul className="dropdown-menu p-3">
+            <input
+              type="date"
+              className="form-control"
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
+            />
+          </ul>
+        </li>
+         {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
                 {user && user.rol === 'organizador' && (
                     <li className='nav-item'>
                         <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
@@ -30,37 +95,32 @@ export const NavBar = () => {
                         </NavLink>
                     </li>
                 )}
-                {/*LÓGICA CONDICIONAL LOGIN vs INFO DE USUARIO*/}
-                {!user ? (
-                    // Si NO hay usuario logueado, muestra Registrarse y Login
-                    <>
-                        <li className='nav-item'>
-                            <NavLink className={'nav-link btn btn-light'} to={"/register"}>Registrarse</NavLink>
-                        </li>
-                        <li className='nav-item ms-2'> {/* ms-2 añade un margen */}
-                            <NavLink className={'nav-link btn btn-success'} to={"/login"}>Login</NavLink>
-                        </li>
-                    </>
-                ) : (
-                    // Si SÍ hay usuario logueado, muestra su nombre y el botón de logout
-                    <>
-                        <li className='nav-item'>
-                            <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
-                        </li>
-                        <li className='nav-item'>
-                            {/* Suponiendo que el objeto de usuario tiene un campo 'nombre' */}
-                            <span className='nav-link'>
-                                👤 ¡Hola, {user.nombre}! 
-                            </span>
-                        </li>
-                        <li className='nav-item ms-2'>
-                            <button className={'nav-link btn btn-danger text-black'} onClick={logout}>
-                                Cerrar Sesión
-                            </button>
-                        </li>
-                    </>
-                )}
-            </ul>
-        </nav>
-    )
+        {/* Botones de usuario */}
+        {!user ? (
+          <>
+            <li className='nav-item'>
+              <NavLink className='nav-link btn btn-light' to={"/register"}>Registrarse</NavLink>
+            </li>
+            <li className='nav-item ms-2'>
+              <NavLink className='nav-link btn btn-success' to={"/login"}>Login</NavLink>
+            </li>
+          </>
+        ) : (
+          <>
+            <li className='nav-item'>
+                <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
+            </li>
+            <li className='nav-item'>
+              <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
+            </li>
+            <li className='nav-item ms-2'>
+              <button className='nav-link btn btn-danger text-black' onClick={logout}>
+                Cerrar Sesión
+              </button>
+            </li>
+          </>
+        )}
+      </ul>
+    </nav>
+  )
 }
