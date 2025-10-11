@@ -45,6 +45,9 @@ export const NavBar = () => {
                     // Si SÍ hay usuario logueado, muestra su nombre y el botón de logout
                     <>
                         <li className='nav-item'>
+                            <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
+                        </li>
+                        <li className='nav-item'>
                             {/* Suponiendo que el objeto de usuario tiene un campo 'nombre' */}
                             <span className='nav-link'>
                                 👤 ¡Hola, {user.nombre}! 
