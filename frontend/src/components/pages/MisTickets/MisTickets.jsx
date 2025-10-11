@@ -57,7 +57,7 @@ export const MisTickets = () => {
                 <h6 className='mb-3 text-truncate'>{ticket.detalleCompra.ordenCompra.funcion.evento.nombre}</h6>
                 <button
                   className='btn btn-primary btn-sm'
-                  onClick={() => handleVerTicket(ticket.id)}
+                  onClick={() => handleVerTicket(ticket.idTicket)}
                 >
                   Ver ticket
                 </button>
