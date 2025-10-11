@@ -44,6 +44,7 @@ public class FilterChainConfig {
             "/api/temporada/**",
             "/api/funcion/**",
             "/api/orden/**"
+            "/api/ticket/**"
     };
 
     @Bean

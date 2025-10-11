@@ -35,13 +35,13 @@ public class PDFController {
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/miticket/{codigo}")
-    public ResponseEntity<byte[]> descargarTicket(@PathVariable String codigo) throws Exception {
-        byte[] pdfBytes = service.generarTicketPDF(codigo);
+    @GetMapping("/miticket/{id}")
+    public ResponseEntity<byte[]> descargarTicket(@PathVariable String id) throws Exception {
+        byte[] pdfBytes = service.generarTicketPDF(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "ticket_" + codigo + ".pdf");
+        headers.setContentDispositionFormData("attachment", "ticket_" + id + ".pdf");
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }

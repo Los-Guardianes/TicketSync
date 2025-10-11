@@ -32,4 +32,6 @@ public class TicketService {
     public void deleteTicket(Integer id) {
         repo.deleteById(id);
     }
+
+    public List<Ticket> getTicketsByIdUsuario(Integer id) { return repo.findTicketsByUsuarioId(id); }
 }
