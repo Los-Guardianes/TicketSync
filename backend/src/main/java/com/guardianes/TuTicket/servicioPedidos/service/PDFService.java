@@ -4,10 +4,16 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.guardianes.TuTicket.servicioEventos.model.Entrada;
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
+import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
+import com.guardianes.TuTicket.servicioPedidos.model.Ticket;
+import com.guardianes.TuTicket.servicioPedidos.repo.DetalleCompraRepo;
 import com.guardianes.TuTicket.servicioPedidos.repo.OrdenCompraRepo;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
+import com.guardianes.TuTicket.servicioUsuarios.repo.UsuarioRepo;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import com.itextpdf.text.BaseColor;
 import com.lowagie.text.*;
@@ -25,13 +31,13 @@ import java.util.Random;
 public class PDFService {
 
     @Autowired
-    private OrdenCompraRepo repo;
-
-    @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
     private DetalleCompraService dcService;
+
+    @Autowired
+    private TicketService tktService;
 
     public Image generarQR(String contenido) throws Exception {
         BitMatrix matrix = new MultiFormatWriter().encode(contenido, BarcodeFormat.QR_CODE, 100, 100);
@@ -87,7 +93,7 @@ public class PDFService {
         return baos.toByteArray();
     }
 
-    public byte[] generarTicketPDF(String codigoTicket) throws Exception {
+    public byte[] generarTicketPDF(String codigo) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Rectangle ticketSize = new Rectangle(650, 300);
@@ -98,6 +104,20 @@ public class PDFService {
         Font fontBold = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11);
         Font fontNormal = FontFactory.getFont(FontFactory.HELVETICA, 9);
         Font fontSmall = FontFactory.getFont(FontFactory.HELVETICA, 8);
+
+        Integer idTicket = null;
+        try {
+            idTicket = Integer.parseInt(codigo);
+        } catch (NumberFormatException e) {
+            System.out.println("Código inválido: " + codigo);
+        }
+        //Obtener objetos
+        Ticket ticket = tktService.getTicketById(idTicket);
+        OrdenCompra orden = ticket.getDetalleCompra().getOrdenCompra();
+        Usuario user = orden.getUsuario();
+        Funcion fc = orden.getFuncion();
+        Evento event = fc.getEvento();
+        Entrada entrada = ticket.getDetalleCompra().getEntrada();
 
         PdfPTable header = new PdfPTable(2);
         header.setWidthPercentage(100);
@@ -118,7 +138,7 @@ public class PDFService {
         document.add(header);
         document.add(new Paragraph(" "));
 
-        Paragraph evento = new Paragraph("MI EVENTO – “TICKETSYNC”", fontBold);
+        Paragraph evento = new Paragraph(event.getNombre(), fontBold);
         evento.setAlignment(Element.ALIGN_CENTER);
         document.add(evento);
         document.add(new Paragraph(" "));
@@ -131,14 +151,13 @@ public class PDFService {
         left.setBorder(Rectangle.NO_BORDER);
         left.setPadding(8);
 
-        left.addElement(new Paragraph("LUIS IZARRA", fontNormal));
-        left.addElement(new Paragraph("DNI: ********", fontNormal));
+        left.addElement(new Paragraph(user.getNombre().toUpperCase() + " " + user.getApellido().toUpperCase(), fontNormal));
         left.addElement(new Paragraph("Tipo de entrada: PREFERENCIAL", fontNormal));
         left.addElement(new Paragraph("Asiento: PRE-IZQ-C01", fontNormal));
         left.addElement(new Paragraph("Sector: 203", fontNormal));
         left.addElement(new Paragraph("Fecha: 02 DE AGOSTO DEL 2025", fontNormal));
         left.addElement(new Paragraph("Hora: 06:00 P.M.", fontNormal));
-        left.addElement(new Paragraph("Precio: S/100.00", fontNormal));
+        left.addElement(new Paragraph("Precio: " + entrada.getPrecioCalculado(), fontNormal));
         left.addElement(new Paragraph("\n* Público en general", fontSmall));
         left.addElement(new Paragraph("* PROHIBIDO el ingreso con bebidas o alimentos", fontSmall));
         mainTable.addCell(left);
@@ -162,10 +181,10 @@ public class PDFService {
         right.setHorizontalAlignment(Element.ALIGN_CENTER);
         right.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-        Image qr = generarQR(codigoTicket);
+        Image qr = generarQR(codigo);
         qr.scaleToFit(90, 90);
         right.addElement(qr);
-        right.addElement(new Paragraph("\nS/100.00", fontBold));
+        right.addElement(new Paragraph("\n" + entrada.getPrecioCalculado(), fontBold));
 
         mainTable.addCell(right);
         document.add(mainTable);
@@ -175,7 +194,8 @@ public class PDFService {
         canvas.saveState();
         canvas.beginText();
         canvas.setFontAndSize(bf, 9);
-        canvas.showTextAligned(Element.ALIGN_LEFT, "LUIS IZARRA — PREFERENCIAL", ticketSize.getWidth() - 10, 90, 90);
+        canvas.showTextAligned(Element.ALIGN_LEFT, user.getNombre().toUpperCase() + " " + user.getApellido().toUpperCase() + " — PREFERENCIAL",
+                ticketSize.getWidth() - 10, 90, 90);
         canvas.endText();
         canvas.restoreState();
 
