@@ -11,6 +11,7 @@ import { ComprobanteTest } from "../components/pages/ComprobanteTest/Comprobante
 import { CreateTicket } from "../components/pages/CreateEvent/CreateTicket";
 import { TicketPay } from "../components/pages/TicketPurchase/TicketPay";
 import { TicketPurchase } from "../components/pages/TicketPurchase/TicketPurchase";
+import { HappyPay } from "../components/pages/TicketPurchase/HappyPay";
 import Layout from "../components/Layout";
 
 export const ClienteRoutes = () => {
@@ -37,6 +38,7 @@ export const ClienteRoutes = () => {
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
         <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<TicketPay />} />
+        <Route path="happy-pay" element={<HappyPay />} />
       </Route>
     </Routes>
   );

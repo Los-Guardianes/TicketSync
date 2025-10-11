@@ -3,7 +3,10 @@ import { useState } from "react";
 import { OrdenCompra } from "./models/ordenCompra";
 import "./TicketPay.css"
 import { useAuth } from "../../../context/AuthContext";
+import { postOrdenCompra } from "./service/ticketPayService";
+
 export const TicketPay = () => {
+
     const location = useLocation();
     const navigate = useNavigate();
     const { listaDetalles = [], montoFinal = 0, funcion } = location.state || {};
@@ -29,12 +32,28 @@ export const TicketPay = () => {
         return true
     }
 
-    const handlePay = (e) => {
+    const handlePay = async (e) => {
         e.preventDefault();
-        if(!validateForm()) return;
-        const ordenCompra = new OrdenCompra(new Date(), formData.metodoPago, user.idUsuario, funcion.idFuncion, listaDetalles);
-        console.log(ordenCompra);        
-    }
+        console.log("Formulario de pago enviado");
+        if (!validateForm()) return;
+        const ordenCompra = new OrdenCompra(
+            formData.metodoPago,
+            user.idUsuario,
+            funcion.idFuncion,
+            listaDetalles
+        );
+        console.log("Enviando orden de compra:", ordenCompra);
+        try {
+            const ordenDevuelta = await postOrdenCompra(ordenCompra);
+            console.log("Orden de compra realizada:", ordenDevuelta);
+            navigate("/happy-pay");
+        } catch (error) {
+            console.error("Error al realizar la orden de compra:", error);
+            alert("Error al procesar el pago. Por favor, inténtelo de nuevo.");
+        }
+    };
+
+
 
     const handleInputChange = (onChangeEvent) => {
         const { name, value } = onChangeEvent.target;
@@ -50,7 +69,7 @@ export const TicketPay = () => {
 
     return (
         <div className="tp-container">
-            <h1>Pasarela de pagos (simulada)</h1>
+            <h1>Pasarela de pagos</h1>
 
             <section>
                 <h3>Total general: S/ {montoFinal}</h3>
