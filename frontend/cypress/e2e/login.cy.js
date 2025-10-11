@@ -13,11 +13,11 @@ describe("Login", () => {
     }).as("login");
 
     cy.visit("/login");
-    cy.get('input[name="email"]').type("user@test.com");
-    cy.get('input[name="password"]').type("secret");
+    cy.get('input[name="email"]').type("mario1@gmail.com");
+    cy.get('input[name="password"]').type("hash11");
     cy.contains("button","Iniciar sesión").click();
     cy.wait("@login").its("request.body").should("deep.include", {
-      email: "user@test.com",
+      email: "mario1@gmail.com",
     });
 
     // si tu app guarda auth en localStorage, verificamos
