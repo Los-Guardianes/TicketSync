@@ -108,6 +108,9 @@ export const NavBar = ({
         ) : (
           <>
             <li className='nav-item'>
+                <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
+            </li>
+            <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>
             <li className='nav-item ms-2'>
