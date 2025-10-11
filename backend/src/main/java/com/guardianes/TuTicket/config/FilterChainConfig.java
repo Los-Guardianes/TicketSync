@@ -43,6 +43,7 @@ public class FilterChainConfig {
             "/api/miticket/**",
             "/api/temporada/**",
             "/api/funcion/**",
+            "/api/orden/**"
     };
 
     @Bean
