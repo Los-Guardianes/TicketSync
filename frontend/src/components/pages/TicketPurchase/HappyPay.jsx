@@ -1,11 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from "react-router-dom";
+import { descargarComprobante } from '../../../services/PDFService'; 
 import "./HappyPay.css";
+
 export const HappyPay = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { idOrden } = location.state || {};
+    const [error, setError] = useState('');
 
-    const handleDownloadReport = () => {
-        // Función vacía para descargar informe
+    const handleDescarga = async () => {
+        setError('');
         console.log("Descargando informe...");
+        try {
+          await descargarComprobante(idOrden);
+        } catch (err) {
+          setError(err.message || 'Error al descargar el comprobante');
+        }
     };
 
     const handleGoHome = () => {
@@ -38,7 +49,7 @@ export const HappyPay = () => {
                 <div className="hp-buttons">
                     <button 
                         className="btn btn-primary" 
-                        onClick={handleDownloadReport}
+                        onClick={handleDescarga}
                     >
                         Descargar Informe
                     </button>
@@ -48,6 +59,7 @@ export const HappyPay = () => {
                     >
                         Volver al Inicio
                     </button>
+                    {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
                 </div>
             </div>
         </div>

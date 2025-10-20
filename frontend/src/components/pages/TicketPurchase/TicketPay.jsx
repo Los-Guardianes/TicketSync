@@ -46,7 +46,11 @@ export const TicketPay = () => {
         try {
             const ordenDevuelta = await postOrdenCompra(ordenCompra);
             console.log("Orden de compra realizada:", ordenDevuelta);
-            navigate("/happy-pay");
+            navigate("/happy-pay", {
+                state: {
+                    idOrden : ordenDevuelta.idOrdenCompra
+                }
+            });
         } catch (error) {
             console.error("Error al realizar la orden de compra:", error);
             alert("Error al procesar el pago. Por favor, inténtelo de nuevo.");
