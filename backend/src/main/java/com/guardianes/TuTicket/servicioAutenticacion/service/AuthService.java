@@ -26,10 +26,10 @@ public class AuthService {
         if (auth.isAuthenticated()) {
             Usuario usuario = (Usuario) auth.getPrincipal();
             return new UsuarioDTO(
-                    jwtService.generateToken(usuario.getEmail(),usuario.getRol()),
+                    jwtService.generateToken(usuario.getEmail(),usuario.getRol().toString()),
                     usuario.getIdUsuario(),
                     usuario.getEmail(),
-                    usuario.getRol(),
+                    usuario.getRol().toString(),
                     usuario.getNombre(),
                     usuario.getApellido()
             );
