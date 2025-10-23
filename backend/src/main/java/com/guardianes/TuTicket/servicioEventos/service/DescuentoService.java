@@ -2,6 +2,7 @@ package com.guardianes.TuTicket.servicioEventos.service;
 
 import com.guardianes.TuTicket.servicioEventos.model.Descuento;
 import com.guardianes.TuTicket.servicioEventos.repo.DescuentoRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DescuentoService {
 
-    @Autowired
-    private DescuentoRepo repo;
+    private final DescuentoRepo repo;
 
     public List<Descuento> getAllDescuentos() {
         return repo.findAll();
