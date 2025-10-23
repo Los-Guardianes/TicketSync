@@ -1,11 +1,14 @@
 package com.guardianes.TuTicket.servicioPedidos.controller;
 
+import com.guardianes.TuTicket.servicioPedidos.DTO.OrdenCompraDTO;
 import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioPedidos.service.OrdenCompraService;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +72,16 @@ public class OrdenCompraController {
             service.deleteOrden(id);
             return ResponseEntity.ok("Orden de compra eliminada");
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/orden/completo")
+    public ResponseEntity<?> addEventoCompleto(@RequestBody OrdenCompraDTO orden) {
+        try{
+            OrdenCompra oc = service.orquestarOrdenCompra(orden);
+            return ResponseEntity.ok(oc);
+        }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

@@ -36,10 +36,10 @@ public class Evento {
     @Column(columnDefinition = "TEXT")
     private String restricciones;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = true, length = 255)
     private String urlImagen;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = true, length = 255)
     private String urlMapa;
 
     @Column(nullable = false, length = 255)

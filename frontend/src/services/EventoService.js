@@ -10,3 +10,9 @@ export const getEventos = (limit, offset) => {
 	return apiFetch(path);
 };
 export const getEventosById = (id) => apiFetch(`/api/evento/${id}`);
+
+export const getCateventos = () => apiFetch('/api/catevento');
+
+export const postEventoCompleto = (evento) =>
+  apiFetch('/api/evento/completo', { method: 'POST', body: JSON.stringify(evento) });
+

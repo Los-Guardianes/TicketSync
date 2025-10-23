@@ -1,0 +1,29 @@
+.info-event{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-event li{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.info-event li h3{
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.info-event li p{
+    font-size: 1rem;
+    text-align: right;
+}
+
+@media (max-width: 768px){
+    .info-event{
+        width: 100%;
+    }
+}

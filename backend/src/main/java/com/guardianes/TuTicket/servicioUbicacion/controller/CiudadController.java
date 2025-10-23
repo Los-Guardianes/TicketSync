@@ -61,4 +61,10 @@ public class CiudadController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/ciudad/dpto/{id}")
+    public ResponseEntity<List<Ciudad>> getCiudadesPorDpto(@PathVariable Integer id) {
+        List<Ciudad> ciudades = service.getCiudadesByDptoId(id);
+        return new ResponseEntity<>(ciudades, HttpStatus.OK);
+    }
 }

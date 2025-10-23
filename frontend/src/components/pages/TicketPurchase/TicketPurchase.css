@@ -3,13 +3,13 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left: 15vw;
-    padding-right: 15vw;
+    padding-left: 10vw;
+    padding-right: 10vw;
 }
 
 #buy-ticket-data{
-    height: 90%;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,12 +21,14 @@
     color: var(--primary-color);
 }
 
-.data_purchase{
-    height: 100%;
+#purchase_selection{
     width: 100%;
+}
+
+.data_purchase{
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    flex-direction: row;
+    justify-content: left;
     gap: 20px;
 }
 
@@ -39,7 +41,6 @@
     font-weight: 600;
 }
 
-
 #purchase_actions {
     width: 100%;
     display: flex;
@@ -49,13 +50,13 @@
 }
 
 #purchase_actions button {
-    width: 200px;
+    width: 100px;
     height: 48px;
 }
 
 #list_purchase {
     height: 100%;
-    width:90%;
+    width:100%;
     max-height: 500px;
     background: #EBF5EB;
     border-radius: 14px;
@@ -90,8 +91,8 @@
 }
 
 #info-event-ticket{
-    height: 90%;
-    width: 20%;
+    height: 100%;
+    width: 30%;
 }
 
 #info-event-ticket img{
@@ -107,4 +108,23 @@
     align-items: center;
     gap: 10px;
     margin-top: 10px;
+}
+
+@media (max-width: 768px){
+
+    .data_purchase{
+        justify-content: space-between;
+    }
+
+    #buy-ticket-data{
+        width: 100%;
+    }
+
+    #info-event-ticket{
+        width: 100%;
+    }
+
+    .buy-ticket{
+        flex-direction: column;
+    }
 }
