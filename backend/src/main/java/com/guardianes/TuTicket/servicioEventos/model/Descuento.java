@@ -20,11 +20,11 @@ public class Descuento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDescuento;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 50)
     private String codigo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipoDesc", nullable = false)
+    @Column(name = "tipoDesc", nullable = false, length = 50)
     private TipoDescuento tipoDesc;
 
     @Column(nullable = false, precision = 10, scale = 2)

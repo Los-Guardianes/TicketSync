@@ -34,7 +34,6 @@ public class FilterChainConfig {
              "/api/cliente",
             "/api/register",
             "/api/organizador",
-            //Para la página del home
             "/api/evento/**",
             "/api/zona/**",
             "/api/ciudad/**",
@@ -43,7 +42,7 @@ public class FilterChainConfig {
             "/api/miticket/**",
             "/api/temporada/**",
             "/api/funcion/**",
-            "/api/orden/**"
+            "/api/orden/**",
             "/api/ticket/**"
     };
 

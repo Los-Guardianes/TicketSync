@@ -2,16 +2,17 @@ package com.guardianes.TuTicket.servicioPedidos.service;
 
 import com.guardianes.TuTicket.servicioPedidos.model.Devolucion;
 import com.guardianes.TuTicket.servicioPedidos.repo.DevolucionRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DevolucionService {
 
-    @Autowired
-    private DevolucionRepo repo;
+    private final DevolucionRepo repo;
 
     public Devolucion addDevolucion(Devolucion devolucion) {
         return repo.save(devolucion);

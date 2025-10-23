@@ -3,21 +3,18 @@ package com.guardianes.TuTicket.servicioUbicacion.service;
 import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import com.guardianes.TuTicket.servicioUbicacion.repo.CiudadRepo;
 import com.guardianes.TuTicket.servicioUbicacion.repo.DptoRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CiudadService {
 
-
-
-    @Autowired
-    private CiudadRepo repo;
-
-    @Autowired
-    private DptoRepo repo2;
+    private final CiudadRepo repo;
+    private final DptoRepo repo2;
 
     public List<Ciudad> getAllCiudades() {
         return repo.findAll();
@@ -28,15 +25,8 @@ public class CiudadService {
     }
 
     public Ciudad addCiudad(Ciudad ciudad) {
-//        Integer idDpto = ciudad.getDepartamento().getIdDepartamento();
-//        Departamento departamentoExistente = repo2.findById(idDpto)
-//                .orElseThrow(() -> new RuntimeException("Departamento no encontrado"));
-//
-//        ciudad.setDepartamento(departamentoExistente);
-//        System.out.println(ciudad.getDepartamento().getIdDepartamento());
         return repo.save(ciudad);
     }
-
     public Ciudad updateCiudad(Ciudad ciudad) {
         return repo.save(ciudad);
     }
