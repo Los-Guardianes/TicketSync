@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { descargarComprobante } from '../../MisTickets/service/PDFService'; 
+import { descargarComprobante } from '../../../../globalServices/PDFService'; 
 
 export const ComprobanteTest = () => {
   const [idCompra, setIdCompra] = useState('');

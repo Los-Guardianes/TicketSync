@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import { descargarComprobante } from '../../../services/PDFService'; 
+import { descargarComprobante } from '../../../../globalServices/PDFService'; 
 import "./HappyPay.css";
 
 export const HappyPay = () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './MisTickets.css';
 import { getTickets } from '../service/MisTicketsService';
-import { abrirTicket } from '../service/PDFService';
+import { abrirTicket } from '../../../../globalServices/PDFService';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de login
 
 export const MisTickets = () => {

@@ -1,4 +1,4 @@
-  import { apiDownload } from '../../../../globalServices/API';
+  import { apiDownload } from './API';
 
   export const descargarComprobante = async (id) => {
     try {
