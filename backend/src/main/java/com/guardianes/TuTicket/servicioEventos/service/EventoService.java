@@ -2,17 +2,16 @@ package com.guardianes.TuTicket.servicioEventos.service;
 
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.repo.EventoRepo;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-
 public class EventoService {
 
-    private final EventoRepo repo;
+    @Autowired
+    private EventoRepo repo;
 
     public List<Evento> getAllEventos() {
         return repo.findAll();

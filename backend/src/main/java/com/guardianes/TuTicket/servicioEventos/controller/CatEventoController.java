@@ -1,8 +1,7 @@
 package com.guardianes.TuTicket.servicioEventos.controller;
 
-import com.guardianes.TuTicket.servicioEventos.model.CategoriaEvento;
+import com.guardianes.TuTicket.servicioEventos.model.CatEvento;
 import com.guardianes.TuTicket.servicioEventos.service.CatEventoService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +11,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class CatEventoController {
 
-    private final CatEventoService service;
+    @Autowired
+    private CatEventoService service;
 
     @PostMapping("/catevento")
-    public ResponseEntity<?> addCatEvento(@RequestBody CategoriaEvento categoriaEvento) {
+    public ResponseEntity<?> addCatEvento(@RequestBody CatEvento catEvento) {
         try {
-            CategoriaEvento nuevo = service.addCategoria(categoriaEvento);
+            CatEvento nuevo = service.addCategoria(catEvento);
             return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -28,24 +27,24 @@ public class CatEventoController {
     }
 
     @GetMapping("/catevento")
-    public ResponseEntity<List<CategoriaEvento>> getAllCatEventos() {
+    public ResponseEntity<List<CatEvento>> getAllCatEventos() {
         return ResponseEntity.ok(service.getAllCategorias());
     }
 
     @GetMapping("/catevento/{id}")
     public ResponseEntity<?> getCatEventoById(@PathVariable Integer id) {
-        CategoriaEvento categoriaEvento = service.getCategoriaById(id);
-        if (categoriaEvento == null) {
+        CatEvento catEvento = service.getCategoriaById(id);
+        if (catEvento == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoría de evento no encontrada");
         }
-        return ResponseEntity.ok(categoriaEvento);
+        return ResponseEntity.ok(catEvento);
     }
 
     @PutMapping("/catevento/{id}")
-    public ResponseEntity<?> updateCatEvento(@PathVariable Integer id, @RequestBody CategoriaEvento categoriaEvento) {
+    public ResponseEntity<?> updateCatEvento(@PathVariable Integer id, @RequestBody CatEvento catEvento) {
         try {
-            categoriaEvento.setIdCategoria(id);
-            CategoriaEvento actualizado = service.updateCategoria(categoriaEvento);
+            catEvento.setIdCategoria(id);
+            CatEvento actualizado = service.updateCategoria(catEvento);
             return ResponseEntity.ok(actualizado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -2,17 +2,16 @@ package com.guardianes.TuTicket.servicioPedidos.service;
 
 import com.guardianes.TuTicket.servicioPedidos.model.Ticket;
 import com.guardianes.TuTicket.servicioPedidos.repo.TicketRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TicketService {
 
-    private final TicketRepo repo;
+    @Autowired
+    private TicketRepo repo;
 
     public Ticket addTicket(Ticket ticket) {
         return repo.save(ticket);

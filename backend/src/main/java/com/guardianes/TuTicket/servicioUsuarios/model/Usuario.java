@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, length = 150, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String hashCtr;
 
     @Column
@@ -42,21 +43,23 @@ public class Usuario implements UserDetails {
     @Column(length = 9, unique = true)
     private String telefono;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Rol rol;
-
     @Column
     private Boolean activo = true;
+
+    @Column(nullable = false, length = 20)
+    private String rol;
 
     @ManyToOne
     @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Ciudad ciudad;
 
+
+
+    //IMPLEMENTACIÓN DE USER DETAILS
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(rol.toString().toUpperCase()));
+        return Collections.singletonList(new SimpleGrantedAuthority(rol.toUpperCase()));
     }
 
     @Override

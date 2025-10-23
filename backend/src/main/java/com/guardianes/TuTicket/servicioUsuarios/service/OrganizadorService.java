@@ -2,17 +2,16 @@ package com.guardianes.TuTicket.servicioUsuarios.service;
 
 import com.guardianes.TuTicket.servicioUsuarios.model.Organizador;
 import com.guardianes.TuTicket.servicioUsuarios.repo.OrganizadorRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class OrganizadorService {
 
-    private final OrganizadorRepo repo;
+    @Autowired
+    private OrganizadorRepo repo;
 
     public List<Organizador> getAllOrganizadores() {
         return repo.findAll();

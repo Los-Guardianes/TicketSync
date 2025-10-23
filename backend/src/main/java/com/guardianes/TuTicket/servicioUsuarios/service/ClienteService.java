@@ -2,16 +2,16 @@ package com.guardianes.TuTicket.servicioUsuarios.service;
 
 import com.guardianes.TuTicket.servicioUsuarios.model.Cliente;
 import com.guardianes.TuTicket.servicioUsuarios.repo.ClienteRepo;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ClienteService {
 
-    private final ClienteRepo repo;
+    @Autowired
+    private ClienteRepo repo;
 
     public List<Cliente> getAllClientes() {
         return repo.findAll();

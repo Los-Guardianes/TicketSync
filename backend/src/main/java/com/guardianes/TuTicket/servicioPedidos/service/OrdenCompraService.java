@@ -1,7 +1,9 @@
 package com.guardianes.TuTicket.servicioPedidos.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.guardianes.TuTicket.servicioEventos.model.Entrada;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
+import com.guardianes.TuTicket.servicioEventos.repo.EntradaRepo;
 import com.guardianes.TuTicket.servicioPedidos.DTO.DetalleCompraDTO;
 import com.guardianes.TuTicket.servicioPedidos.DTO.OrdenCompraDTO;
 import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
@@ -21,10 +23,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class OrdenCompraService {
-
     private final OrdenCompraRepo repo;
     private final DetalleCompraRepo repoDetalle;
-    //private final EntradaRepo repoEntrada;
+    private final EntradaRepo repoEntrada;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -50,9 +51,6 @@ public class OrdenCompraService {
     }
 
     public OrdenCompra orquestarOrdenCompra(OrdenCompraDTO ordenCompraDTO) {
-
-        return new OrdenCompra();
-        /* Cambiar
         // Crear referencias sin hacer SELECT (solo proxies con ID)
         Usuario usuario = entityManager.getReference(Usuario.class, ordenCompraDTO.getIdUsuario());
         Funcion funcion = entityManager.getReference(Funcion.class, ordenCompraDTO.getIdFuncion());
@@ -81,6 +79,5 @@ public class OrdenCompraService {
             }
         }
         return oc;
-         */
     }
 }

@@ -1,33 +1,32 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.model.CategoriaEvento;
+import com.guardianes.TuTicket.servicioEventos.model.CatEvento;
 import com.guardianes.TuTicket.servicioEventos.repo.CatEventoRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CatEventoService {
 
-    private final CatEventoRepo repo;
+    @Autowired
+    private CatEventoRepo repo;
 
-    public List<CategoriaEvento> getAllCategorias() {
+    public List<CatEvento> getAllCategorias() {
         return repo.findAll();
     }
 
-    public CategoriaEvento getCategoriaById(Integer id) {
+    public CatEvento getCategoriaById(Integer id) {
         return repo.findById(id).orElse(null);
     }
 
-    public CategoriaEvento addCategoria(CategoriaEvento categoriaEvento) {
-        return repo.save(categoriaEvento);
+    public CatEvento addCategoria(CatEvento catEvento) {
+        return repo.save(catEvento);
     }
 
-    public CategoriaEvento updateCategoria(CategoriaEvento categoriaEvento) {
-        return repo.save(categoriaEvento);
+    public CatEvento updateCategoria(CatEvento catEvento) {
+        return repo.save(catEvento);
     }
 
     public void deleteCategoria(Integer id) {

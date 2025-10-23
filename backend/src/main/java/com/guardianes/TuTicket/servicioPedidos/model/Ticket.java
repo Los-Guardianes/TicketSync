@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,19 +21,7 @@ public class Ticket {
     @Column(nullable = false)
     private Boolean usado = false;
 
-    @Column(nullable = false)
-    private String hashTicket;
-
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal precioUnitario;
-
-    @Column(precision = 5, scale = 2)
-    private BigDecimal conceptoDevolucion;
-
-    @Column(nullable = false)
-    private Boolean activo = true;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idDetalleCompra", referencedColumnName = "idDetalleCompra")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private DetalleCompra detalleCompra;

@@ -21,17 +21,19 @@ public class Zona {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "comprasActuales", nullable = false)
-    private Integer comprasActuales = 0;
-
-    @Column(name = "aforo", nullable = false)
-    private Integer aforo;
+    @Column(name = "numAsientos", nullable = false)
+    private Integer numAsientos;
 
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idEvento", referencedColumnName = "idEvento")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Evento evento;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idTipoEntrada", referencedColumnName = "idTipoEntrada")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private TipoEntrada tipoEntrada;
 }

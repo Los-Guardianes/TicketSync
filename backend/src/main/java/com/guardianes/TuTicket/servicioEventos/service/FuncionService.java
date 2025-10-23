@@ -4,7 +4,6 @@ import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
 import jdk.jfr.Event;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-
 public class FuncionService {
 
-    private final FuncionRepo repo;
+    @Autowired
+    private FuncionRepo repo;
 
     public List<Funcion> getAllFunciones() {
         return repo.findAll();

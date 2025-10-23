@@ -2,7 +2,6 @@ package com.guardianes.TuTicket.servicioEventos.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
-import com.guardianes.TuTicket.servicioUsuarios.model.Organizador;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,57 +11,52 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "evento", schema = "tuticket")
+@Table(name = "evento")
 public class Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idevento")
     private Integer idEvento;
 
     @Column(nullable = false, length = 150)
     private String nombre;
 
+    // @Column(nullable = false)
+    // private LocalDate fechaInicio;
+
+    // @Column(nullable = false)
+    // private LocalDate fechaFin;
+
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "informadic", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String informAdic;
 
     @Column(columnDefinition = "TEXT")
     private String restricciones;
 
-    @Column(name = "urlimagen", length = 255)
+    @Column(nullable = true, length = 255)
     private String urlImagen;
 
-    @Column(name = "urlmapa", length = 255)
+    @Column(nullable = true, length = 255)
     private String urlMapa;
 
-    @Column(length = 255)
+    @Column(nullable = false, length = 255)
     private String direccion;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoMoneda moneda;
-
-    @Column(name = "maxcomprastickets", nullable = false)
-    private Integer maxComprasTickets;
-
-    @Column(nullable = false)
+    @Column
     private Boolean activo = true;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Organizador organizador;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "idciudad", referencedColumnName = "idciudad")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Ciudad ciudad;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "idcategoria", referencedColumnName = "idcategoria")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private CategoriaEvento categoria;
+    private CatEvento categoria;
+
+
 }

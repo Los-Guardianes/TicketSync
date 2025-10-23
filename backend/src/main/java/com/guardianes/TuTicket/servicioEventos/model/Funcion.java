@@ -34,7 +34,7 @@ public class Funcion {
 
     private Boolean activo = true;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idEvento", referencedColumnName = "idEvento")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Evento evento;

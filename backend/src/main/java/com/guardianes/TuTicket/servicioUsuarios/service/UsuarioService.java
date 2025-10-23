@@ -2,7 +2,8 @@ package com.guardianes.TuTicket.servicioUsuarios.service;
 
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioUsuarios.repo.UsuarioRepo;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService implements UserDetailsService {
 
-    private final UsuarioRepo repo;
+    @Autowired
+    private UsuarioRepo repo;
 
     public List<Usuario> getAllUsuarios() {
         return repo.findAll();

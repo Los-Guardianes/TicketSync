@@ -1,10 +1,9 @@
 package com.guardianes.TuTicket.servicioEventos.service;
-import com.guardianes.TuTicket.servicioEventos.DTO.*;
+import com.guardianes.TuTicket.servicioEventos.DTO.*; // Importa los DTOs corregidos
 import com.guardianes.TuTicket.servicioEventos.model.*;
 import com.guardianes.TuTicket.servicioEventos.repo.*;
 import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import com.guardianes.TuTicket.servicioUbicacion.repo.CiudadRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,24 +14,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.time.format.DateTimeFormatter; // <-- IMPORTANTE
 @Service
-@RequiredArgsConstructor
 public class EventoCompletoService {
 
-    private final EventoRepo repoEvento;
-    private final FuncionRepo repoFuncion;
-    private final PeriodoRepo repoTemporada;
-    private final TipoEntradaRepo repoTipoEntrada;
-    private final ZonaRepo repoZona; // <-- Repositorio para Zona
-    private final CiudadRepo repoCiudad;
-    private final CatEventoRepo repoCatEvento;
+    @Autowired private EventoRepo repoEvento;
+    @Autowired private FuncionRepo repoFuncion;
+    @Autowired private TemporadaRepo repoTemporada;
+    @Autowired private TipoEntradaRepo repoTipoEntrada;
+    @Autowired private ZonaRepo repoZona; // <-- Repositorio para Zona
+    @Autowired private CiudadRepo repoCiudad;
+    @Autowired private CatEventoRepo repoCatEvento;
 
     @Transactional
     public Evento crearEventoCompleto(EventoCompletoDTO dto) {
-
         // --- 1. Crear y Guardar el Evento ---
         Evento evento = new Evento();
-        return evento;
-        /* Cambiar a nueva forma
         evento.setNombre(dto.getNombre());
         evento.setDescripcion(dto.getDescripcion());
         evento.setInformAdic(dto.getInformAdic());
@@ -42,7 +37,7 @@ public class EventoCompletoService {
 
         Ciudad ciudad = repoCiudad.findById(dto.getIdCiudad())
                 .orElseThrow(() -> new RuntimeException("Ciudad no encontrada con ID: " + dto.getIdCiudad()));
-        CategoriaEvento categoria = repoCatEvento.findById(dto.getIdCategoria())
+        CatEvento categoria = repoCatEvento.findById(dto.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + dto.getIdCategoria()));
         evento.setCiudad(ciudad);
         evento.setCategoria(categoria);
@@ -74,7 +69,7 @@ public class EventoCompletoService {
 
         // --- 3. Crear y Guardar las Temporadas ---
         dto.getTemporadas().forEach(temporadaDto -> {
-            Periodo temporada = new Periodo();
+            Temporada temporada = new Temporada();
             temporada.setNombre(temporadaDto.getNombre());
             if (temporadaDto.getFechaInicio() != null && !temporadaDto.getFechaInicio().isEmpty()) {
                 temporada.setFechaInicio(LocalDate.parse(temporadaDto.getFechaInicio(), dateFormatter));
@@ -123,7 +118,5 @@ public class EventoCompletoService {
         });
 
         return eventoGuardado;
-
-         */
     }
 }
