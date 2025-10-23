@@ -87,7 +87,14 @@ export const NavBar = ({
             />
           </ul>
         </li>
-
+         {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
+                {user && user.rol === 'organizador' && (
+                    <li className='nav-item'>
+                        <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
+                            Crear Evento
+                        </NavLink>
+                    </li>
+                )}
         {/* Botones de usuario */}
         {!user ? (
           <>
@@ -100,6 +107,9 @@ export const NavBar = ({
           </>
         ) : (
           <>
+            <li className='nav-item'>
+                <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
+            </li>
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>

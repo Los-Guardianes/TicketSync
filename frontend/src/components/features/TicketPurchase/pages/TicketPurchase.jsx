@@ -121,7 +121,7 @@ export const TicketPurchase = () => {
         <main className="buy-ticket">
             <div id="buy-ticket-data">
                 <h1>Comprar ticket</h1>
-                <section>
+                <section id="purchase_selection">
                     <div className="data_purchase">
                         <div>
                             <h2>Zona</h2>                        
