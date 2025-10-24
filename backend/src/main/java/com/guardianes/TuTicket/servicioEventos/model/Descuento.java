@@ -24,7 +24,7 @@ public class Descuento {
     private String codigo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipoDesc", nullable = false, length = 50)
+    @Column(name = "tipoDesc", nullable = false)
     private TipoDescuento tipoDesc;
 
     @Column(nullable = false, precision = 10, scale = 2)

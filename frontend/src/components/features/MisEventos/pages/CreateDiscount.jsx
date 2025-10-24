@@ -25,7 +25,7 @@ export const CreateDiscount = () => {
   const handleSubmit = async () => {
     const descuento = {
       codigo: code,
-      tipoDesc: discountType === 'monto' ? 'MONTO' : 'PORCENTAJE',
+      tipoDesc: discountType === 'monto' ? "monto" : "porcentaje",
       valorDescuento: parseFloat(discountValue),
       fechaInicio: startDate,
       fechaFin: endDate,
@@ -43,7 +43,7 @@ export const CreateDiscount = () => {
       console.log('Descuento creado exitosamente');
       navigate('/miseventos');
     } catch (error) {
-      console.error('Error al crear el descuento:', error);
+      alert("Hubo un error: " + error.message);
     }
   };
 
