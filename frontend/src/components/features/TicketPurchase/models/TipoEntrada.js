@@ -1,18 +1,17 @@
 export class TipoEntrada {
-    constructor(id, nombre, precioBase, cantidad_maxima,activo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.precioBase = precioBase;
-        this.cantidad_maxima = cantidad_maxima;
-        this.activo = activo;
-    }
-    
-    getNombre() { return this.nombre }
+  constructor({ idTipoEntrada, nombre, descripcion, idEvento }) {
+    this.idTipoEntrada = idTipoEntrada;
+    this.nombre = nombre;
+    this.descripcion = descripcion;
+    this.idEvento = idEvento;
+  }
 
-    getPrecioBase() { return this.precioBase }
-
-    getCantidadMaxima() { return this.cantidad_maxima }
-
-    getActivo() { return this.activo }
-
+  static fromApi(data) {
+    return new TipoEntrada({
+      idTipoEntrada: data.idTipoEntrada,
+      nombre: data.nombre,
+      descripcion: data.descripcion,
+      idEvento: data.idEvento,
+    });
+  }
 }

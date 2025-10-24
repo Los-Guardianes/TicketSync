@@ -34,4 +34,5 @@ public class Tarifa {
     @JoinColumn(name = "idTipoEntrada", referencedColumnName = "idTipoEntrada")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TipoEntrada tipoEntrada;
+
 }

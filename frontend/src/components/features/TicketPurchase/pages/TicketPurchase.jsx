@@ -27,6 +27,7 @@ export const TicketPurchase = () => {
     const [selectedZona, setSelectedZona] = useState(null);
     const [selectedTemporada, setSelectedTemporada] = useState(null);
     const [selectedFuncion, setSelectedFuncion] = useState(null);
+    const [selectedTipoEntrada, setSelectedTipoEntrada] = useState(null);
 
     const navigate = useNavigate();
     const {
@@ -35,21 +36,23 @@ export const TicketPurchase = () => {
         isLoading,
         message,
         zonas,
-        temporadas,
+        periodo,
         evento,
         funciones,
+        tipoEntradas,
+        tarifas,
         handleInputChange,
-        fetchZonas,
-        fetchTemporadas,
+        fetchPeriodo,
         fetchEvento,
-        fetchFunciones
+        fetchFunciones,
+        fetchTarifas
     } = useTicketPurchase(id);
  
     useEffect(() => {
         fetchEvento();
-        fetchZonas();
-        fetchTemporadas();
+        //fetchPeriodo();
         fetchFunciones();
+        fetchTarifas();
     }, [id]);
     
     const incrementar = () => {
@@ -62,6 +65,7 @@ export const TicketPurchase = () => {
 
     const handleDiscount = async (e) => {
         e.preventDefault();
+        //falta implementar validacion de codigo de descuento
     };
 
     const handleContinueToPay = () => {
@@ -93,9 +97,10 @@ export const TicketPurchase = () => {
         );
         if (indexExistente >= 0) {
             const nuevaLista = [...listaActual];
-            const detalleExistente = nuevaLista[indexExistente];
             detalleExistente.precioDetalle += precioDetalleLocal;
             detalleExistente.cantidad += cantidadEntradas;
+            const detalleExistente = nuevaLista[indexExistente];
+
             setListaDetalles(nuevaLista);
         } else {
             const nuevoDetalle = new DetalleCompra(
@@ -133,11 +138,11 @@ export const TicketPurchase = () => {
                             />    
                         </div>                        
                         <div>
-                            <h2>Temporada</h2>
+                            <h2>Tipo Entrada</h2>
                             <DropdownOptions                        
-                                options={temporadas}
-                                setSelectedOption={setSelectedTemporada}
-                                selectedOption={selectedTemporada}
+                                options={tipoEntradas}
+                                setSelectedOption={setSelectedTipoEntrada}
+                                selectedOption={selectedTipoEntrada}
                             />
                         </div>
                         <div>

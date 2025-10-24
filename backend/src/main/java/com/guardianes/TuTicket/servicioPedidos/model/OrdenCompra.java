@@ -3,10 +3,13 @@ package com.guardianes.TuTicket.servicioPedidos.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +31,7 @@ public class OrdenCompra {
     private String metodoPago;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private EstadoOrdenCompra estado;
 

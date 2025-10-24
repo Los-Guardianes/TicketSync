@@ -1,16 +1,19 @@
 export class Zona {
-    constructor(id, nombre, num_asientos, activo){
-        this.id = id;
-        this.nombre = nombre;
-        this.num_asientos = num_asientos;
-        this.activo = activo;
-    }
+  constructor({ idZona, nombre, comprasActuales, aforo, idEvento }) {
+    this.idZona = idZona;
+    this.nombre = nombre;
+    this.comprasActuales = comprasActuales;
+    this.aforo = aforo;
+    this.idEvento = idEvento;
+  }
 
-    GetId() { return this.id }
-
-    GetNombre() { return this.nombre }
-
-    GetNumAsientos() { return this.num_asientos }
-
-    GetActivo() { return this.activo }
+  static fromApi(data) {
+    return new Zona({
+      idZona: data.idZona,
+      nombre: data.nombre,
+      comprasActuales: data.comprasActuales,
+      aforo: data.aforo,
+      idEvento: data.idEvento,
+    });
+  }
 }
