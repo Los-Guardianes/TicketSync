@@ -21,9 +21,6 @@ public class Zona {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "comprasActuales", nullable = false)
-    private Integer comprasActuales = 0;
-
     @Column(name = "aforo", nullable = false)
     private Integer aforo;
 
