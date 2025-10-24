@@ -1,16 +1,20 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
+import com.guardianes.TuTicket.servicioEventos.model.TipoDescuento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class TemporadaDTO {
+public class PeriodoDTO {
     private String nombre; // "Preventa", "Venta General"
+    //Esto no debe ser string porsiacaso
     private String fechaInicio;
     private String fechaFin;
-    private BigDecimal porcentajeDesc;
+
+    private TipoDescuento tipoDescuento;
+    private BigDecimal valorDescuento;
+    private Integer idEvento;
 }
