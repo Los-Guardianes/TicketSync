@@ -3,16 +3,18 @@ package com.guardianes.TuTicket.servicioEventos.service;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import com.guardianes.TuTicket.servicioEventos.repo.ZonaRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+
 public class ZonaService {
 
-    @Autowired
-    private ZonaRepo repo;
+    private final ZonaRepo repo;
 
     public Zona addZona(Zona zona) {
         return repo.save(zona);

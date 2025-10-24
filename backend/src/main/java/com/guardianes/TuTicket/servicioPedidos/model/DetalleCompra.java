@@ -1,17 +1,20 @@
 package com.guardianes.TuTicket.servicioPedidos.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.guardianes.TuTicket.servicioEventos.model.Entrada;
+import com.guardianes.TuTicket.servicioEventos.model.Periodo;
+import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "detallecompra")
+@Table(name = "detalle_compra")
 public class DetalleCompra {
 
     @Id
@@ -22,18 +25,21 @@ public class DetalleCompra {
     @Column(nullable = false)
     private Integer cantidad;
 
-    @ManyToOne(optional = false)
+    @Column(name = "precioDetalle", nullable = false, precision = 5, scale = 2)
+    private BigDecimal precioDetalle;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idOrdenCompra", referencedColumnName = "idOrdenCompra")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private OrdenCompra ordenCompra;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "idEntrada", referencedColumnName = "idEntrada")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idTarifa", referencedColumnName = "idTarifa")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Entrada entrada;
+    private Tarifa tarifa;
 
-    public DetalleCompra(OrdenCompra ordenCompra, Entrada entrada, Integer cantidad){
-        this.ordenCompra = ordenCompra;
-        this.entrada = entrada;
-        this.cantidad = cantidad;
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idPeriodo", referencedColumnName = "idPeriodo")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Periodo periodo;
 }

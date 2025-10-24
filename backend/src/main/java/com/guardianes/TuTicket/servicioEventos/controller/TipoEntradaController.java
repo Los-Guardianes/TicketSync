@@ -60,4 +60,14 @@ public class TipoEntradaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("tipoentrada/evento/{idEvento}")
+    public ResponseEntity<?> getPeriodosByEvent(@PathVariable Integer idEvento) {
+        //Esta función devuelve instanciado hasta Zona y TipoEntrada
+        try{
+            return ResponseEntity.ok(service.getTipoEntradaByIdEvento(idEvento));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

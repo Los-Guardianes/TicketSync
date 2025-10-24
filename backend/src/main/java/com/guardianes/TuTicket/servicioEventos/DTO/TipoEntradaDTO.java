@@ -1,16 +1,21 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
+import com.guardianes.TuTicket.servicioEventos.model.TipoEntrada;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 public class TipoEntradaDTO {
-    private String nombre; // "VIP", "General"
-    private String moneda; // "PEN", "USD"
-    private BigDecimal precioBase;
+    private Integer idTipoEntrada;
+    private String nombre;
     private String descripcion;
-    private Integer cantidadMax;
+    private Integer idEvento;
+
+    public TipoEntradaDTO(TipoEntrada tipoEntrada){
+        this.idTipoEntrada = tipoEntrada.getIdTipoEntrada();
+        this.nombre = tipoEntrada.getNombre();
+        this.descripcion = tipoEntrada.getDescripcion();
+        this.idEvento = tipoEntrada.getEvento().getIdEvento();
+    }
 }

@@ -4,7 +4,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.guardianes.TuTicket.servicioEventos.model.Entrada;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
@@ -18,6 +17,7 @@ import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import com.itextpdf.text.BaseColor;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,16 +28,12 @@ import java.util.Date;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class PDFService {
 
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private DetalleCompraService dcService;
-
-    @Autowired
-    private TicketService tktService;
+    private final UsuarioService usuarioService;
+    private final DetalleCompraService dcService;
+    private final TicketService tktService;
 
     public Image generarQR(String contenido) throws Exception {
         BitMatrix matrix = new MultiFormatWriter().encode(contenido, BarcodeFormat.QR_CODE, 100, 100);
@@ -47,6 +43,8 @@ public class PDFService {
     }
 
     public byte[] generarComprobantePDF(OrdenCompra orden) throws Exception {
+        return null;
+        /*
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Rectangle customSize = new Rectangle(400, 300);
         Document document = new Document(customSize);
@@ -201,6 +199,8 @@ public class PDFService {
 
         document.close();
         return baos.toByteArray();
+
+         */
     }
 
 }
