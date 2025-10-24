@@ -14,7 +14,9 @@ const Layout = () => {
   const [search, setSearch] = useState('');
   const [precio, setPrecio] = useState(1000);     // placeholder
   const [ubicacion, setUbicacion] = useState('Todas');
-  const [fecha, setFecha] = useState('');
+  const [fecha, setFecha] = useState(['', '']);
+
+
 
   // ubicaciones dinámicas (dptos)
   const [ubicacionesDisponibles, setUbicacionesDisponibles] = useState([]);

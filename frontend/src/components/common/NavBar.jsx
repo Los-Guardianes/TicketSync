@@ -79,22 +79,34 @@ export const NavBar = ({
             Fecha
           </NavLink>
           <ul className="dropdown-menu p-3">
-            <input
-              type="date"
-              className="form-control"
-              value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
-            />
+            <div>
+              <label><strong>Fecha de inicio:</strong></label> {/* el título para "Fecha de inicio" */}
+              <input
+                type="date"
+                className="form-control"
+                value={fecha[0]} // Fecha de inicio
+                onChange={(e) => setFecha([e.target.value, fecha[1]])}
+              />
+            </div>
+            <div className="mt-2">
+              <label><strong>Fecha de fin:</strong></label> {/* título para "Fecha de fin" */}
+              <input
+                type="date"
+                className="form-control"
+                value={fecha[1]} // Fecha de fin
+                onChange={(e) => setFecha([fecha[0], e.target.value])}
+              />
+            </div>
           </ul>
         </li>
-         {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
-                {user && user.rol === 'organizador' && (
-                    <li className='nav-item'>
-                        <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
-                            Crear Evento
-                        </NavLink>
-                    </li>
-                )}
+        {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
+        {user && user.rol === 'organizador' && (
+          <li className='nav-item'>
+            <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
+              Crear Evento
+            </NavLink>
+          </li>
+        )}
         {/* Botones de usuario */}
         {!user ? (
           <>
@@ -108,7 +120,7 @@ export const NavBar = ({
         ) : (
           <>
             <li className='nav-item'>
-                <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
+              <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
             </li>
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>

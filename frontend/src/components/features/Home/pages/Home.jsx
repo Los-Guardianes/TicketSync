@@ -35,7 +35,11 @@ export const Home = () => {
 
     // fecha
     const matchFecha =
-      !fecha || (evento.fecha && evento.fecha.startsWith(fecha))
+      (!fecha[0] && !fecha[1]) || // Si no hay fechas seleccionadas, no aplicar el filtro
+      (evento.fecha &&
+      new Date(evento.fecha) >= new Date(fecha[0]) &&
+      new Date(evento.fecha) <= new Date(fecha[1])) // Si hay fechas seleccionadas, aplicamos el filtro
+
 
     return matchSearch && matchUbicacion && matchPrecio && matchFecha
   })
