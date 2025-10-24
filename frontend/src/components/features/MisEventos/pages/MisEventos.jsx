@@ -1,32 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import './MisTickets.css';
-import { getTickets } from '../service/MisTicketsService';
-import { abrirTicket } from '../../../../globalServices/PDFService';
+import { getMisEventos } from '../service/MisEventosService';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de login
 
-export const MisTickets = () => {
-  const [tickets, setTickets] = useState([]);
+export const MisEventos = () => {
+  const [eventos, setEventos] = useState([]);
   const { user, logout } = useAuth(); //Usuario y la función logout
   // Obtenemos los tickets de la API
   useEffect(() => {
-    const fetchTickets = async () => {
+    const fetchEventos = async () => {
       try {
-        const data = await getTickets(user.idUsuario);
-        setTickets(data);
+        const data = await getMisEventos(user.idUsuario);
+        setEventos(data);
       } catch (err) {
-        console.error('Error al obtener tickets:', err);
+        console.error('Error al obtener eventos:', err);
       }
     };
-    fetchTickets();
+    fetchEventos();
   }, []);
-
-  const handleVerTicket = async (id) => {
-    try {
-      await abrirTicket(id);
-    } catch (err) {
-      console.error(`Error al abrir el ticket ${id}:`, err);
-    }
-  };
 
   return (
     <div className='d-flex'>
@@ -35,8 +25,8 @@ export const MisTickets = () => {
         <h5 className='mb-4'>TuTicket</h5>
         <nav className='nav flex-column'>
           <a className='nav-link' href='/perfil'>Mi perfil</a>
-          <a className='nav-link' href='/miseventos'>Mis Eventos</a>
-          <a className='nav-link active fw-bold' href='/mistickets'>Mis Tickets</a>
+          <a className='nav-link active fw-bold' href='/eventos'>Mis Eventos</a>
+          <a className='nav-link' href='/mistickets'>Mis Tickets</a>
           <a className='nav-link' href='/faq'>Preguntas frecuentes</a>
           <a className='nav-link' href='/privacidad'>Política de Privacidad</a>
         </nav>
@@ -44,7 +34,7 @@ export const MisTickets = () => {
 
       {/* Contenido principal */}
       <main className='flex-grow-1 p-4'>
-        <h4 className='mb-3'>Mis Tickets</h4>
+{/*         <h4 className='mb-3'>Mis Tickets</h4>
 
         {tickets.length > 0 ? (
           <div className='d-flex overflow-auto gap-3 pb-2'>
@@ -70,7 +60,7 @@ export const MisTickets = () => {
 
         <hr className='my-5' />
 
-        <h4 className='mb-3'>Tickets Pasados</h4>
+        <h4 className='mb-3'>Tickets Pasados</h4> */}
         {/* Sección vacía por ahora */}
       </main>
     </div>

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import "./CreateEvent.css";
+import "./CreateDiscount.css";
+import { postDescuento } from '../service/DescuentoService';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateDiscount = () => {
+  const navigate = useNavigate();
+
   const [code, setCode] = useState('');
   const [autoGenerate, setAutoGenerate] = useState(false);
   const [discountType, setDiscountType] = useState('porcentaje');
@@ -18,28 +22,38 @@ export const CreateDiscount = () => {
     setCode(generated);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const payload = {
-      code,
-      discountType,
-      discountValue,
-      ticketTypes,
-      totalLimit,
-      perClientLimit,
-      startDate,
-      endDate,
-      massiveGeneration,
+  const handleSubmit = async () => {
+    const descuento = {
+      codigo: code,
+      tipoDesc: discountType === 'monto' ? 'MONTO' : 'PORCENTAJE',
+      valorDescuento: parseFloat(discountValue),
+      fechaInicio: startDate,
+      fechaFin: endDate,
+      limiteTotal: parseInt(totalLimit),
+      limiteCliente: perClientLimit ? parseInt(perClientLimit) : null,
+      esGlobal: false,
+      activo: true,
+      evento: {
+        idEvento: 1 // Reemplaza con el id real si lo tienes dinámico
+      }
     };
-    console.log('Descuento guardado:', payload);
+
+    try {
+      await postDescuento(descuento);
+      console.log('Descuento creado exitosamente');
+      navigate('/miseventos');
+    } catch (error) {
+      console.error('Error al crear el descuento:', error);
+    }
   };
 
   return (
-    <form className="crear-evento-container evento-form" onSubmit={handleSubmit}>
+    <div className="crear-evento-container evento-form">
       <div className="header">
         <span className="step">4</span>
         <h2>Crear Descuentos</h2>
       </div>
+
       <div className="form-content">
         <div className="form-left">
           <div className="campo">
@@ -144,11 +158,13 @@ export const CreateDiscount = () => {
       </div>
 
       <div className="form-actions">
-        <button type="button" className="cancel" onClick={() => navigate("/ubicacion-evento")}>Regresar</button>
-        <button type="submit" className="next">
+        <button type="button" className="cancel" onClick={() => navigate("/ubicacion-evento")}>
+          Regresar
+        </button>
+        <button type="button" className="next" onClick={handleSubmit}>
           Guardar
         </button>
       </div>
-    </form>
+    </div>
   );
 };
