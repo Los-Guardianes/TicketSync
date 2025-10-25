@@ -77,12 +77,8 @@ public class OrdenCompraController {
     }
 
     @PostMapping("/orden/completo")
-    public ResponseEntity<?> addEventoCompleto(@RequestBody OrdenCompraDTO orden) {
-        try{
-            OrdenCompra oc = service.orquestarOrdenCompra(orden);
-            return ResponseEntity.ok(oc);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<?> addOrdenCompleta(@RequestBody OrdenCompraDTO orden) {
+        OrdenCompra oc = service.orquestarOrdenCompra(orden);
+        return ResponseEntity.ok(oc);
     }
 }

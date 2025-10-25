@@ -40,12 +40,12 @@ export const useTicketPurchase = (idevento) => {
     const fetchPeriodo = async () => {
         const data = await apiFetch(`/api/periodo/evento/${idevento}`);
         setPeriodos(data || []); // Corregí "strea" a "data"
+        console.log("Periodos obtenidos:", data);
     };
 
     const fetchTarifas = async () => {
         const data = await apiFetch(`/api/tarifa/evento/${idevento}`);
         const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));
-        console.log("Tarifas parseadas:", tarifasParseadas);
         setTarifas(tarifasParseadas);
     };
 
@@ -56,23 +56,13 @@ export const useTicketPurchase = (idevento) => {
     }
 
     useEffect(() => {
-    if (tarifas.length > 0) {
-        const zonasUnicas = tarifas.reduce((acc, tarifa) => {
-        const zona = tarifa.zona;
-        if (!acc.find(z => z.idZona === zona.idZona)) acc.push(zona);
-        return acc;
-        }, []);
-
-        const tiposUnicos = tarifas.reduce((acc, tarifa) => {
-        const tipo = tarifa.tipoEntrada;
-        if (!acc.find(t => t.idTipoEntrada === tipo.idTipoEntrada)) acc.push(tipo);
-        return acc;
-        }, []);
-
+        if (tarifas.length === 0) return;
+        const zonasUnicas = tarifas.map(t => t.zona);
+        const tiposUnicos = tarifas.map(t => t.tipoEntrada);
         setZonas(zonasUnicas);
         setTipoEntradas(tiposUnicos);
-    }
     }, [tarifas]);
+
 
 
     return {

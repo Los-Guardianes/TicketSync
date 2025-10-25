@@ -36,11 +36,17 @@ export const TicketPay = () => {
         e.preventDefault();
         console.log("Formulario de pago enviado");
         if (!validateForm()) return;
+        const detallesCompras = listaDetalles.map(detalle => ({
+                cantidad: detalle.cantidad,
+                precioDetalle: detalle.precioDetalle,
+                idTarifa: detalle.tarifa?.idTarifa,
+                idPeriodo: detalle.idPeriodo
+        }))
         const ordenCompra = new OrdenCompra(
             formData.metodoPago,
             user.idUsuario,
             funcion.idFuncion,
-            listaDetalles
+            detallesCompras
         );
         console.log("Enviando orden de compra:", ordenCompra);
         try {
