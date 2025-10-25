@@ -82,8 +82,8 @@ export const TicketPurchase = () => {
     }
 
     const agregarIncrementarDetalle = () => {
-        if (!selectedZona || !selectedTipoEntrada) {
-            alert("Selecciona una zona y un tipo de entrada antes de agregar.");
+        if (!selectedZona || !selectedTipoEntrada || !selectedFuncion) {
+            alert("Selecciona una zona, un tipo de entrada y una función antes de agregar.");
             return;
         }
         const selectedTarifa = tarifas.find(
