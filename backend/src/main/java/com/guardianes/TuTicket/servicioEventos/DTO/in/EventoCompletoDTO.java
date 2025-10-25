@@ -1,5 +1,9 @@
-package com.guardianes.TuTicket.servicioEventos.DTO;
+package com.guardianes.TuTicket.servicioEventos.DTO.in;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.FuncionDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.PeriodoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.TipoEntradaDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.ZonaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

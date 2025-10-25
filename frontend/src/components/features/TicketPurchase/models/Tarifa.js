@@ -13,8 +13,8 @@ export class Tarifa {
     return new Tarifa({
       idTarifa: data.idTarifa,
       precioBase: data.precioBase,
-      tipoEntrada: TipoEntrada.fromApi(data.tipoEntrada || data.tipoEntradaDTO),
-      zona: Zona.fromApi(data.zona || data.zonaDTO),
+      tipoEntrada: TipoEntrada.fromApi(data.tipoEntradaDTO),
+      zona: Zona.fromApi(data.zonaDTO),
     });
   }
 }

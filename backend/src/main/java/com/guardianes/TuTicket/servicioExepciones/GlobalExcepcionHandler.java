@@ -48,7 +48,7 @@ public class GlobalExcepcionHandler {
     }
 
     @ExceptionHandler(LogicaNegocioException.class)
-    public ResponseEntity<Map<String, Object>> handleLogicaNegocio(OperacionNoPermitidaException ex, WebRequest request) {
+    public ResponseEntity<Map<String, Object>> handleLogicaNegocio(LogicaNegocioException ex, WebRequest request) {
         return new ResponseEntity<>(construirRespuesta(ex, HttpStatus.CONFLICT, request), HttpStatus.CONFLICT);
     }
 

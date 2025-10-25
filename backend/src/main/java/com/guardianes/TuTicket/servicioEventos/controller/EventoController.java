@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.controller;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.EventoCompletoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.service.EventoCompletoService;
 import com.guardianes.TuTicket.servicioEventos.service.EventoService;

@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.servicioAutenticacion.service;
 
-import com.guardianes.TuTicket.servicioUsuarios.DTO.LoginDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.LoginDTO;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.UsuarioDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import lombok.RequiredArgsConstructor;

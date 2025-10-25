@@ -1,6 +1,5 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
 import lombok.AllArgsConstructor;
 import lombok.Data;
