@@ -25,7 +25,7 @@ export const TicketPurchase = () => {
     const [listaDetalles, setListaDetalles] = useState([]);
 
     const [selectedZona, setSelectedZona] = useState(null);
-    const [selectedTemporada, setSelectedTemporada] = useState(null);
+    const [selectedPeriodo, setSelectedPeriodo] = useState(null);
     const [selectedFuncion, setSelectedFuncion] = useState(null);
     const [selectedTipoEntrada, setSelectedTipoEntrada] = useState(null);
 
@@ -50,7 +50,7 @@ export const TicketPurchase = () => {
  
     useEffect(() => {
         fetchEvento();
-        //fetchPeriodo();
+        fetchPeriodo();
         fetchFunciones();
         fetchTarifas();
     }, [id]);
@@ -75,50 +75,62 @@ export const TicketPurchase = () => {
             return;
         }
         navigate("/ticket-pay", { state: {
-            listaDetalles: listaDetalles.map(detalle => ({
-                        cantidad: detalle.cantidad,
-                        idZona: detalle.zona.idZona,
-                        idTemporada: detalle.temporada.idTemporada,
-            })),    
-            montoFinal: montoFinal,
+            listaDetalles: listaDetalles,
+            montoFinal: totalDetalle, //falta aplicar descuento y comision
             funcion: selectedFuncion,
         }});
     }
 
     const agregarIncrementarDetalle = () => {
-        const precioCalculadoLocal = selectedZona.tipoEntrada.precioBase * (1 - selectedTemporada.porcentajeDesc / 100);
-        const precioDetalleLocal = precioCalculadoLocal * cantidadEntradas;
-
-        const listaActual = listaDetalles;
-
-        const indexExistente = listaActual.findIndex(detalle => 
-            detalle.zona.idZona === selectedZona.idZona && 
-            detalle.temporada.idTemporada === selectedTemporada.idTemporada
-        );
-        if (indexExistente >= 0) {
-            const nuevaLista = [...listaActual];
-            detalleExistente.precioDetalle += precioDetalleLocal;
-            detalleExistente.cantidad += cantidadEntradas;
-            const detalleExistente = nuevaLista[indexExistente];
-
-            setListaDetalles(nuevaLista);
-        } else {
-            const nuevoDetalle = new DetalleCompra(
-                selectedZona, 
-                selectedTemporada, 
-                precioDetalleLocal, 
-                cantidadEntradas
-            );            
-            setListaDetalles([...listaActual, nuevoDetalle]);
+        if (!selectedZona || !selectedTipoEntrada) {
+            alert("Selecciona una zona y un tipo de entrada antes de agregar.");
+            return;
         }
+        const selectedTarifa = tarifas.find(
+            t => 
+            t.tipoEntrada.idTipoEntrada === selectedTipoEntrada.idTipoEntrada &&
+            t.zona.idZona === selectedZona.idZona
+        );
+        if (!selectedTarifa) {
+            alert("No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.");
+            return;
+        }
+        
+        const listaActual = [...listaDetalles];
+        console.log("Tarifa seleccionada:", selectedTarifa);
+        console.log("Lista actual antes de agregar/incrementar:", listaActual);
+        const indexExistente = listaActual.findIndex(
+            detalle => 
+            detalle.tarifa.idTarifa === selectedTarifa.idTarifa
+        );
+        const precioDetalleAgregado = selectedTarifa.precioBase * cantidadEntradas;
 
-        setTotalDetalle(totalDetalle+precioDetalleLocal);
-        setMontoComision((comision/100)*(totalDetalle+precioDetalleLocal));
-        setMontoFinal((1+comision/100)*(totalDetalle+precioDetalleLocal));
+        if (indexExistente >= 0) {
+            const detalleExistente = listaActual[indexExistente];
+            detalleExistente.precioDetalle += precioDetalleAgregado;
+            detalleExistente.cantidad += cantidadEntradas;
+            listaActual[indexExistente] = detalleExistente;
+            setListaDetalles(listaActual);
+        } else {
+            //const descuentoPeriodo = precioDetalle * (selectedPeriodo.porcentajeDescuento / 100);
+            listaActual.push({
+                cantidad: cantidadEntradas,
+                precioDetalle: precioDetalleAgregado,
+                tarifa: selectedTarifa,
+                idPeriodo: periodo[0].idPeriodo //falta seleccionar periodo
+            });
+            setListaDetalles(listaActual);
+        }
+        setTotalDetalle(totalDetalle+precioDetalleAgregado);
+
+        /*
+        setMontoFinal((1+comision/100)*(totalDetalle+precioDetalle));
         setPrecioCalculado(precioCalculadoLocal);
         setPrecioDetalle(precioDetalleLocal);
+        */
+
         setSelectedZona(null);
-        setSelectedTemporada(null);
+        setSelectedPeriodo(null);
         setCantidadEntradas(1);
     };
     
@@ -156,29 +168,31 @@ export const TicketPurchase = () => {
                         </div>                         
                     </div>                
                     <div className="data_purchase">
-                        <div>                    
-                            <h2>Canjear código</h2>
-                            <form className="form-discount" onSubmit={handleDiscount}>
-                                <input 
-                                    className={`input-form ${errors.discount ? 'error' : ''}`}
-                                    name='discount'
-                                    placeholder='Ingresa el código de descuento'
-                                    maxLength={100}
-                                    value={formData.discount}
-                                    onChange={handleInputChange}
-                                    disabled={isLoading}
-                                />
-                                <button 
-                                    type="submit" 
-                                    className='btn btn-secondary btn-lg mt-3'
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? 'Verificando...' : 'Aplicar'}
-                                </button>
-                            </form>                        
-                            {errors.discount && <div className="error-form">{errors.discount}</div>}
-                        </div>              
-                        {selectedZona ? (
+                        {/*
+                            <div>                    
+                                <h2>Canjear código</h2>
+                                <form className="form-discount" onSubmit={handleDiscount}>
+                                    <input 
+                                        className={`input-form ${errors.discount ? 'error' : ''}`}
+                                        name='discount'
+                                        placeholder='Ingresa el código de descuento'
+                                        maxLength={100}
+                                        value={formData.discount}
+                                        onChange={handleInputChange}
+                                        disabled={isLoading}
+                                    />
+                                    <button 
+                                        type="submit" 
+                                        className='btn btn-secondary btn-lg mt-3'
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? 'Verificando...' : 'Aplicar'}
+                                    </button>
+                                </form>                        
+                                {errors.discount && <div className="error-form">{errors.discount}</div>}
+                            </div>
+                            */}
+                        {selectedZona && selectedTipoEntrada? (
                             <TicketQuantitySelector
                                 cantidadEntradas={cantidadEntradas}
                                 incrementar={incrementar}
@@ -208,10 +222,7 @@ export const TicketPurchase = () => {
             <section id="info-event-ticket">
                 <InfoEventTicket 
                     evento={evento}
-                    totalDetalle={totalDetalle}
-                    montoDescuento={montoDescuento}
-                    montoComision={montoComision}
-                    montoFinal={montoFinal}
+                    montoFinal={totalDetalle}
                 />
                 <button 
                 className='btn btn-primary'
