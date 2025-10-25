@@ -180,7 +180,7 @@ export const CreateDiscount = () => {
 
           <p>0 = usos ilimitados</p>
 
-          <div className="campo campo-masivo">
+          {/* <div className="campo campo-masivo">
             <label>Generación masiva (opcional)</label>
             <input
               type="number"
@@ -189,7 +189,7 @@ export const CreateDiscount = () => {
               min="0"
               placeholder="Cantidad"
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
