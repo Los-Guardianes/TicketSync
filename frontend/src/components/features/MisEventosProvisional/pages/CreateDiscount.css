@@ -186,3 +186,19 @@
 .form-actions .next:hover {
   background: #176c3a;
 }
+.campo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 1rem;
+}
+
+.campo-row .campo,
+.campo-row .fecha-hora {
+  flex: 1;
+  min-width: 180px;
+}
+
+.campo-masivo {
+  max-width: 200px; /* o el ancho que prefieras */
+}
