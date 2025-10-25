@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
+// src/components/pages/MisTickets/MisTickets.jsx
+import React, { useState, useEffect } from 'react';
 import './MisTickets.css';
 import { getTickets } from '../../../services/MisTicketsService';
 import { abrirTicket } from '../../../services/PDFService';
-import { useAuth } from '../../../context/AuthContext'; //Importa el hook de login
+import { useAuth } from '../../../context/AuthContext';
+import Sidebar from '../../common/Sidebar/Sidebar'; // <-- IMPORTA el Sidebar
 
 export const MisTickets = () => {
   const [tickets, setTickets] = useState([]);
-  const { user, logout } = useAuth(); //Usuario y la función logout
-  // Obtenemos los tickets de la API
+  const { user, logout } = useAuth();
+
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -30,17 +32,8 @@ export const MisTickets = () => {
 
   return (
     <div className='d-flex'>
-      {/* Barra lateral */}
-      <aside className='bg-light border-end p-3' style={{ minWidth: '220px', height: '100vh' }}>
-        <h5 className='mb-4'>TuTicket</h5>
-        <nav className='nav flex-column'>
-          <a className='nav-link' href='/perfil'>Mi perfil</a>
-          <a className='nav-link' href='/eventos'>Mis Eventos</a>
-          <a className='nav-link active fw-bold' href='/tickets'>Mis Tickets</a>
-          <a className='nav-link' href='/faq'>Preguntas frecuentes</a>
-          <a className='nav-link' href='/privacidad'>Política de Privacidad</a>
-        </nav>
-      </aside>
+      {/* Sidebar reutilizable */}
+      <Sidebar />
 
       {/* Contenido principal */}
       <main className='flex-grow-1 p-4'>
