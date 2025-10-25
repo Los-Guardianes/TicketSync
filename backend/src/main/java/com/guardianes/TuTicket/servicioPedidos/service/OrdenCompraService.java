@@ -1,25 +1,17 @@
 package com.guardianes.TuTicket.servicioPedidos.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioExepciones.LogicaNegocioException;
-import com.guardianes.TuTicket.servicioPedidos.DTO.DetalleCompraDTO;
 import com.guardianes.TuTicket.servicioPedidos.DTO.OrdenCompraDTO;
-import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import com.guardianes.TuTicket.servicioPedidos.model.EstadoOrdenCompra;
 import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioPedidos.repo.DetalleCompraRepo;
 import com.guardianes.TuTicket.servicioPedidos.repo.OrdenCompraRepo;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
-import jakarta.persistence.Entity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -55,7 +47,7 @@ public class OrdenCompraService {
         Funcion f = em.getReference(Funcion.class, ordenCompraDTO.getIdFuncion());
         OrdenCompra ordenCompra = ordenCompraDTO.toModel(u,f);
         OrdenCompra ocInsertada = repo.save(ordenCompra);
-        simularApiPasarelaPagos(ocInsertada,true); //true -> siempre va funcionar
+        simularApiPasarelaPagos(ocInsertada,false); //true -> siempre va funcionar
         detalleCompraService.addListDetalles(ordenCompraDTO.getDetallesCompras(), ocInsertada);
         return ocInsertada;
     }

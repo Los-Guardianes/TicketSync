@@ -1,9 +1,11 @@
 package com.guardianes.TuTicket.servicioEventos.controller;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.EventoCompletoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.service.EventoCompletoService;
 import com.guardianes.TuTicket.servicioEventos.service.EventoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class EventoController {
 
-    @Autowired
-    private EventoService service;
+    private final EventoService service;
 
     @PostMapping("/evento")
     public ResponseEntity<?> addEvento(@RequestBody Evento evento) {
@@ -29,7 +31,7 @@ public class EventoController {
     }
 
     @GetMapping("/evento")
-    public ResponseEntity<List<Evento>> getAllEventos() {
+    public ResponseEntity<List<EventoDTO>> getAllEventos() {
         return ResponseEntity.ok(service.getAllEventos());
     }
 

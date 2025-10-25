@@ -15,6 +15,7 @@ export const Home = () => {
     const fetchEventos = async () => {
       const data = await getEventos()
       setEventos(data)
+      console.log(data)
     }
     fetchEventos()
   }, [])
@@ -25,15 +26,12 @@ export const Home = () => {
     const matchSearch =
       !search || evento.nombre?.toLowerCase().includes(search.toLowerCase())
 
-    // ubicación dinámica
     const matchUbicacion =
       ubicacion === 'Todas' ||
       evento.ciudad?.dpto?.nombre === ubicacion
 
-    // precio (placeholder: siempre true Por ahora )
     const matchPrecio = true
 
-    // fecha
     const matchFecha =
       !fecha || (evento.fecha && evento.fecha.startsWith(fecha))
 
