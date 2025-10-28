@@ -40,12 +40,11 @@ export const useTicketPurchase = (idevento) => {
     const fetchPeriodo = async () => {
         const data = await apiFetch(`/api/periodo/evento/${idevento}`);
         setPeriodos(data || []); // Corregí "strea" a "data"
-        console.log("Periodos obtenidos:", data);
     };
 
     const fetchTarifas = async () => {
         const data = await apiFetch(`/api/tarifa/evento/${idevento}`);
-        const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));
+        const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));        
         setTarifas(tarifasParseadas);
     };
 
@@ -55,15 +54,17 @@ export const useTicketPurchase = (idevento) => {
         setFunciones(data || []);
     }
 
-    useEffect(() => {
-        if (tarifas.length === 0) return;
-        const zonasUnicas = tarifas.map(t => t.zona);
-        const tiposUnicos = tarifas.map(t => t.tipoEntrada);
-        setZonas(zonasUnicas);
-        setTipoEntradas(tiposUnicos);
-    }, [tarifas]);
+    const fetchZonas = async () => {
+        const data = await apiFetch(`/api/zona/evento/${idevento}`);
+        const zonasParseadas = (data || []).map(z => Zona.fromApi(z));        
+        setZonas(zonasParseadas);
+    }
 
-
+    const fetchTipoEntradas = async () => {
+        const data = await apiFetch(`/api/tipoentrada/evento/${idevento}`);
+        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));        
+        setTipoEntradas(tiposParseadas);
+    }
 
     return {
         formData,
@@ -77,6 +78,8 @@ export const useTicketPurchase = (idevento) => {
         tipoEntradas,
         tarifas,
         handleInputChange,
+        fetchZonas,
+        fetchTipoEntradas,
         fetchPeriodo,
         fetchEvento,
         fetchFunciones,

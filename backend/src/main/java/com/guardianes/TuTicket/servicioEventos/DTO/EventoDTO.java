@@ -2,12 +2,17 @@ package com.guardianes.TuTicket.servicioEventos.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
+import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioEventos.model.TipoMoneda;
 import com.guardianes.TuTicket.servicioUbicacion.DTO.CiudadDTO;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.OrganizadorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -24,6 +29,8 @@ public class EventoDTO {
     private TipoMoneda moneda;
     private Integer maxComprasTickets;
     private Integer idUsuario; //organizador
+
+    private List<FuncionDTO> funciones;
 
     @JsonProperty("ciudad")
     private CiudadDTO ciudadDTO;
@@ -45,5 +52,22 @@ public class EventoDTO {
         this.idUsuario = evento.getOrganizador().getIdUsuario();
         this.ciudadDTO = new CiudadDTO(evento.getCiudad());
         this.categoriaDTO = new CategoriaEventoDTO(evento.getCategoria());
+    }
+
+    public EventoDTO(Evento evento, List<Funcion> funciones){
+        this.idEvento = evento.getIdEvento();
+        this.nombre = evento.getNombre();
+        this.descripcion = evento.getDescripcion();
+        this.informaAdic = evento.getInformAdic();
+        this.restricciones = evento.getRestricciones();
+        this.urlImagen = evento.getUrlImagen();
+        this.urlMapa = evento.getUrlMapa();
+        this.direccion = evento.getUrlMapa();
+        this.moneda = evento.getMoneda();
+        this.maxComprasTickets = evento.getMaxComprasTickets();
+        this.idUsuario = evento.getOrganizador().getIdUsuario();
+        this.ciudadDTO = new CiudadDTO(evento.getCiudad());
+        this.categoriaDTO = new CategoriaEventoDTO(evento.getCategoria());
+        this.funciones = funciones.stream().map(FuncionDTO::new).collect(Collectors.toList());
     }
 }

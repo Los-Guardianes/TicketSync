@@ -42,6 +42,8 @@ export const TicketPurchase = () => {
         tipoEntradas,
         tarifas,
         handleInputChange,
+        fetchZonas,
+        fetchTipoEntradas,
         fetchPeriodo,
         fetchEvento,
         fetchFunciones,
@@ -53,11 +55,38 @@ export const TicketPurchase = () => {
         fetchPeriodo();
         fetchFunciones();
         fetchTarifas();
+        fetchZonas();
+        fetchTipoEntradas();    
     }, [id]);
     
+
+    const getPeriodoActual = (listaPeriodos) => {
+        if (!listaPeriodos || listaPeriodos.length === 0) return null;
+
+        const hoy = new Date(); // fecha actual
+        return listaPeriodos.find((p) => {
+            const inicio = new Date(p.fechaInicio);
+            const fin = new Date(p.fechaFin);
+            return hoy >= inicio && hoy <= fin;
+        }) || null; // si no encuentra ninguno, devuelve null
+    }
+
+    useEffect(() => {
+        if (periodo && periodo.length > 0) {
+            const actual = getPeriodoActual(periodo);
+            setSelectedPeriodo(actual);
+        }
+        console.log("Periodo actualizado:", selectedPeriodo);
+    }, [periodo]);
+
+
     const incrementar = () => {
         if (cantidadEntradas < maximoEntradas)setCantidadEntradas(prev => prev + 1);
     };
+
+    const handleRegresar = () => {
+        navigate(-1);
+    }
 
     const decrementar = () => {
         setCantidadEntradas(prev => Math.max(1, prev - 1));
@@ -139,6 +168,47 @@ export const TicketPurchase = () => {
             <div id="buy-ticket-data">
                 <h1>Comprar ticket</h1>
                 <section id="purchase_selection">
+                        {/* LISTA DE PERIODOS */}
+                        {periodo && periodo.length > 0 && (
+                        <div className="mb-2">
+                            <h2 className="text-xl font-semibold mb-3 text-gray-800">
+                            Periodos disponibles
+                            </h2>
+                            <div>
+                            <table className="min-w-full text-sm text-gray-700">
+                                <thead className="bg-gray-100 text-gray-900">
+                                <tr>
+                                    <th className="px-4 py-2 text-left font-medium">Nombre</th>
+                                    <th className="px-4 py-2 text-left font-medium">Fecha Inicio</th>
+                                    <th className="px-4 py-2 text-left font-medium">Fecha Fin</th>                                    
+                                    <th className="px-4 py-2 text-left font-medium">Descuento</th>                    
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {periodo.map((p) => (
+                                    <tr
+                                    key={p.idPeriodo}
+                                    className="border-t hover:bg-gray-50 transition-colors"
+                                    >
+                                    <td className="px-4 py-2">{p.nombre}</td>
+                                    <td className="px-4 py-2">{p.fechaInicio}</td>
+                                    <td className="px-4 py-2">{p.fechaFin}</td>                     
+                                    <td className="px-4 py-2">
+                                    {!p.tipoDesc || p.valorDescuento == null
+                                        ? "-"
+                                        : p.tipoDesc === "MONTO"
+                                        ? `S/. ${p.valorDescuento}`
+                                        : `${p.valorDescuento}%`}
+                                    </td>
+
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        )}
+
                     <div className="data_purchase">
                         <div>
                             <h2>Zona</h2>                        
@@ -146,7 +216,6 @@ export const TicketPurchase = () => {
                                 options={zonas}
                                 setSelectedOption={setSelectedZona}
                                 selectedOption={selectedZona}    
-                                price={selectedZona?.tipoEntrada?.precioBase}
                             />    
                         </div>                        
                         <div>
@@ -163,7 +232,7 @@ export const TicketPurchase = () => {
                                 options={funciones}
                                 setSelectedOption={setSelectedFuncion}
                                 selectedOption={selectedFuncion}
-                                nombre='horaInicio'
+                                nombre={['fechaInicio','horaInicio']}
                             />
                         </div>                         
                     </div>                
@@ -204,7 +273,11 @@ export const TicketPurchase = () => {
                     </div>
                 </section>
                 <section id="purchase_actions">
-                    <button className='btn btn-secondary'>Regresar</button>
+                    <button className='btn btn-secondary'
+                        onClick={handleRegresar}
+                    >
+                        Regresar
+                    </button>
                     <button 
                         className='btn btn-primary'
                         onClick={agregarIncrementarDetalle}
