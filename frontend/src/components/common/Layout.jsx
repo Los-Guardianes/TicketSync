@@ -24,7 +24,7 @@ const Layout = () => {
   };
 
   useEffect(() => {
-    dptoFetch();
+    isHomePage && dptoFetch();
   }, []);
 
 

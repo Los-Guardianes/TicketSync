@@ -18,6 +18,8 @@ public class TarifaDTO {
         this.idTarifa = tarifa.getIdTarifa();
         this.precioBase = tarifa.getPrecioBase();
         this.tipoEntradaDTO = new TipoEntradaDTO(tarifa.getTipoEntrada());
+
         this.zonaDTO = new ZonaDTO(tarifa.getZona());
+
     }
 }
