@@ -34,10 +34,18 @@ public class FilterChainConfig {
              "/api/cliente",
             "/api/register",
             "/api/organizador",
-            //Para la página del home
+            "/api/organizador/reporte/excel", //Cambiar luego si es publico o no
             "/api/evento/**",
             "/api/zona/**",
-            "/api/ciudad/**"
+            "/api/ciudad/**",
+            "/api/dpto/**",
+            "/api/comp/**",
+            "/api/miticket/**",
+            "/api/temporada/**",
+            "/api/funcion/**",
+            "/api/orden/**",
+            "/api/ticket/**",
+            "/api/descuento/**"
     };
 
     @Bean

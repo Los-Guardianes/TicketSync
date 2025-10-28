@@ -30,8 +30,8 @@ public class Devolucion {
     @Column(nullable = false)
     private Boolean activo = true;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "idDetalleCompra", referencedColumnName = "idDetalleCompra", unique = true)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idTicket", referencedColumnName = "idTicket", unique = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private DetalleCompra detalleCompra;
+    private Ticket ticket;
 }

@@ -1,11 +1,14 @@
 package com.guardianes.TuTicket.servicioPedidos.controller;
 
+import com.guardianes.TuTicket.servicioPedidos.DTO.OrdenCompraDTO;
 import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioPedidos.service.OrdenCompraService;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,5 +74,11 @@ public class OrdenCompraController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/orden/completo")
+    public ResponseEntity<?> addOrdenCompleta(@RequestBody OrdenCompraDTO orden) {
+        OrdenCompra oc = service.orquestarOrdenCompra(orden);
+        return ResponseEntity.ok(oc);
     }
 }

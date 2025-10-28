@@ -60,4 +60,14 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/ticket/user/{id}")
+    public ResponseEntity<?> getTicketByIdUsuario(@PathVariable String id) {
+        Integer myId = Integer.parseInt(id);
+        List<Ticket> tickets = service.getTicketsByIdUsuario(myId);
+        if (tickets == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error al conseguir lista");
+        }
+        return ResponseEntity.ok(tickets);
+    }
 }
