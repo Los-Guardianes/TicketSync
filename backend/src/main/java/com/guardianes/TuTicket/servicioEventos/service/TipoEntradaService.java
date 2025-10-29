@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.TipoEntrada;
 import com.guardianes.TuTicket.servicioEventos.repo.TipoEntradaRepo;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,11 @@ public class TipoEntradaService {
 
     public void deleteTipoEntrada(Integer id) {
         repo.deleteById(id);
+    }
+
+    public List<TipoEntrada> getTipoEntradaByIdEvento(Integer idEvento) {
+        Evento e = new Evento();
+        e.setIdEvento(idEvento);
+        return repo.findByEvento(e);
     }
 }

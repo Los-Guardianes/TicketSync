@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class EventoCompletoDTO {
+
+    /// ////CORREGIR GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     private String nombre;
     private String descripcion;
     private String informAdic;
@@ -20,7 +22,7 @@ public class EventoCompletoDTO {
 
     // Listas de entidades relacionadas
     private List<FuncionDTO> funciones;
-    private List<TemporadaDTO> temporadas;
+    private List<PeriodoDTO> temporadas;
     private List<TipoEntradaDTO> tiposDeEntrada; // <-- Lista de tipos de entrada a crear
     private List<ZonaDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
 }
