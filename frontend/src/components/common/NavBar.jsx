@@ -88,7 +88,7 @@ export const NavBar = ({
           </ul>
         </li>
          {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
-                {user && user.rol === 'organizador' && (
+                {user && user.rol === 'ORGANIZADOR' && (
                     <li className='nav-item'>
                         <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
                             Crear Evento
