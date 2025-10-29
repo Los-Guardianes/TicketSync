@@ -36,10 +36,13 @@ public class JWTService {
                 .compact();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String email = getEmailFromToken(token);
-        //En este caso el username de userDetails será el EMAIL
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public boolean validateToken(String token) {
+        try {
+            getClaimsFromToken(token); // Si no lanza excepción, es válido
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private SecretKey getSecretKey() {
@@ -49,6 +52,11 @@ public class JWTService {
 
     public String getEmailFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
+    }
+
+    public String getRolFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.get("rol", String.class);
     }
 
     private boolean isTokenExpired(String token) {

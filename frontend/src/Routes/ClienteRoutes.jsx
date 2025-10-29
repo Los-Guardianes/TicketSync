@@ -1,19 +1,22 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Home } from "../components/pages/Home/Home";
-import { Login } from "../components/pages/LogIn/Login";
-import { Register } from "../components/pages/Register/Register";
-import { GoogleVerification } from "../components/pages/GoogleVerification/GoogleVerification";
-import { RegisterOptions } from "../components/pages/Register/RegisterOptions";
-import { RegisterOrganizer } from "../components/pages/Register/RegisterOrganizer";
-import { CreateEvent } from "../components/pages/CreateEvent/CreateEvent";
-import { UbicacionEvento } from "../components/pages/CreateEvent/UbicacionEvento";
-import { ComprobanteTest } from "../components/pages/ComprobanteTest/ComprobanteTest";
-import { CreateTicket } from "../components/pages/CreateEvent/CreateTicket";
-import { TicketPay } from "../components/pages/TicketPurchase/TicketPay";
-import { TicketPurchase } from "../components/pages/TicketPurchase/TicketPurchase";
-import { HappyPay } from "../components/pages/TicketPurchase/HappyPay";
-import Layout from "../components/Layout";
-import { MisTickets } from "../components/pages/MisTickets/MisTickets";
+
+import { Home } from "../components/features/Home/pages/Home";
+import { Login } from "../components/features/LogIn/pages/Login";
+import { Register } from "../components/features/Register/Register";
+import { GoogleVerification } from "../components/features/GoogleVerification/pages/GoogleVerification";
+import { RegisterOptions } from "../components/features/Register/RegisterOptions";
+import { RegisterOrganizer } from "../components/features/Register/RegisterOrganizer";
+import { CreateEvent } from "../components/features/CreateEvent/pages/CreateEvent";
+import { UbicacionEvento } from "../components/features/CreateEvent/pages/UbicacionEvento";
+import { ComprobanteTest } from "../components/features/ComprobanteTest/pages/ComprobanteTest";
+import { CreateTicket } from "../components/features/CreateEvent/pages/CreateTicket";
+import { TicketPay } from "../components/features/TicketPurchase/pages/TicketPay";
+import { TicketPurchase } from "../components/features/TicketPurchase/pages/TicketPurchase";
+import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
+import Layout from "../components/common/Layout";
+import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
+import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -39,8 +42,10 @@ export const ClienteRoutes = () => {
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
         <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<TicketPay />} />
-        <Route path="mistickets" element={<MisTickets />} />
         <Route path="happy-pay" element={<HappyPay />} />
+        <Route path="mistickets" element={<MisTickets />} />
+        <Route path="create-discount" element={<CreateDiscount />} />
+        <Route path="discountlist" element={<DiscountList />} />
       </Route>
     </Routes>
   );

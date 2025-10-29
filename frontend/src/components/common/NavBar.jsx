@@ -66,8 +66,8 @@ export const NavBar = ({
               onChange={(e) => setUbicacion(e.target.value)}
             >
               <option value="Todas">Todas</option>
-              {ubicacionesDisponibles.map((ubi, idx) => (
-                <option key={idx} value={ubi}>{ubi}</option>
+              {ubicacionesDisponibles.map(ubi => (
+                <option key={ubi.idDpto} value={ubi.nombre}>{ubi.nombre}</option>
               ))}
             </select>
           </ul>
