@@ -17,6 +17,7 @@ import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -31,6 +32,7 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+      <Route path="home-admin" element={<AdminHome />} />
       
 
       {/* CON Layout - Rutas anidadas */}
