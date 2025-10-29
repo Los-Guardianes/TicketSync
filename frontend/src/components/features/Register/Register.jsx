@@ -24,7 +24,7 @@ export const Register = () => {
             "idCiudad": null
         },
         dni: "",
-        rol: "cliente",
+        rol: "CLIENTE",
         fechaNacimiento: today  
     });
 
@@ -90,7 +90,7 @@ export const Register = () => {
             activo: true,
             ciudad: { idCiudad: newClient.ciudad.idCiudad },
             dni: (dni || '').replace(/\D/g, ''), // solo dígitos
-            rol: "cliente",
+            rol: "CLIENTE",
             fechaNacimiento
         };
 
@@ -113,7 +113,7 @@ export const Register = () => {
             activo: true,
             ciudad: { "idCiudad": null },
             dni: "",
-            rol: "cliente",
+            rol: "CLIENTE",
             fechaNacimiento: today 
         });
         setConfirmPassword("");

@@ -16,7 +16,6 @@ public class ZonaDTO {
     public ZonaDTO(Zona zona) {
         this.idZona = zona.getIdZona();
         this.nombre = zona.getNombre();
-        this.comprasActuales = zona.getComprasActuales();
         this.aforo = zona.getAforo();
         this.idZona = zona.getEvento().getIdEvento();
     }

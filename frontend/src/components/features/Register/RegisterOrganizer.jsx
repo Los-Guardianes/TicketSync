@@ -18,7 +18,7 @@ export const RegisterOrganizer = () => {
         telefono: "",
         activo: true,
         ciudad: { "idCiudad": null },
-        rol: "organizador",
+        rol: "ORGANIZADOR",
         ruc: "",
         razonSocial: ""
     });
@@ -79,7 +79,7 @@ export const RegisterOrganizer = () => {
             telefono: (telefono || '').replace(/\D/g, ''), // solo dígitos
             activo: true,
             ciudad: { idCiudad: newOrganizer.ciudad.idCiudad },
-            rol: "organizador",
+            rol: "ORGANIZADOR",
             ruc: (ruc || '').replace(/\D/g, ''),           // solo dígitos
             razonSocial: (razonSocial || '').replace(/\s+/g, ' ').trim()
         };
@@ -102,6 +102,7 @@ export const RegisterOrganizer = () => {
             activo: true,
             ciudad: { "idCiudad": null },
             ruc: "",
+            rol: "ORGANIZADOR",
             razonSocial: ""
         });
         setConfirmPassword("");

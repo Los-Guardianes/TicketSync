@@ -1,5 +1,5 @@
 import React from 'react';
-
+//página placeholder que probablemente sea borrada / cambiada, debería existir para mostrar los descuentos por evento
 const discountData = [
   {
     code: 'EARLYBIRD10',
@@ -17,7 +17,7 @@ const discountData = [
   },
 ];
 
-const DiscountList = () => {
+export const DiscountList = () => {
   return (
     <div className="crear-evento-container">
       <div className="header">
@@ -61,5 +61,3 @@ const DiscountList = () => {
     </div>
   );
 };
-
-export default DiscountList;
