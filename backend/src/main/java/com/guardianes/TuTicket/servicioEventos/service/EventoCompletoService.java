@@ -1,19 +1,12 @@
 package com.guardianes.TuTicket.servicioEventos.service;
-import com.guardianes.TuTicket.servicioEventos.DTO.*;
+import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.*;
 import com.guardianes.TuTicket.servicioEventos.repo.*;
-import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import com.guardianes.TuTicket.servicioUbicacion.repo.CiudadRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate; // Para parsear fechas
-import java.time.LocalTime; // Para parsear horas
-import java.util.HashMap;
-import java.util.Map;
-import java.time.format.DateTimeFormatter; // <-- IMPORTANTE
 @Service
 @RequiredArgsConstructor
 public class EventoCompletoService {

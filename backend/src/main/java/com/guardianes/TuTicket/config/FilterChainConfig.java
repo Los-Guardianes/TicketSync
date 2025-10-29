@@ -34,6 +34,7 @@ public class FilterChainConfig {
              "/api/cliente",
             "/api/register",
             "/api/organizador",
+            "/api/organizador/reporte/excel", //Cambiar luego si es publico o no
             "/api/evento/**",
             "/api/zona/**",
             "/api/ciudad/**",

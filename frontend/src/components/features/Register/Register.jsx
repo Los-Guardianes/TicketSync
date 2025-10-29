@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getCiudades } from '../../../globalServices/CiudadService';
+import { getCiudades } from '../../../globalServices/UbicacionService';
 import { postClient } from '../../../globalServices/ClienteService';
 import { NavLink } from 'react-router-dom'
 

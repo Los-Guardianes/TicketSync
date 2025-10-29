@@ -44,8 +44,7 @@ export const useTicketPurchase = (idevento) => {
 
     const fetchTarifas = async () => {
         const data = await apiFetch(`/api/tarifa/evento/${idevento}`);
-        const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));
-        console.log("Tarifas parseadas:", tarifasParseadas);
+        const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));        
         setTarifas(tarifasParseadas);
     };
 
@@ -55,25 +54,17 @@ export const useTicketPurchase = (idevento) => {
         setFunciones(data || []);
     }
 
-    useEffect(() => {
-    if (tarifas.length > 0) {
-        const zonasUnicas = tarifas.reduce((acc, tarifa) => {
-        const zona = tarifa.zona;
-        if (!acc.find(z => z.idZona === zona.idZona)) acc.push(zona);
-        return acc;
-        }, []);
-
-        const tiposUnicos = tarifas.reduce((acc, tarifa) => {
-        const tipo = tarifa.tipoEntrada;
-        if (!acc.find(t => t.idTipoEntrada === tipo.idTipoEntrada)) acc.push(tipo);
-        return acc;
-        }, []);
-
-        setZonas(zonasUnicas);
-        setTipoEntradas(tiposUnicos);
+    const fetchZonas = async () => {
+        const data = await apiFetch(`/api/zona/evento/${idevento}`);
+        const zonasParseadas = (data || []).map(z => Zona.fromApi(z));        
+        setZonas(zonasParseadas);
     }
-    }, [tarifas]);
 
+    const fetchTipoEntradas = async () => {
+        const data = await apiFetch(`/api/tipoentrada/evento/${idevento}`);
+        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));        
+        setTipoEntradas(tiposParseadas);
+    }
 
     return {
         formData,
@@ -87,6 +78,8 @@ export const useTicketPurchase = (idevento) => {
         tipoEntradas,
         tarifas,
         handleInputChange,
+        fetchZonas,
+        fetchTipoEntradas,
         fetchPeriodo,
         fetchEvento,
         fetchFunciones,

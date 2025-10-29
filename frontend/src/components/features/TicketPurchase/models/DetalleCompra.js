@@ -1,19 +1,27 @@
 export class DetalleCompra {
+  constructor({ cantidad, precioDetalle, tarifa, idPeriodo }) {
+    this.cantidad = cantidad;
+    this.precioDetalle = precioDetalle;
+    this.tarifa = tarifa;
+    this.idPeriodo = idPeriodo;
+  }
 
-    constructor(zona, temporada, precioDetalle, cantidad) {
-        this.zona = zona;
-        this.temporada = temporada;
-        this.precioDetalle = precioDetalle;
-        this.cantidad = cantidad;
-    }
+  static fromApi(data) {
+    if (!data) return null;
+    return new DetalleCompra({
+      cantidad: data.cantidad,
+      precioDetalle: data.precioDetalle,
+      tarifa: data.tarifa,
+      idPeriodo: data.idPeriodo,
+    });
+  }
 
-    GetZona() { return this.zona }
-
-    GetTemporada() { return this.temporada }
-
-    GetPrecioDetalle() { return this.precioDetalle }
-
-    GetCantidad() { return this.cantidad }
-
-    SetCantidad(cantidad) { this.cantidad = cantidad }
+  toApi() {
+    return {
+      cantidad: this.cantidad,
+      precioDetalle: this.precioDetalle,
+      tarifa: this.tarifa,
+      idPeriodo: this.idPeriodo,
+    };
+  }
 }

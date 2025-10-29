@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface FuncionRepo extends JpaRepository<Funcion, Integer> {
-    List<Funcion> findByEvento(Evento evento);
+    List<Funcion> findByEventoOrderByFechaInicioAscHoraInicioAsc(Evento evento);
 }
