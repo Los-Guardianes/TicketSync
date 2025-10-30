@@ -14,7 +14,6 @@ import { TicketPurchase } from "../components/pages/TicketPurchase/TicketPurchas
 import { HappyPay } from "../components/pages/TicketPurchase/HappyPay";
 import Layout from "../components/Layout";
 import { MisTickets } from "../components/pages/MisTickets/MisTickets";
-import { MisEventos } from "../components/pages/MisEventos/MisEventos";
 
 
 export const ClienteRoutes = () => {
@@ -43,7 +42,6 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="mistickets" element={<MisTickets />} />
         <Route path="happy-pay" element={<HappyPay />} />
-        <Route path="eventos" element={<MisEventos />} />
       </Route>
     </Routes>
   );
