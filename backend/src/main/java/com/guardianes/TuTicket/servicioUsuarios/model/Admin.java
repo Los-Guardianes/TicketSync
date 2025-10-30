@@ -12,6 +12,4 @@ import java.math.BigDecimal;
 @PrimaryKeyJoinColumn(name = "idUsuario")
 public class Admin extends Usuario {
 
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal comisionGlobal;
 }
