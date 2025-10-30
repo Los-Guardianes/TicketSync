@@ -6,6 +6,7 @@ import { DropdownOptions } from "../components/DropdownOptions"
 import { TicketQuantitySelector } from '../components/TicketQuantitySelector'
 import { ShoppingDetails } from '../components/ShoppingDetails'
 import { InfoEventTicket } from '../components/InfoEventTicket'
+import { Notification } from "../../../../components/common/Notification/Notification"
 
 import "./TicketPurchase.css"
 
@@ -28,6 +29,8 @@ export const TicketPurchase = () => {
     const [selectedPeriodo, setSelectedPeriodo] = useState(null);
     const [selectedFuncion, setSelectedFuncion] = useState(null);
     const [selectedTipoEntrada, setSelectedTipoEntrada] = useState(null);
+
+    const [notification, setNotification] = useState(null)
 
     const navigate = useNavigate();
     const {
@@ -100,7 +103,10 @@ export const TicketPurchase = () => {
     const handleContinueToPay = () => {
         //falta verificar que la listaDetalles no este vacia
         if (listaDetalles.length === 0) {
-            alert("Agrega al menos un detalle de compra antes de continuar.");
+            setNotification({
+                message: "Agrega al menos un detalle de compra antes de continuar.",
+                type: "warning",
+            });
             return;
         }
         navigate("/ticket-pay", { state: {
@@ -112,7 +118,10 @@ export const TicketPurchase = () => {
 
     const agregarIncrementarDetalle = () => {
         if (!selectedZona || !selectedTipoEntrada || !selectedFuncion) {
-            alert("Selecciona una zona, un tipo de entrada y una función antes de agregar.");
+            setNotification({
+                message: "Selecciona una zona, un tipo de entrada y una función antes de agregar.",
+                type: "warning",
+            });
             return;
         }
         const selectedTarifa = tarifas.find(
@@ -121,7 +130,10 @@ export const TicketPurchase = () => {
             t.zona.idZona === selectedZona.idZona
         );
         if (!selectedTarifa) {
-            alert("No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.");
+            setNotification({
+                message: "No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.",
+                type: "error",
+            });
             return;
         }
         
@@ -164,146 +176,168 @@ export const TicketPurchase = () => {
     };
     
     return (
-        <main className="buy-ticket">
-            <div id="buy-ticket-data">
-                <h1>Comprar ticket</h1>
-                <section id="purchase_selection">
-                        {/* LISTA DE PERIODOS */}
-                        {periodo && periodo.length > 0 && (
-                        <div className="mb-2">
-                            <h2 className="text-xl font-semibold mb-3 text-gray-800">
-                            Periodos disponibles
-                            </h2>
-                            <div>
-                            <table className="min-w-full text-sm text-gray-700">
-                                <thead className="bg-gray-100 text-gray-900">
-                                <tr>
-                                    <th className="px-4 py-2 text-left font-medium">Nombre</th>
-                                    <th className="px-4 py-2 text-left font-medium">Fecha Inicio</th>
-                                    <th className="px-4 py-2 text-left font-medium">Fecha Fin</th>                                    
-                                    <th className="px-4 py-2 text-left font-medium">Descuento</th>                    
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {periodo.map((p) => (
-                                    <tr
-                                    key={p.idPeriodo}
-                                    className="border-t hover:bg-gray-50 transition-colors"
-                                    >
-                                    <td className="px-4 py-2">{p.nombre}</td>
-                                    <td className="px-4 py-2">{p.fechaInicio}</td>
-                                    <td className="px-4 py-2">{p.fechaFin}</td>                     
-                                    <td className="px-4 py-2">
-                                    {!p.tipoDesc || p.valorDescuento == null
-                                        ? "-"
-                                        : p.tipoDesc === "MONTO"
-                                        ? `S/. ${p.valorDescuento}`
-                                        : `${p.valorDescuento}%`}
-                                    </td>
+        <main className="ticket-purchase-main">
+            <div className="ticket-purchase-container">
 
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
-                        )}
-
-                    <div className="data_purchase">
-                        <div>
-                            <h2>Zona</h2>                        
-                            <DropdownOptions                        
-                                options={zonas}
-                                setSelectedOption={setSelectedZona}
-                                selectedOption={selectedZona}    
-                            />    
-                        </div>                        
-                        <div>
-                            <h2>Tipo Entrada</h2>
-                            <DropdownOptions                        
-                                options={tipoEntradas}
-                                setSelectedOption={setSelectedTipoEntrada}
-                                selectedOption={selectedTipoEntrada}
-                            />
-                        </div>
-                        <div>
-                            <h2>Funciones</h2>
-                            <DropdownOptions                        
-                                options={funciones}
-                                setSelectedOption={setSelectedFuncion}
-                                selectedOption={selectedFuncion}
-                                nombre={['fechaInicio','horaInicio']}
-                            />
-                        </div>                         
-                    </div>                
-                    <div className="data_purchase">
-                        {/*
-                            <div>                    
-                                <h2>Canjear código</h2>
-                                <form className="form-discount" onSubmit={handleDiscount}>
-                                    <input 
-                                        className={`input-form ${errors.discount ? 'error' : ''}`}
-                                        name='discount'
-                                        placeholder='Ingresa el código de descuento'
-                                        maxLength={100}
-                                        value={formData.discount}
-                                        onChange={handleInputChange}
-                                        disabled={isLoading}
-                                    />
-                                    <button 
-                                        type="submit" 
-                                        className='btn btn-secondary btn-lg mt-3'
-                                        disabled={isLoading}
-                                    >
-                                        {isLoading ? 'Verificando...' : 'Aplicar'}
-                                    </button>
-                                </form>                        
-                                {errors.discount && <div className="error-form">{errors.discount}</div>}
-                            </div>
-                            */}
-                        {selectedZona && selectedTipoEntrada? (
-                            <TicketQuantitySelector
-                                cantidadEntradas={cantidadEntradas}
-                                incrementar={incrementar}
-                                decrementar={decrementar}
-                            >
-                                <h2>Cantidad de entradas</h2>
-                            </TicketQuantitySelector>                        
-                        ) : null}
-                    </div>
-                </section>
-                <section id="purchase_actions">
-                    <button className='btn btn-secondary'
-                        onClick={handleRegresar}
-                    >
-                        Regresar
-                    </button>
-                    <button 
-                        className='btn btn-primary'
-                        onClick={agregarIncrementarDetalle}
-                    >
-                        Agregar
-                    </button>
-                </section>
-                <section id="list_purchase">
-                    <ShoppingDetails 
-                        totalDetalle={totalDetalle}
-                        listaDetalles={listaDetalles}
+                {notification && (
+                    <Notification
+                    message={notification.message}
+                    type={notification.type}
+                    duration={3000}
+                    onClose={() => setNotification(null)}
                     />
-                </section>
+                )}
+
+                <div className="ticket-purchase-grid">
+                    {/* Main Content */}
+                    <div className='ticket-purchase-content'>
+                        <section className='ticket-purchase-section'>
+                            {/* LISTA DE PERIODOS */}
+                            {periodo && periodo.length > 0 && (
+                            <div className="mb-2">
+                                <h2 className="ticket-purchase-section-title">Periodos disponibles</h2>
+                                <div>
+                                <table className="min-w-full text-sm text-gray-700">
+                                    <thead className="bg-gray-100 text-gray-900">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left font-medium">Nombre</th>
+                                        <th className="px-4 py-2 text-left font-medium">Fecha Inicio</th>
+                                        <th className="px-4 py-2 text-left font-medium">Fecha Fin</th>                                    
+                                        <th className="px-4 py-2 text-left font-medium">Descuento</th>                    
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {periodo.map((p) => (
+                                        <tr
+                                        key={p.idPeriodo}
+                                        className="border-t hover:bg-gray-50 transition-colors"
+                                        >
+                                        <td className="px-4 py-2">{p.nombre}</td>
+                                        <td className="px-4 py-2">{p.fechaInicio}</td>
+                                        <td className="px-4 py-2">{p.fechaFin}</td>                     
+                                        <td className="px-4 py-2">
+                                        {!p.tipoDesc || p.valorDescuento == null
+                                            ? "-"
+                                            : p.tipoDesc === "MONTO"
+                                            ? `S/. ${p.valorDescuento}`
+                                            : `${p.valorDescuento}%`}
+                                        </td>
+
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                            )}
+                        </section>
+
+                        <div className="ticket-purchase-section">
+                            <h2 className="ticket-purchase-section-title">Selecciona tus entradas</h2>
+                            <form className="purchase-form">
+                                <fieldset className="purchase-form-grid">
+                                    <div className="purchase-form-group">
+                                        <label className="purchase-form-label">Zona</label>                       
+                                        <DropdownOptions                        
+                                            options={zonas}
+                                            setSelectedOption={setSelectedZona}
+                                            selectedOption={selectedZona}
+                                        />
+                                    </div>
+                                    <div className="purchase-form-group">
+                                        <label className="purchase-form-label">Tipo de entrada</label>
+                                        <DropdownOptions                        
+                                            options={tipoEntradas}
+                                            setSelectedOption={setSelectedTipoEntrada}
+                                            selectedOption={selectedTipoEntrada}
+                                        />
+                                    </div>
+                                    <div className="purchase-form-group">
+                                        <label className="purchase-form-label">Funciones</label>
+                                        <DropdownOptions                        
+                                            options={funciones}
+                                            setSelectedOption={setSelectedFuncion}
+                                            selectedOption={selectedFuncion}
+                                            nombre={['fechaInicio','horaInicio']}
+                                        />
+                                    </div>
+                                </fieldset>
+                                <div className="data_purchase">
+                                    {selectedZona && selectedTipoEntrada && selectedFuncion ? (
+                                        <>
+                                        <section className='ticket-purchase-grid'>
+                                            <TicketQuantitySelector
+                                                cantidadEntradas={cantidadEntradas}
+                                                incrementar={incrementar}
+                                                decrementar={decrementar}
+                                            >
+                                                <label className="purchase-form-label">Cantidad de entradas</label>
+                                            </TicketQuantitySelector>
+                                            {/*
+                                                <div>                    
+                                                    <h2>Canjear código</h2>
+                                                    <form className="form-discount" onSubmit={handleDiscount}>
+                                                        <input 
+                                                            className={`input-form ${errors.discount ? 'error' : ''}`}
+                                                            name='discount'
+                                                            placeholder='Ingresa el código de descuento'
+                                                            maxLength={100}
+                                                            value={formData.discount}
+                                                            onChange={handleInputChange}
+                                                            disabled={isLoading}
+                                                        />
+                                                        <button 
+                                                            type="submit" 
+                                                            className='btn btn-secondary btn-lg mt-3'
+                                                            disabled={isLoading}
+                                                        >
+                                                            {isLoading ? 'Verificando...' : 'Aplicar'}
+                                                        </button>
+                                                    </form>                        
+                                                    {errors.discount && <div className="error-form">{errors.discount}</div>}
+                                                </div>
+                                            */}
+                                        </section>
+                                        <button 
+                                                    className='ticket-purchase-button
+                                                    ticket-purchase-button-primary
+                                                    ticket-purchase-button-full mt-4'
+                                                    onClick={agregarIncrementarDetalle}
+                                                >
+                                                Agregar a carrito
+                                            </button>
+                                        </>           
+                                    ) : null}
+                                </div>
+                            </form>                        
+                        </div> 
+                        <section className="ticket-purchase-section">
+                            <h2 className="ticket-purchase-section-title">Tu carrito</h2>
+                            <ShoppingDetails 
+                                totalDetalle={totalDetalle}
+                                listaDetalles={listaDetalles}
+                            />
+                        </section>
+                    </div>
+                    {/* Sidebar */}
+                    <aside className="ticket-purchase-sidebar">
+                        <section className="ticket-purchase-section">
+                            <InfoEventTicket 
+                                evento={evento}
+                                montoFinal={totalDetalle}
+                            />
+                            <button 
+                            className='ticket-purchase-button
+                            ticket-purchase-button-primary
+                            ticket-purchase-button-full'
+                            onClick={handleContinueToPay}
+                            >
+                                Continuar al pago
+                            </button>
+                        </section>
+                    </aside>
+                </div>
             </div>
-            <section id="info-event-ticket">
-                <InfoEventTicket 
-                    evento={evento}
-                    montoFinal={totalDetalle}
-                />
-                <button 
-                className='btn btn-primary'
-                onClick={handleContinueToPay}
-                >
-                    Continuar
-                </button>
-            </section>
         </main>
     )
 }

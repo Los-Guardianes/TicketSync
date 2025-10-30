@@ -14,10 +14,11 @@ La arquitectura sigue un modelo cliente-servidor:
 
 ## Integrantes (Grupo: Los Guardianes)
 
-* [Nombre Apellido 1] - `[código-alumno-1]`
+* Braulio Antayhua    - `20216512`
 * [Nombre Apellido 2] - `[código-alumno-2]`
 * [Nombre Apellido 3] - `[código-alumno-3]`
 * [Nombre Apellido 4] - `[código-alumno-4]`
+  
 ## Tecnologías Utilizadas
 
 ### Frontend

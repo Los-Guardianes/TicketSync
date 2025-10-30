@@ -1,10 +1,13 @@
+"use client"
+
+import "./ShoppingDetails.css"
 
 export const ShoppingDetails = ({totalDetalle, listaDetalles}) => {
     return (
         <>
             {totalDetalle === 0 ? (
                 <div className="empty-state">
-                    <img src="/tuticket_logo_name.png" alt="Carrito vacío" />
+                    <img className="empty-state-image" src="/tuticket_logo_name.png" alt="Carrito vacío" />
                     <p>Agregue entradas</p>
                 </div>
             ):(
