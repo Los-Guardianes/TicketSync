@@ -4,7 +4,7 @@ export const InfoEventTicket = ({evento, montoFinal}) => {
     return (
         <>
             <h2>{evento?.nombre || 'Cargando...'}</h2>
-            <img src="/tuticket_logo.png"/>
+            <img className="info-event-image" src="/tuticket_logo.png"/>
             <span>
                 <p>{evento?.descripcion || 'Cargando...'}</p>
                 <p>{evento?.direccion || 'Cargando...'}</p>
