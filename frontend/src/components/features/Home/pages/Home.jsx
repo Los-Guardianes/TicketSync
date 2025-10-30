@@ -33,7 +33,7 @@ export const Home = () => {
     const matchPrecio = true
 
     const matchFecha = true
-      //!fecha || (evento.fecha && evento.fecha.startsWith(fecha))
+    //!fecha || (evento.fecha && evento.fecha.startsWith(fecha))
 
     return matchSearch && matchUbicacion && matchPrecio && matchFecha
   })
