@@ -10,10 +10,12 @@ export const Home = () => {
   // Filtros que vienen de Layout (y que controla NavBar)
   const { search, precio, ubicacion, fecha } = useOutletContext()
 
+
   // Cargar eventos de la API
   useEffect(() => {
     const fetchEventos = async () => {
       const data = await getEventos()
+      //console.log(data); //ver la estructura de los objetos
       setEventos(data)
     }
     fetchEventos()
@@ -32,6 +34,8 @@ export const Home = () => {
 
     // precio (placeholder: siempre true Por ahora )
     const matchPrecio = true
+
+    
 
     // fecha
     const matchFecha =

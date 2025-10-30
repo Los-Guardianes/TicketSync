@@ -15,6 +15,9 @@ import { TicketPurchase } from "../components/features/TicketPurchase/pages/Tick
 import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
 import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+//Prueba
+import AdminDashboard from "../components/features/AdminDashboard/AdminDashboard";
+
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -42,6 +45,9 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="happy-pay" element={<HappyPay />} />
         <Route path="mistickets" element={<MisTickets />} />
+
+        //Prueba pantalla para Admin
+         <Route path="admin-dashboard" element={<AdminDashboard />} />
       </Route>
     </Routes>
   );
