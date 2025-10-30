@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./UbicacionEvento.css";
 import { useEventCreation } from "../../../../context/EventCreationContext";
 // Asumo que tienes un servicio para la ubicación, ajústalo a tu proyecto real
-import { getDepartamentos, getCiudadesPorDpto } from     '../../../../globalServices/CiudadService';
+import { getDepartamentos, getCiudadesPorDpto } from '../../../../globalServices/UbicacionService';
 
 export const UbicacionEvento = () => {
     const navigate = useNavigate();

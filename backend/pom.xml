@@ -61,6 +61,12 @@
 			<version>1.12.773</version>
 		</dependency>
 
+		<!-- Dependencia para el reporte en excel -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.5</version> </dependency>
+
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-60</artifactId>

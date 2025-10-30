@@ -8,12 +8,14 @@ import { NavLink } from 'react-router-dom';
 export const MisTickets = () => {
   const [tickets, setTickets] = useState([]);
   const { user, logout } = useAuth(); //Usuario y la función logout
-  const esOrganizador = user?.rol === 'ORGANIZADOR'; // usa el mismo check que ya te funciona
+
+  const esOrganizador = (user?.rol ?? '').toString().toUpperCase() === 'ORGANIZADOR';
 
   // Obtenemos los tickets de la API
   useEffect(() => {
     const fetchTickets = async () => {
       try {
+        if (!user?.idUsuario) return;       // evita llamada si aún no hay user
         const data = await getTickets(user.idUsuario);
         setTickets(data);
       } catch (err) {
@@ -21,7 +23,7 @@ export const MisTickets = () => {
       }
     };
     fetchTickets();
-  }, []);
+  }, [user?.idUsuario]); 
 
   const handleVerTicket = async (id) => {
     try {
@@ -34,10 +36,10 @@ export const MisTickets = () => {
   return (
     <div className='d-flex'>
       {/* Barra lateral */}
-
       <aside className='bg-light border-end p-3' style={{ minWidth: '220px', height: '100vh' }}>
         <h5 className='mb-4'>TuTicket</h5>
         <nav className='nav flex-column'>
+
           <NavLink
             to="/home"
             end
@@ -55,7 +57,6 @@ export const MisTickets = () => {
             </NavLink>
           )}
 
-
           <NavLink
             to="/mistickets"
             end
@@ -66,6 +67,7 @@ export const MisTickets = () => {
 
           <NavLink to="/faq" className="nav-link">Preguntas frecuentes</NavLink>
           <NavLink to="/privacidad" className="nav-link">Política de Privacidad</NavLink>
+
         </nav>
       </aside>
 
@@ -81,7 +83,9 @@ export const MisTickets = () => {
                 className='border rounded p-3 bg-light d-flex flex-column justify-content-between'
                 style={{ minWidth: '200px', maxWidth: '250px' }}
               >
-                <h6 className='mb-3 text-truncate'>{ticket.detalleCompra.ordenCompra.funcion.evento.nombre}</h6>
+                <h6 className='mb-3 text-truncate'>
+                  {ticket.detalleCompra?.ordenCompra?.funcion?.evento?.nombre ?? 'Evento'}
+                </h6>
                 <button
                   className='btn btn-primary btn-sm'
                   onClick={() => handleVerTicket(ticket.idTicket)}

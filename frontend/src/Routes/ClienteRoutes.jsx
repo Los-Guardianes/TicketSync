@@ -15,7 +15,10 @@ import { TicketPurchase } from "../components/features/TicketPurchase/pages/Tick
 import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
 import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+
 import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
+import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
+import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -30,7 +33,6 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
-      
 
       {/* CON Layout - Rutas anidadas */}
       <Route path="/*" element={<Layout />}>
@@ -43,7 +45,11 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="happy-pay" element={<HappyPay />} />
         <Route path="mistickets" element={<MisTickets />} />
+
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
+
+        <Route path="create-discount" element={<CreateDiscount />} />
+        <Route path="discountlist" element={<DiscountList />} />
       </Route>
     </Routes>
   );

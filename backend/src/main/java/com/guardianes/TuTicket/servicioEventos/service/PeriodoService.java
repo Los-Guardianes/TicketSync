@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.PeriodoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Periodo;
 import com.guardianes.TuTicket.servicioEventos.repo.PeriodoRepo;
@@ -7,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,9 +40,10 @@ public class PeriodoService {
         repo.deleteById(id);
     }
 
-    public List<Periodo> getPeriodoByEventId(Integer idEvento) {
+    public List<PeriodoDTO> getPeriodoByEventId(Integer idEvento) {
         Evento e = new Evento();
         e.setIdEvento(idEvento);
-        return repo.findByEvento(e);
+        List<Periodo> periodos = repo.findByEvento(e);
+        return periodos.stream().map(PeriodoDTO::new).collect(Collectors.toList());
     }
 }

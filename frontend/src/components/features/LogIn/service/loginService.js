@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de autenticación
+import { jwtDecode } from 'jwt-decode';
 export const loginService = () => {
 
     const { login } = useAuth(); //Obtenemos la función login del contexto
@@ -78,16 +79,16 @@ export const loginService = () => {
                 return false; // Indica que el login falló
             }
             // COSAS NUEVAS
-            const token = result.token;
+            const decoded = jwtDecode(result.token); //Se decodifica el token                   
             const user  = {
-                idUsuario:       result.idUsuario,
+                idUsuario:result.idUsuario,
                 email:    result.email,
                 rol:      result.rol,
                 nombre:   result.nombre,
                 apellido: result.apellido,
-            };
+            };            
             //
-            login(user, token, result.exp); //Cambio acá también
+            login(user, result.token ,decoded.exp); //Cambio acá también
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
             return true;
 
