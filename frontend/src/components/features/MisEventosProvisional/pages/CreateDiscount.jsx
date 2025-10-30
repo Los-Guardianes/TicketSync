@@ -63,7 +63,7 @@ export const CreateDiscount = () => {
   ];
 
   const hayCamposVacios = camposObligatorios.some(campo => campo === '' || campo === null || campo === undefined);
-  const codigoManualVacio = !autoGenerate && (code || '').trim() === '';
+  const codigoManualVacio = !autoGenerate && (code || '').trim() === '' && parseInt(massiveGeneration || 0) === 0;
 
   if (hayCamposVacios || codigoManualVacio) {
     return 'Complete todos los campos obligatorios, por favor.';
@@ -71,7 +71,7 @@ export const CreateDiscount = () => {
 
   const tipoOk = ['porcentaje', 'monto'].includes(discountType);
   const valorOk = !isNaN(discountValue) && parseFloat(discountValue) > 0;
-  const codigoOk = autoGenerate || ((code || '').trim().length >= 4 && (code || '').trim().length <= 20);
+  const codigoOk = autoGenerate || parseInt(massiveGeneration || 0) !== 0 || ((code || '').trim().length >= 4 && (code || '').trim().length <= 20);
 
   const fechaInicio = new Date(startDate);
   const fechaFin = new Date(endDate);
