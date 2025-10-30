@@ -17,6 +17,7 @@ export const Home = () => {
       const data = await getEventos()
       //console.log(data); //ver la estructura de los objetos
       setEventos(data)
+      console.log(data)
     }
     fetchEventos()
   }, [])
@@ -27,12 +28,10 @@ export const Home = () => {
     const matchSearch =
       !search || evento.nombre?.toLowerCase().includes(search.toLowerCase())
 
-    // ubicación dinámica
     const matchUbicacion =
       ubicacion === 'Todas' ||
       evento.ciudad?.dpto?.nombre === ubicacion
 
-    // precio (placeholder: siempre true Por ahora )
     const matchPrecio = true
 
     
@@ -59,7 +58,7 @@ export const Home = () => {
               id={evento.idEvento}
               ubicacion={evento.direccion}
               titulo={evento.nombre}
-              dia={evento.fecha || 'Sin fecha definida'}
+              fecha={evento.funciones[0]?.fechaInicio || 'Sin fecha definida'} //Del back viene con fecha ordenada
               ulrimagen={evento.urlImagen || 'Sin imagen disponible'}
             />
           ))

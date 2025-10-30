@@ -1,0 +1,44 @@
+.quantity-selector {
+  display: flex;
+  flex-direction: column;
+}
+
+.quantity-selector-label {
+  font-weight: 700;
+  color: #111827;
+}
+
+.quantity-selector-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-button {
+  background-color: #f0fdf4;
+  border: none;
+  border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-button:hover {
+  background-color: #dcfce7;
+}
+
+.quantity-button:active {
+  background-color: #bbf7d0;
+}
+
+.quantity-display {
+  font-weight: 600;
+  font-size: 1.125rem;
+  min-width: 2rem;
+  text-align: center;
+}

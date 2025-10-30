@@ -1,44 +1,38 @@
+"use client"
+
+import "./DropdownOptions.css"
+
 export const DropdownOptions = ({ 
-        options = [], 
-        setSelectedOption, 
-        selectedOption, 
-        price,
-        nombre = "nombre"
-    }) => {
-        
-    const getNombre = (option) => {
-        return option[nombre] || "";
-    }
-    return (
-        <div className="col">
-            <div className="dropdown">
-                <button
-                    className="btn btn-light dropdown-toggle"
-                    style={{ background: "#EBF5EB" }}
-                    type="button"
-                    id="dropdownMenuButton"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    {selectedOption ? getNombre(selectedOption) : "Seleccionar"}
-                </button>
-                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {options.map((option, index) => (
-                        <li key={index}>
-                            <button
-                                className="dropdown-item"
-                                type="button"
-                                onClick={() => setSelectedOption(option)}
-                            >
-                                {getNombre(option)}                                                     
-                                {price !== undefined && (
-                                    <> — ${price}</>
-                                )}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>
-    );
-};
+  options = [], 
+  setSelectedOption, 
+  selectedOption, 
+  nombre = ["nombre"] 
+}) => {
+  
+  const getNombre = (option) => {
+    return nombre
+      .map(key => option[key] || "") // Extrae el valor de cada clave; evita errores si no existe
+      .join(" ")                     // Une los valores con espacio
+      .trim();                       // Elimina espacios extra
+  }
+
+  return (
+    <div className="dropdown-wrapper">
+      <select
+        className="dropdown-button"
+        value={selectedOption ? getNombre(selectedOption) : ""}
+        onChange={(e) => {
+          const selected = options.find((opt) => getNombre(opt) === e.target.value)
+          if (selected) setSelectedOption(selected)
+        }}
+      >
+        <option value="">Seleccionar</option>
+        {options.map((option, index) => (
+          <option key={index} value={getNombre(option)}>
+            {getNombre(option)}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}

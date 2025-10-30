@@ -1,11 +1,10 @@
 package com.guardianes.TuTicket.servicioUsuarios.controller;
 
 import com.guardianes.TuTicket.servicioAutenticacion.service.AuthService;
-import com.guardianes.TuTicket.servicioUsuarios.DTO.LoginDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.LoginDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -10,6 +10,8 @@ export const NavBar = ({
   ubicacionesDisponibles
 }) => {
   const { user, logout } = useAuth();
+  // Detecta rol de organizador con tolerancia a distintas formas de guardarlo
+  const esOrganizador = user && user.rol === 'ORGANIZADOR';
 
   return (
     <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
@@ -66,8 +68,8 @@ export const NavBar = ({
               onChange={(e) => setUbicacion(e.target.value)}
             >
               <option value="Todas">Todas</option>
-              {ubicacionesDisponibles.map((ubi, idx) => (
-                <option key={idx} value={ubi}>{ubi}</option>
+              {ubicacionesDisponibles.map(ubi => (
+                <option key={ubi.idDpto} value={ubi.nombre}>{ubi.nombre}</option>
               ))}
             </select>
           </ul>
@@ -99,14 +101,14 @@ export const NavBar = ({
             </div>
           </ul>
         </li>
-        {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
-        {user && user.rol === 'organizador' && (
-          <li className='nav-item'>
-            <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
-              Crear Evento
-            </NavLink>
-          </li>
-        )}
+         {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
+                {user && user.rol === 'ORGANIZADOR' && (
+                    <li className='nav-item'>
+                        <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
+                            Crear Evento
+                        </NavLink>
+                    </li>
+                )}
         {/* Botones de usuario */}
         {!user ? (
           <>
@@ -119,9 +121,15 @@ export const NavBar = ({
           </>
         ) : (
           <>
-            <li className='nav-item'>
-              <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
-            </li>
+              <li className='nav-item'>
+                <NavLink
+                  className="nav-link"
+                  to={esOrganizador ? "/organizer/mis-eventos" : "/mistickets"}
+                >
+                  {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
+                </NavLink>
+              </li>
+
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>

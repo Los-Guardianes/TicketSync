@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,11 +18,24 @@ public class DescuentoController {
     private final DescuentoService service;
 
     // Crear un descuento
+//    @PostMapping("/descuento")
+//    public ResponseEntity<?> addDescuento(@RequestBody Descuento descuento) {
+//        try {
+//            Descuento nuevo = service.addDescuento(descuento);
+//            return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     @PostMapping("/descuento")
-    public ResponseEntity<?> addDescuento(@RequestBody Descuento descuento) {
+    public ResponseEntity<?> addDescuento(@RequestBody List<Descuento> descuento) {
         try {
-            Descuento nuevo = service.addDescuento(descuento);
-            return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+            List<Descuento> nuevos = new ArrayList<>();
+            for (Descuento d : descuento) {
+                Descuento creado = service.addDescuento(d);
+                nuevos.add(creado);
+            }
+            return new ResponseEntity<>(nuevos, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

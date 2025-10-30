@@ -1,10 +1,13 @@
+"use client"
+
+import "./ShoppingDetails.css"
 
 export const ShoppingDetails = ({totalDetalle, listaDetalles}) => {
     return (
         <>
             {totalDetalle === 0 ? (
                 <div className="empty-state">
-                    <img src="/tuticket_logo_name.png" alt="Carrito vacío" />
+                    <img className="empty-state-image" src="/tuticket_logo_name.png" alt="Carrito vacío" />
                     <p>Agregue entradas</p>
                 </div>
             ):(
@@ -12,19 +15,19 @@ export const ShoppingDetails = ({totalDetalle, listaDetalles}) => {
                 {listaDetalles.map((detalle,index) => (
                     <div key={index} className={`entrada-card`}>
                         <div className="entrada-header">
-                            <h3>{detalle.zona.nombre}</h3>
+                            <h3>{detalle.tarifa.zona.nombre}</h3>
                             <span>
-                                {detalle.temporada.nombre}
+                                {detalle.tarifa.tipoEntrada.nombre}
                             </span>
                         </div>                        
                         <div className="entrada-details">
                             <div className="detail-row">
                                 <span>Cantidad:</span>
-                                <strong>{detalle.GetCantidad()}</strong>
+                                <strong>{detalle.cantidad}</strong>
                             </div>
                             <div className="detail-row">
                                 <span>Precio:</span>
-                                <span>${detalle.GetPrecioDetalle()}</span>
+                                <span>${detalle.precioDetalle}</span>
                             </div>
                         </div>
                     </div>

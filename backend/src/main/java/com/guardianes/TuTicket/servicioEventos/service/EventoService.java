@@ -1,11 +1,16 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.EventoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.FuncionDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.repo.EventoRepo;
+import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.OrganizadorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -13,9 +18,13 @@ import java.util.List;
 public class EventoService {
 
     private final EventoRepo repo;
+    private final FuncionService funcionService;
 
-    public List<Evento> getAllEventos() {
-        return repo.findAll();
+    public List<EventoDTO> getAllEventos() {
+        List<Evento> eventos = repo.findAll();
+        return eventos.stream().map(
+                evento -> new EventoDTO(evento, funcionService.getFuncionByEvento(evento.getIdEvento()))
+        ).collect(Collectors.toList());
     }
 
     public Evento getEventoById(Integer id) {

@@ -45,4 +45,6 @@ public class UsuarioService implements UserDetailsService {
         }
         throw new UsernameNotFoundException("No se encontró al usuario con email: " + email);
     }
+
+
 }

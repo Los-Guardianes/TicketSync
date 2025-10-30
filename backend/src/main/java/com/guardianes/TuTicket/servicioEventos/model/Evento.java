@@ -15,7 +15,7 @@ import org.hibernate.type.SqlTypes;
 @AllArgsConstructor
 @Data
 @Table(name = "evento", schema = "tuticket")
-public class Evento {
+public class    Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
