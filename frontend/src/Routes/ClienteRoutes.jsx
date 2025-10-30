@@ -19,6 +19,7 @@ import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
 import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 
 export const ClienteRoutes = () => {
@@ -49,10 +50,17 @@ export const ClienteRoutes = () => {
         <Route path="happy-pay" element={<HappyPay />} />
 
         <Route path="mistickets" element={<MisTickets />} />
-        <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
 
         <Route path="create-discount" element={<CreateDiscount />} />
         <Route path="discountlist" element={<DiscountList />} />
+
+        <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
+
+        <Route
+          path="organizer/evento/:idEvento/config"
+          element={<ConfigEvento />}
+        />
+
       </Route>
     </Routes>
   );
