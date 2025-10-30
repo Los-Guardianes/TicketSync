@@ -3,6 +3,7 @@ import './MisTickets.css';
 import { getTickets } from '../service/MisTicketsService';
 import { abrirTicket } from '../../../../globalServices/PDFService';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de login
+import { BarraLateral } from '../components/BarraLateral';
 
 export const MisTickets = () => {
   const [tickets, setTickets] = useState([]);
@@ -29,23 +30,11 @@ export const MisTickets = () => {
   };
 
   return (
-    <div className='d-flex'>
-      {/* Barra lateral */}
-      <aside className='bg-light border-end p-3' style={{ minWidth: '220px', height: '100vh' }}>
-        <h5 className='mb-4'>TuTicket</h5>
-        <nav className='nav flex-column'>
-          <a className='nav-link' href='/perfil'>Mi perfil</a>
-          <a className='nav-link' href='/miseventos'>Mis Eventos</a>
-          <a className='nav-link active fw-bold' href='/mistickets'>Mis Tickets</a>
-          <a className='nav-link' href='/faq'>Preguntas frecuentes</a>
-          <a className='nav-link' href='/privacidad'>Política de Privacidad</a>
-        </nav>
-      </aside>
-
+    <div className='d-flex'>  
+      <BarraLateral />
       {/* Contenido principal */}
       <main className='flex-grow-1 p-4'>
         <h4 className='mb-3'>Mis Tickets</h4>
-
         {tickets.length > 0 ? (
           <div className='d-flex overflow-auto gap-3 pb-2'>
             {tickets.map((ticket) => (
