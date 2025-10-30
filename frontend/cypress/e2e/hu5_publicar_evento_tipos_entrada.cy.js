@@ -1,112 +1,145 @@
-// HU5 - Tipos de entrada y publicación
-// Este spec automatiza el llenado del formulario de `CreateTicket.jsx` según la prueba
-// adjunta: moneda Soles, temporada 'Verano', zonas (3), entrada Estándar, cantidad 200,
-// precio S/100, max por orden 10, sin selección de butaca y publicación exitosa.
+/// <reference types="cypress" />
 
-Cypress.on('uncaught:exception', (err, runnable) => {
-  // Retorna 'false' si el error es 'navigate is not defined'
-  // Esto previene que Cypress falle la prueba.
-  if (err.message.includes('navigate is not defined')) {
-    return false
-  }
-  // Si es cualquier otro error, se permite que Cypress falle
-})
+describe('HU5 - Crear Entradas y Publicar Evento', () => {
+  const email = 'clara1@mail.com';
+  const password = 'hash31';
 
-describe("HU5 - Tipos de entrada y publicación", () => {
-  it("configura entradas y publica", () => {
-    // Interceptamos la petición de publicación del evento para simular éxito
-    cy.intercept('POST', '/api/evento', {
+  beforeEach(() => {
+    // Mocks para las categorías, departamentos y ciudades
+    cy.intercept('GET', '**/cateventos**', {
+      statusCode: 200,
+      body: [
+        { idCategoria: 1, nombre: 'Conciertos' },
+        { idCategoria: 2, nombre: 'Teatro' }
+      ]
+    }).as('getCateventos');
+
+    cy.intercept('GET', '**/departamentos**', {
+      statusCode: 200,
+      body: [
+        { idDpto: '01', nombre: 'Lima' },
+        { idDpto: '02', nombre: 'Cusco' }
+      ]
+    }).as('getDepartamentos');
+
+    cy.intercept('GET', '**/ciudades**', {
+      statusCode: 200,
+      body: [
+        { idCiudad: 101, nombre: 'Lima Metropolitana' },
+        { idCiudad: 102, nombre: 'Callao' }
+      ]
+    }).as('getCiudades');
+
+    // Mock correcto con la ruta exacta del servicio
+    cy.intercept('POST', '**/api/evento/completo', {
       statusCode: 201,
-      body: { message: '¡Felicitaciones! Su evento ha sido creado satisfactoriamente :)' },
-    }).as('createEvento');
-
-    // Visitar la página de creación de entradas
-    cy.visit('/create-ticket');
-
-    // --- MONEDA ---
-    // Seleccionamos Soles (valor 'pen')
-    cy.get('#categoria').select('pen');
-
-    // --- AGREGAR TEMPORADA ---
-    // Click en agregar temporada para crear una nueva temporada y luego editarla
-    cy.contains('+ Agregar temporada').click();
-
-    // Rellenar la temporada dentro de su sección (primera .funciones-section)
-    cy.get('.funciones-section').eq(0).within(() => {
-      // Escribir nombre 'Verano'
-      cy.get('input[placeholder="Escribe la temporada"]').last().clear().type('Verano');
-
-      // Asignar descuento (0)
-      cy.contains('Descuento').parent().find('input[type="number"]').clear().type('0');
-
-      // Los inputs de fecha dentro de la sección; poner hoy y hoy+30
-      cy.get('input[type="date"]').then(($dates) => {
-        if ($dates.length >= 2) {
-          const hoy = new Date();
-          const fin = new Date(hoy);
-          fin.setDate(hoy.getDate() + 30);
-          const toIso = (d) => d.toISOString().slice(0, 10);
-          cy.wrap($dates[0]).type(toIso(hoy));
-          cy.wrap($dates[1]).type(toIso(fin));
-        }
-      });
-    });
-
-    // --- AGREGAR ENTRADA ---
-    cy.contains('+ Agregar entrada').click();
-
-    // Rellenar la entrada dentro de su sección (segunda .funciones-section)
-    cy.get('.funciones-section').eq(1).within(() => {
-      // Rellenar tipo de entrada 'Estándar'
-      cy.get('input[placeholder="VIP, Preferencial, Estándar"]').last().clear().type('Estándar');
-
-      // Zona: escribimos varias zonas separadas por comas
-      cy.get('input[placeholder="Zona del estadio"]').last().clear().type('Zona Norte, Zona oriente, Zona occidente');
-
-      // Descuento de la entrada (0)
-      cy.contains('Descuento').parent().find('input[type="number"]').clear().type('0');
-
-      // Max por orden -> buscar label y el input correspondiente
-      cy.contains('Max. cantidad por orden').parent().find('input[type="number"]').clear().type('10');
-
-      // Cantidad disponible
-      cy.contains('Cantidad disponible').parent().find('input[type="number"]').clear().type('200');
-
-        // Nota: el formulario actual de CreateTicket.jsx no expone un campo 'Precio' visible,
-        // por lo que no intentamos asignarlo aquí.
-
-      // Descripción (vacío según la prueba)
-      cy.get('input[placeholder="Escribe información adicional sobre el tipo de entrada."]').last().clear();
-
-      // Permite seleccionar butaca: debe estar NO marcado
-      cy.get('#permiteButaca').should('exist').should('not.be.checked');
-
-      // Política de devoluciones: si existe un input file lo dejamos; no intentamos adjuntar
-      // porque la utilidad `attachFile` puede no estar instalada en este proyecto.
-      cy.get('input[type="file"]').then(($files) => {
-        if ($files.length) {
-          cy.wrap($files[0]).should('exist');
-        }
-      });
-    });
-
-    // --- PUBLICAR EVENTO ---
-    // Asumimos que hay un botón con texto 'Publicar evento' o 'Siguiente' que finalmente dispara la creación
-    // En el CreateTicket.jsx actual hay botones 'Cancelar' y 'Siguiente' que navegan a la siguiente pantalla.
-    // Para esta prueba simulamos que el formulario final se publica con un botón 'Publicar evento' en alguna parte.
-    // Intentamos buscar y hacer click en 'Publicar evento' y si no existe, hacemos click en 'Siguiente' para avanzar.
-    cy.contains('Siguiente').then(($btn) => {
-      if ($btn.length) {
-        cy.wrap($btn).click();
-      } else {
-        cy.contains('Siguiente').click();
+      body: {
+        idEvento: 1,
+        nombre: 'Una noche de salsa 14',
+        mensaje: 'Evento creado exitosamente'
       }
+    }).as('postEvento');
+  });
+
+  it('flujo completo: Detalles -> Ubicación -> Crear Entradas -> Publicar', () => {
+    cy.visit('/home');
+
+    // Login
+    cy.contains('Login').click();
+    cy.get('input[type="email"]').type(email);
+    cy.get('input[type="password"]').type(password);
+    cy.get('button[type="submit"]').click();
+
+    cy.url().should('include', '/home');
+    cy.contains('Crear Evento').click();
+
+    // Esperar select de categorías poblado
+    cy.get('#idCategoria', { timeout: 15000 }).should('be.visible');
+    cy.get('#idCategoria option').should('have.length.greaterThan', 1);
+
+    // Completar Detalles del Evento
+    cy.get('#nombre').clear().type('Una noche de salsa 14');
+    cy.get('#idCategoria').select('Conciertos');
+
+    cy.get('.funcion').within(() => {
+      cy.get('input[name="fechaInicio"]').clear().type('2025-12-01');
+      cy.get('input[name="horaInicio"]').clear().type('20:00');
+      cy.get('input[name="fechaFin"]').clear().type('2025-12-02');
+      cy.get('input[name="horaFin"]').clear().type('00:00');
     });
 
-    // Esperar la llamada al endpoint de creación que interceptamos
-    // cy.wait('@createEvento').its('response.statusCode').should('eq', 201);
+    cy.get('#restricciones').clear().type('Apto para mayores de 18 años. Menores de edad a partir de los 14 años acompañados de un adulto responsable de su seguridad');
+    cy.get('#descripcion').clear().type('Descripción de prueba para Una noche de salsa 14');
 
-    // Comprobar que aparece el mensaje de éxito (según el resultado esperado en la imagen)
-    // cy.contains('¡Felicitaciones! Su evento ha sido creado satisfactoriamente').should('exist');
+    // Avanzar a Ubicación
+    cy.get('button.next').click();
+    cy.url({ timeout: 10000 }).should('include', '/ubicacion-evento');
+    cy.contains('Ubicación').should('be.visible');
+
+    // Completar Ubicación
+    cy.get('#departamento').should('be.visible').select('Lima');
+    cy.get('#idCiudad', { timeout: 10000 }).should('not.be.disabled');
+    cy.get('#idCiudad option').should('have.length.greaterThan', 1);
+    cy.get('#idCiudad').select('Lima Metropolitana');
+    cy.get('#direccion').clear().type('C. José Díaz s/n, Lima 15046');
+
+    // Avanzar a Crear Entradas
+    cy.get('button.next').click();
+    cy.url({ timeout: 10000 }).should('eq', Cypress.config().baseUrl + '/create-ticket');
+    cy.contains('Crear Entradas').should('be.visible');
+
+    // ========== INICIO DE PRUEBA HU5 ==========
+
+    // Seleccionar Moneda
+    cy.get('#moneda').should('be.visible').select('PEN');
+
+    // Configurar Temporada
+    cy.contains('Temporada 1 de 1').should('be.visible');
+    cy.get('input[placeholder="Escribe la temporada"]').clear().type('Verano');
+    
+    cy.get('input[type="number"]').first().clear().type('0');
+
+    // Configurar Tipo de Entrada
+    cy.contains('Entrada 1 de 1').should('be.visible');
+    cy.get('input[placeholder="VIP, Preferencial, Estándar"]').clear().type('Estándar');
+
+    // Zona de la entrada
+    cy.get('input[placeholder="Zona del estadio"]').clear().type('Zona Norte');
+
+    // Precio Base
+    cy.get('input[type="number"]').eq(1).clear().type('100');
+
+    // Max. cantidad por orden
+    cy.get('input[type="number"]').eq(2).clear().type('10');
+
+    // N° de Asientos / Cantidad Disponible
+    cy.get('input[type="number"]').eq(3).clear().type('200');
+
+    // Descripción (vacío según el documento)
+    cy.get('textarea[placeholder="Escribe información adicional..."]').clear();
+
+    // Verificar que el checkbox "Permite seleccionar butaca" está deshabilitado
+    cy.get('#permiteButaca').should('be.disabled').should('not.be.checked');
+
+    // Verificar que el input de archivo está deshabilitado
+    cy.get('input[type="file"]').should('be.disabled');
+
+    // Stub del window.alert ANTES de hacer click
+    cy.window().then((win) => {
+      cy.stub(win, 'alert').as('windowAlert');
+    });
+
+    // Publicar Evento
+    cy.contains('Finalizar y Guardar Evento').click();
+
+    // Verificar que se llamó al endpoint de creación de evento
+    cy.wait('@postEvento', { timeout: 15000 });
+
+    // Verificar que el alert fue llamado con el mensaje correcto
+    cy.get('@windowAlert').should('have.been.calledOnce');
+    cy.get('@windowAlert').should('have.been.calledWithMatch', /Evento creado con éxito/);
+
+    // Verificar redirección a home
+    cy.url({ timeout: 10000 }).should('include', '/home');
   });
 });
