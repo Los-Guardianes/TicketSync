@@ -8,6 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.guardianes.TuTicket.servicioEventos.model.Funcion;
+import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
+
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 import java.util.List;
 
@@ -18,6 +26,10 @@ public class EventoController {
     @Autowired
     private EventoService service;
 
+    @Autowired
+    private FuncionRepo funcionRepo;
+
+
     @PostMapping("/evento")
     public ResponseEntity<?> addEvento(@RequestBody Evento evento) {
         try {
@@ -27,6 +39,30 @@ public class EventoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public static class OrganizerEventResp {
+        public Integer idEvento;
+        public String nombre;
+        public String direccion;
+        public String urlImagen;
+
+        // Fecha “representativa” opcional (futura más cercana o última pasada)
+        public LocalDate fechaReferencia;
+        // true si todas sus funciones quedaron en el pasado (event-level)
+        public boolean esPasado;
+
+        // TODAS las funciones activas para que el frontend liste cada una
+        public List<FuncionItem> funciones;
+
+        public static class FuncionItem {
+            public Integer idFuncion;
+            public LocalDate fechaInicio;
+            public LocalDate fechaFin;
+            public String horaInicio;
+            public String horaFin;
+        }
+    }
+
 
     @GetMapping("/evento")
     public ResponseEntity<List<Evento>> getAllEventos() {
@@ -41,6 +77,60 @@ public class EventoController {
         }
         return ResponseEntity.ok(evento);
     }
+
+    @GetMapping("/evento/organizer/{idUsuario}")
+    public ResponseEntity<?> listarEventosDelOrganizador(@PathVariable Integer idUsuario) {
+        try {
+            var hoy = LocalDate.now();
+
+            var eventos = service.getAllEventos() // si prefieres: repo.findByOrganizador_IdUsuario(idUsuario)
+                    .stream()
+                    .filter(ev -> ev.getOrganizador() != null
+                            && ev.getOrganizador().getIdUsuario().equals(idUsuario))
+                    .collect(Collectors.toList());
+
+            var respuesta = eventos.stream().map(ev -> {
+                var funcionesActivas = funcionRepo.findByEvento(ev)
+                        .stream()
+                        .filter(f -> Boolean.TRUE.equals(f.getActivo()))
+                        .collect(Collectors.toList());
+
+                boolean anyFutura = funcionesActivas.stream()
+                        .anyMatch(f -> !f.getFechaInicio().isBefore(hoy));
+
+                LocalDate fechaRef = funcionesActivas.stream()
+                        .map(Funcion::getFechaInicio)
+                        .filter(d -> anyFutura ? !d.isBefore(hoy) : d.isBefore(hoy))
+                        .min(anyFutura ? Comparator.naturalOrder() : Comparator.reverseOrder())
+                        .orElse(null);
+
+                var out = new OrganizerEventResp();
+                out.idEvento = ev.getIdEvento();
+                out.nombre = ev.getNombre();
+                out.direccion = ev.getDireccion();
+                out.urlImagen = ev.getUrlImagen();
+                out.fechaReferencia = fechaRef;
+                out.esPasado = !anyFutura;
+
+                out.funciones = funcionesActivas.stream().map(f -> {
+                    var it = new OrganizerEventResp.FuncionItem();
+                    it.idFuncion = f.getIdFuncion();
+                    it.fechaInicio = f.getFechaInicio();
+                    it.fechaFin = f.getFechaFin();
+                    it.horaInicio = f.getHoraInicio() != null ? f.getHoraInicio().toString() : null;
+                    it.horaFin = f.getHoraFin() != null ? f.getHoraFin().toString() : null;
+                    return it;
+                }).collect(Collectors.toList());
+
+                return out;
+            }).collect(Collectors.toList());
+
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 
     @PutMapping("/evento/{id}")
     public ResponseEntity<?> updateEvento(@PathVariable Integer id, @RequestBody Evento evento) {

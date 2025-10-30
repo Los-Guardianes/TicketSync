@@ -1,0 +1,18 @@
+.triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #000;
+  display: inline-block;
+}
+
+.pagination-like span {
+  cursor: default;
+  user-select: none;
+}
+
+.pagination-like .active {
+  font-weight: 600;
+  text-decoration: underline;
+}

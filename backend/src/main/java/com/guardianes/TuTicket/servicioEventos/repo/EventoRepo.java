@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventoRepo extends JpaRepository<Evento, Integer> {
+    java.util.List<Evento> findByOrganizador_IdUsuario(Integer idUsuario);
 }

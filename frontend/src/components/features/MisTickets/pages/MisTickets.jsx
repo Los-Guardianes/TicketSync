@@ -3,10 +3,13 @@ import './MisTickets.css';
 import { getTickets } from '../service/MisTicketsService';
 import { abrirTicket } from '../../../../globalServices/PDFService';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de login
+import { NavLink } from 'react-router-dom';
 
 export const MisTickets = () => {
   const [tickets, setTickets] = useState([]);
   const { user, logout } = useAuth(); //Usuario y la función logout
+  const esOrganizador = user?.rol === 'ORGANIZADOR'; // usa el mismo check que ya te funciona
+
   // Obtenemos los tickets de la API
   useEffect(() => {
     const fetchTickets = async () => {
@@ -31,14 +34,38 @@ export const MisTickets = () => {
   return (
     <div className='d-flex'>
       {/* Barra lateral */}
+
       <aside className='bg-light border-end p-3' style={{ minWidth: '220px', height: '100vh' }}>
         <h5 className='mb-4'>TuTicket</h5>
         <nav className='nav flex-column'>
-          <a className='nav-link' href='/perfil'>Mi perfil</a>
-          <a className='nav-link' href='/eventos'>Mis Eventos</a>
-          <a className='nav-link active fw-bold' href='/tickets'>Mis Tickets</a>
-          <a className='nav-link' href='/faq'>Preguntas frecuentes</a>
-          <a className='nav-link' href='/privacidad'>Política de Privacidad</a>
+          <NavLink
+            to="/home"
+            end
+            className={({ isActive }) => 'nav-link' + (isActive ? ' active fw-bold' : '')}
+          >
+            Mi perfil
+          </NavLink>
+
+          {esOrganizador && (
+            <NavLink
+              to="/organizer/mis-eventos"
+              className={({ isActive }) => 'nav-link' + (isActive ? ' active fw-bold' : '')}
+            >
+              Mis Eventos
+            </NavLink>
+          )}
+
+
+          <NavLink
+            to="/mistickets"
+            end
+            className={({ isActive }) => 'nav-link' + (isActive ? ' active fw-bold' : '')}
+          >
+            Mis Tickets
+          </NavLink>
+
+          <NavLink to="/faq" className="nav-link">Preguntas frecuentes</NavLink>
+          <NavLink to="/privacidad" className="nav-link">Política de Privacidad</NavLink>
         </nav>
       </aside>
 
