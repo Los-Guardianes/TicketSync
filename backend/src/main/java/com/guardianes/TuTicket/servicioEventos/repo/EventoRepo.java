@@ -19,8 +19,6 @@ public interface EventoRepo extends JpaRepository<Evento, Integer> {
     @Override
     List<Evento> findAll();
 
-    // Solo eventos del organizador logueado (útil para "Mis Eventos")
-    // (Opcional) Puedes mantener el mismo EntityGraph si también necesitas esas relaciones aquí:
     @EntityGraph(attributePaths = {
             "ciudad",
             "categoria",

@@ -3,6 +3,7 @@ package com.guardianes.TuTicket.servicioEventos.controller;
 import com.guardianes.TuTicket.servicioEventos.DTO.EventoDTO;
 import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
+import com.guardianes.TuTicket.servicioEventos.repo.EventoRepo;
 import com.guardianes.TuTicket.servicioEventos.service.EventoCompletoService;
 import com.guardianes.TuTicket.servicioEventos.service.EventoService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
+import com.guardianes.TuTicket.servicioEventos.service.FuncionService;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +33,11 @@ public class EventoController {
     @Autowired
     private FuncionRepo funcionRepo;
 
+    @Autowired
+    private EventoRepo eventoRepo;
+
+    @Autowired
+    private FuncionService funcionService;
 
     @PostMapping("/evento")
     public ResponseEntity<?> addEvento(@RequestBody Evento evento) {
@@ -85,14 +92,11 @@ public class EventoController {
         try {
             var hoy = LocalDate.now();
 
-            var eventos = service.getAllEventos() // si prefieres: repo.findByOrganizador_IdUsuario(idUsuario)
-                    .stream()
-                    .filter(ev -> ev.getOrganizador() != null
-                            && ev.getOrganizador().getIdUsuario().equals(idUsuario))
-                    .collect(Collectors.toList());
+            var eventos = eventoRepo.findByOrganizador_IdUsuario(idUsuario);
+
 
             var respuesta = eventos.stream().map(ev -> {
-                var funcionesActivas = funcionRepo.findByEvento(ev)
+                var funcionesActivas = funcionService.getFuncionByEvento(ev.getIdEvento())
                         .stream()
                         .filter(f -> Boolean.TRUE.equals(f.getActivo()))
                         .collect(Collectors.toList());
