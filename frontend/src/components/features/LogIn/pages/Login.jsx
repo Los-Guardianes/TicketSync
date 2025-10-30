@@ -18,13 +18,17 @@ export const Login = () => {
     // El manejador del formulario en el componente se vuelve muy simple
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Llama a la función del hook que hace todo el trabajo
         const loginSuccess = await handleLoginSubmit();
-        
+
         // Si el hook indica que el login fue exitoso, entonces navegamos
         if (loginSuccess) {
-            navigate('/');
+            // Se valida si es organizador, cliente o administrador
+            console.log(loginSuccess);
+            if(loginSuccess.rol === 'ADMINISTRADOR'){
+                navigate('/home-admin');
+            }else navigate('/');
         }
     };
 
@@ -41,14 +45,14 @@ export const Login = () => {
                 <div className='login-form'>
                     <img className='login-logo' src="/tuticket_logo.png" alt="TuTicket Logo" />
                     <h2>Iniciar sesión</h2>
-                    
+
                     {/* El onSubmit ahora llama a nuestra nueva función simple */}
                     <form className="login-inputs" onSubmit={handleFormSubmit}>
-                        <input 
+                        <input
                             className={`input-form ${errors.email ? 'error' : ''}`}
-                            type="email" 
-                            name='email' 
-                            placeholder="Correo electrónico" 
+                            type="email"
+                            name='email'
+                            placeholder="Correo electrónico"
                             maxLength={100}
                             value={formData.email}
                             onChange={handleInputChange}
@@ -56,11 +60,11 @@ export const Login = () => {
                         />
                         {errors.email && <div className="error-form">{errors.email}</div>}
 
-                        <input 
+                        <input
                             className={`input-form ${errors.password ? 'error' : ''}`}
-                            type="password" 
-                            name='password' 
-                            placeholder="Contraseña" 
+                            type="password"
+                            name='password'
+                            placeholder="Contraseña"
                             maxLength={100}
                             value={formData.password}
                             onChange={handleInputChange}
@@ -76,8 +80,8 @@ export const Login = () => {
                             </div>
                         )}
 
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className='btn btn-primary btn-lg mt-3'
                             disabled={isLoading}
                         >
@@ -88,8 +92,8 @@ export const Login = () => {
                     <hr className='my-3' />
 
                     <a href="/register" className='btn btn-secondary btn-lg mt-3'>Registrate</a>
-                    
-                    <button 
+
+                    <button
                         className='btn btn-secondary btn-lg mt-3 justify-content-center d-flex align-items-center'
                         onClick={handleGoogleLogin}
                         disabled={isLoading}

@@ -36,9 +36,7 @@ public class PDFController {
     }
 
     @GetMapping("/miticket/{id}")
-    public ResponseEntity<byte[]> descargarTicket(@PathVariable String id) throws Exception {
-        return new ResponseEntity<>(null, HttpStatus.NOT_MODIFIED);
-        /* Corregir con nuevo esquema
+    public ResponseEntity<byte[]> descargarTicket(@PathVariable Integer id) throws Exception {
         byte[] pdfBytes = service.generarTicketPDF(id);
 
         HttpHeaders headers = new HttpHeaders();
@@ -46,7 +44,5 @@ public class PDFController {
         headers.setContentDispositionFormData("attachment", "ticket_" + id + ".pdf");
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-
-         */
     }
 }

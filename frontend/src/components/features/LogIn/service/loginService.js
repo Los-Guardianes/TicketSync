@@ -55,10 +55,12 @@ export const loginService = () => {
     };
 
     // --- LÓGICA DE LOGIN CON FETCH (Anteriormente en loginService.js)
+    // Aqui se modifico ya no se pasa TRUE O FALSE, SE PASA EL USUARIO COMPLETO
+    // PARA PODER VALIDAR SU ROL
     const handleLoginSubmit = async () => {
         // 1. Validar el formulario antes de enviar
         if (!validateForm()) {
-            return false; // Indica que el envío falló por validación
+            return null; // Indica que el envío falló por validación
         }
         //Iniciar estado de carga y limpiar mensajes previos
         setIsLoading(true);
@@ -78,7 +80,7 @@ export const loginService = () => {
             const result = await response.json();
             if (!response.ok) {
                 showMessage(result.message || 'Correo o contraseña incorrectos.', 'error');
-                return false; // Indica que el login falló
+                return null; // Indica que el login falló
             }
             // COSAS NUEVAS
             const decoded = jwtDecode(result.token); //Se decodifica el token                   
@@ -92,13 +94,13 @@ export const loginService = () => {
             //
             login(user, result.token ,decoded.exp); //Cambio acá también
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
-            return true;
+            return user;
 
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
             //Capturar errores de red o de la petición
             showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
-            return false; // Indica que el login falló
+            return null; // Indica que el login falló
         } finally {
             //Detener el estado de carga
             setIsLoading(false);
