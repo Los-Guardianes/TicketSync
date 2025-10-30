@@ -15,6 +15,9 @@ import { TicketPurchase } from "../components/features/TicketPurchase/pages/Tick
 import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
 import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
+import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 
 
 export const ClienteRoutes = () => {
@@ -30,6 +33,7 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+      <Route path="home-admin" element={<AdminHome />} />
       
 
       {/* CON Layout - Rutas anidadas */}
@@ -43,6 +47,8 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="happy-pay" element={<HappyPay />} />
         <Route path="mistickets" element={<MisTickets />} />
+        <Route path="create-discount" element={<CreateDiscount />} />
+        <Route path="discountlist" element={<DiscountList />} />
       </Route>
     </Routes>
   );

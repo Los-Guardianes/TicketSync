@@ -1,11 +1,13 @@
 package com.guardianes.TuTicket.servicioPedidos.service;
 
+import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import com.guardianes.TuTicket.servicioPedidos.model.Ticket;
 import com.guardianes.TuTicket.servicioPedidos.repo.TicketRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -35,4 +37,20 @@ public class TicketService {
     }
 
     public List<Ticket> getTicketsByIdUsuario(Integer id) { return repo.findTicketsByUsuarioId(id); }
+
+    public void addTickets(DetalleCompra detalleCompra) {
+        BigDecimal precioUnitario = detalleCompra.getTarifa().getPrecioBase();
+        //faltarían los descuentos
+        for(int i = 0; i < detalleCompra.getCantidad(); i++){
+            repo.save(new Ticket(
+               null,
+               false,
+               "HASH_TEST",
+               precioUnitario,
+               null,
+               true,
+               detalleCompra
+            ));
+        }
+    }
 }

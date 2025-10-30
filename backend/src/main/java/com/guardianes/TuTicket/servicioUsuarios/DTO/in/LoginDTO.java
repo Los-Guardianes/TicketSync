@@ -1,4 +1,4 @@
-package com.guardianes.TuTicket.servicioUsuarios.DTO;
+package com.guardianes.TuTicket.servicioUsuarios.DTO.in;
 
 import lombok.Data;
 

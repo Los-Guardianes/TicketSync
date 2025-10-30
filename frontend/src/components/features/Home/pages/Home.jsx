@@ -15,6 +15,7 @@ export const Home = () => {
     const fetchEventos = async () => {
       const data = await getEventos()
       setEventos(data)
+      console.log(data)
     }
     fetchEventos()
   }, [])
@@ -25,17 +26,14 @@ export const Home = () => {
     const matchSearch =
       !search || evento.nombre?.toLowerCase().includes(search.toLowerCase())
 
-    // ubicación dinámica
     const matchUbicacion =
       ubicacion === 'Todas' ||
       evento.ciudad?.dpto?.nombre === ubicacion
 
-    // precio (placeholder: siempre true Por ahora )
     const matchPrecio = true
 
-    // fecha
-    const matchFecha =
-      !fecha || (evento.fecha && evento.fecha.startsWith(fecha))
+    const matchFecha = true
+    //!fecha || (evento.fecha && evento.fecha.startsWith(fecha))
 
     return matchSearch && matchUbicacion && matchPrecio && matchFecha
   })
@@ -51,7 +49,7 @@ export const Home = () => {
               id={evento.idEvento}
               ubicacion={evento.direccion}
               titulo={evento.nombre}
-              dia={evento.fecha || 'Sin fecha definida'}
+              fecha={evento.funciones[0]?.fechaInicio || 'Sin fecha definida'} //Del back viene con fecha ordenada
               ulrimagen={evento.urlImagen || 'Sin imagen disponible'}
             />
           ))

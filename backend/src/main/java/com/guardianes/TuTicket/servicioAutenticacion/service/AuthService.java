@@ -1,7 +1,7 @@
 package com.guardianes.TuTicket.servicioAutenticacion.service;
 
-import com.guardianes.TuTicket.servicioUsuarios.DTO.LoginDTO;
-import com.guardianes.TuTicket.servicioUsuarios.DTO.UsuarioDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.LoginDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.UsuarioBearerDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +17,7 @@ public class AuthService {
     private final AuthenticationManager authManager;
     private final JWTService jwtService;
 
-    public UsuarioDTO verify(LoginDTO loginDTO) {
+    public UsuarioBearerDTO verify(LoginDTO loginDTO) {
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDTO.getEmail(),
@@ -25,7 +25,7 @@ public class AuthService {
         ));
         if (auth.isAuthenticated()) {
             Usuario usuario = (Usuario) auth.getPrincipal();
-            return new UsuarioDTO(
+            return new UsuarioBearerDTO(
                     jwtService.generateToken(usuario.getEmail(),usuario.getRol().toString()),
                     usuario.getIdUsuario(),
                     usuario.getEmail(),

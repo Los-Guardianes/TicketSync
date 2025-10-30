@@ -66,8 +66,8 @@ export const NavBar = ({
               onChange={(e) => setUbicacion(e.target.value)}
             >
               <option value="Todas">Todas</option>
-              {ubicacionesDisponibles.map((ubi, idx) => (
-                <option key={idx} value={ubi}>{ubi}</option>
+              {ubicacionesDisponibles.map(ubi => (
+                <option key={ubi.idDpto} value={ubi.nombre}>{ubi.nombre}</option>
               ))}
             </select>
           </ul>
@@ -88,7 +88,7 @@ export const NavBar = ({
           </ul>
         </li>
          {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
-                {user && user.rol === 'organizador' && (
+                {user && user.rol === 'ORGANIZADOR' && (
                     <li className='nav-item'>
                         <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
                             Crear Evento
