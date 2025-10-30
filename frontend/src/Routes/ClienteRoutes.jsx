@@ -18,6 +18,7 @@ import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
 
+import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
   // Tengan en cuenta que en el navbar el to es a que url se redirige
@@ -31,7 +32,9 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
-      
+
+      {/* Para testeo del componente de s3 */}
+      <Route path="/test-imagen" element={<ImageUploader />} />
 
       {/* CON Layout - Rutas anidadas */}
       <Route path="/*" element={<Layout />}>
