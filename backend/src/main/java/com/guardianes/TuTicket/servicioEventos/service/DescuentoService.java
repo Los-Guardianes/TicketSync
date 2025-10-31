@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.DescuentoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.DescuentoOutDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Descuento;
 import com.guardianes.TuTicket.servicioEventos.repo.DescuentoRepo;
 import com.guardianes.TuTicket.servicioExepciones.RecursoNoEncontradoException;
@@ -36,10 +36,10 @@ public class DescuentoService {
         repo.deleteById(id);
     }
 
-    public DescuentoDTO verificarCodigo(String codigo) {
+    public DescuentoOutDTO verificarCodigo(String codigo) {
         Optional<Descuento> descuento = repo.findByCodigo(codigo);
         if(descuento.isPresent()){
-            return new DescuentoDTO(descuento.get());
+            return new DescuentoOutDTO(descuento.get());
         }else{
             throw new RecursoNoEncontradoException("Código de descuento no encontrado");
         }

@@ -1,7 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
 import com.guardianes.TuTicket.servicioEventos.model.Descuento;
-import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.TipoDescuento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class DescuentoDTO {
+public class DescuentoOutDTO {
     private int idDescuento;
     private String codigo;
     private TipoDescuento tipoDesc;
@@ -23,7 +22,7 @@ public class DescuentoDTO {
     private Boolean esGlobal;
     private Integer idEvento;
 
-    public DescuentoDTO(Descuento descuento) {
+    public DescuentoOutDTO(Descuento descuento) {
         this.idDescuento = descuento.getIdDescuento();
         this.codigo = descuento.getCodigo();
         this.tipoDesc = descuento.getTipoDesc();
