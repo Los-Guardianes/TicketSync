@@ -4,10 +4,12 @@ import com.guardianes.TuTicket.servicioEventos.DTO.ZonaDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import com.guardianes.TuTicket.servicioEventos.repo.ZonaRepo;
+import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,6 +45,15 @@ public class ZonaService {
         return repo.findByEvento(evento);
     }
 
-    public List<Zona> addListaZonas(List<ZonaDTO> zonasDTO, )
+    public List<Zona> addListaZonas(List<ZonaDTO> zonasDTO, Evento evento) {
+        List<Zona> zonas = zonasDTO.stream()
+                .map(zDTO -> {
+                    return zDTO.toModel(evento);
+                })
+            .toList();
+        List<Zona> zonasGuardadas = repo.saveAll(zonas);
+
+        return zonasGuardadas;
+    }
 
 }

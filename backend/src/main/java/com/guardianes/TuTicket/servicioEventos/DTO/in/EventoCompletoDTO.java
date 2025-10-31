@@ -31,10 +31,10 @@ public class EventoCompletoDTO {
 
     // Listas de entidades relacionadas
     private List<FuncionDTO> funciones;
+    private List<ZonaDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
     private List<TarifaDTO> tarifas;
     private List<PeriodoDTO> temporadas;
     private List<TipoEntradaDTO> tiposDeEntrada; // <-- Lista de tipos de entrada a crear
-    private List<ZonaDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
 
     public Evento toModel(Ciudad ci, CategoriaEvento ca, Organizador o) {
         return new Evento(

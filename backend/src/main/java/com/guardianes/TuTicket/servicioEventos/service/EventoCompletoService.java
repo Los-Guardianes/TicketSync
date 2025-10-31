@@ -1,4 +1,5 @@
 package com.guardianes.TuTicket.servicioEventos.service;
+import com.guardianes.TuTicket.servicioEventos.DTO.TarifaDTO;
 import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.*;
 import com.guardianes.TuTicket.servicioEventos.repo.*;
@@ -39,9 +40,11 @@ public class EventoCompletoService {
         CategoriaEvento ca = em.getReference(CategoriaEvento.class, dto.getIdCategoria());
         Organizador o = em.getReference(Organizador.class, dto.getIdUsuario());
         Evento evento = dto.toModel(ci, ca, o);
-        Evento eventoInsertado = repo.save(evento);
+        Evento eventoInsertado = repoEvento.save(evento);
         funcionService.addListFuncion(dto.getFunciones(), eventoInsertado);
-        zonaService.add
+        zonaService.addListaZonas(dto.getZonas(), eventoInsertado);
+        tipoEntradaService.addListaTipoEntrada(dto.getTiposDeEntrada(), eventoInsertado);
+        tarifaService.addListaTarifas(dto.getTarifas(), eventoInsertado);
         return evento;
 
 
