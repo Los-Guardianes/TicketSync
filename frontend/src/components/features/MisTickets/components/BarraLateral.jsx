@@ -1,11 +1,13 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 
 export const BarraLateral = () => {
   const { user } = useAuth();
 
-  // normalizamos rol
-  const esOrganizador = (user?.rol ?? '').toString().toUpperCase() === 'ORGANIZADOR';
+  // Normalizamos el rol para evitar crashes
+  const esOrganizador =
+    (user?.rol ?? '').toString().toUpperCase() === 'ORGANIZADOR';
 
   return (
     <aside
@@ -13,9 +15,8 @@ export const BarraLateral = () => {
       style={{ minWidth: '220px', height: '100vh' }}
     >
       <h5 className="mb-4">TuTicket</h5>
-
       <nav className="nav flex-column">
-        {/* Mi perfil */}
+
         <NavLink
           to="/home"
           end
@@ -26,7 +27,6 @@ export const BarraLateral = () => {
           Mi perfil
         </NavLink>
 
-        {/* Mis Eventos (solo visible/clicable si es organizador) */}
         {esOrganizador ? (
           <NavLink
             to="/organizer/mis-eventos"
@@ -46,7 +46,6 @@ export const BarraLateral = () => {
           </span>
         )}
 
-        {/* Mis Tickets */}
         <NavLink
           to="/mistickets"
           end
@@ -57,10 +56,10 @@ export const BarraLateral = () => {
           Mis Tickets
         </NavLink>
 
-        {/* FAQ / Privacidad */}
         <NavLink to="/faq" className="nav-link">
           Preguntas frecuentes
         </NavLink>
+
         <NavLink to="/privacidad" className="nav-link">
           Política de Privacidad
         </NavLink>

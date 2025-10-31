@@ -10,3 +10,8 @@ export const postEventoCompleto = (evento) =>
 
 export const getEventosByOrganizer = (idUsuario) =>
   apiFetch(`/api/evento/organizer/${idUsuario}`);
+
+export const cancelarEvento = (idEvento) =>
+  apiFetch(`/api/evento/${idEvento}/cancelar`, {
+    method: 'PUT',
+  });

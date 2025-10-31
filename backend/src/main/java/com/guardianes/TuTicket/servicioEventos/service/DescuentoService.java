@@ -48,5 +48,9 @@ public class DescuentoService {
     public Integer actualizarUsoDescuento(Integer idDescuento){
 
     }
+    public List<Descuento> getActivosByEvento(Integer idEvento) {
+        return repo.findByEvento_IdEventoAndActivoTrueOrderByFechaInicioAsc(idEvento);
+    }
+
 }
 

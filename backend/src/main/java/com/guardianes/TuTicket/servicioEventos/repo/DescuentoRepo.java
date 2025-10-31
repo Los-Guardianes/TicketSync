@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface DescuentoRepo extends JpaRepository<Descuento, Integer> {
@@ -17,4 +18,7 @@ public interface DescuentoRepo extends JpaRepository<Descuento, Integer> {
     Integer updateCantidad(@Param("cantidad") Integer cantidad, @Param("id") Integer id);
 
 
+    public Optional<Descuento> findByCodigo(String codigo);
+
+    List<Descuento> findByEvento_IdEventoAndActivoTrueOrderByFechaInicioAsc(Integer idEvento);
 }
