@@ -23,6 +23,10 @@
   font-weight: bold;
   color: #16a34a;
   margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px; 
 }
 
 .admin-sidebar ul {
@@ -37,6 +41,12 @@
   display: flex;
   align-items: center;
   transition: background 0.3s;
+  gap: 10px; 
+  font-size: 1rem;
+}
+
+.admin-sidebar ul li .icon {
+  font-size: 1.3rem; /* Tamaño de los íconos */
 }
 
 .admin-sidebar ul li:hover,

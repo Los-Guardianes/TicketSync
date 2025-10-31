@@ -4,6 +4,7 @@ import { Header } from '../common/Header/Header';
 import { Footer } from '../common/Footer/Footer';
 import { useState, useEffect, use } from 'react';
 import { getDepartamentos } from '../../globalServices/UbicacionService';
+import { getCategorias } from '../../globalServices/CategoriaService';
 
 import { EventCreationProvider } from '../../context/EventCreationContext'; // 👈 1. Importa el Provider
 const Layout = () => {
@@ -14,6 +15,9 @@ const Layout = () => {
   const [precio, setPrecio] = useState(1000);
   const [ubicacion, setUbicacion] = useState('Todas');
   const [fecha, setFecha] = useState(['', '']);
+  // categoría
+  const [categoria, setCategoria] = useState('Todas');
+  const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
 
 
 
@@ -26,9 +30,18 @@ const Layout = () => {
     console.log(data);
     setUbicacionesDisponibles(data);
   };
+  // categorías dinámicas
+  const categoriaFetch = async () => {
+    const data = await getCategorias();
+    console.log(data);
+    setCategoriasDisponibles(data);
+  };
 
   useEffect(() => {
-    isHomePage && dptoFetch();
+    if (isHomePage) {
+      dptoFetch();
+      categoriaFetch();
+    }
   }, []);
 
 
@@ -49,7 +62,7 @@ const Layout = () => {
       <main style={isHomePage ? {} : { paddingTop: 'var(--margin-top-header)' }}>
         <EventCreationProvider>
           {/* Home (y otras páginas) leen los filtros aquí */}
-          <Outlet context={{ search, precio, ubicacion, fecha}} />
+          <Outlet context={{ search, precio, ubicacion, fecha }} />
         </EventCreationProvider>
       </main>
 
