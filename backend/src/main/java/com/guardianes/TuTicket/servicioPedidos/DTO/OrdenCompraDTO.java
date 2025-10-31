@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,9 +21,12 @@ import java.util.List;
 @AllArgsConstructor
 public class OrdenCompraDTO {
     private String metodoPago;
+    private BigDecimal totalBruto;
+    private BigDecimal descuentoAplicado;
+    private BigDecimal total;
     private Integer idUsuario;
     private Integer idFuncion;
-
+    private Integer idDescuentoUtilizado;
     List<DetalleCompraDTO> detallesCompras;
 
     public OrdenCompra toModel(Usuario u, Funcion f) {
@@ -31,6 +35,9 @@ public class OrdenCompraDTO {
                 LocalDateTime.now(),             //hora actual
                 this.metodoPago,
                 EstadoOrdenCompra.PENDIENTE,    //pendiente ya que se verificará conexión a la API
+                this.totalBruto,
+                this.descuentoAplicado,
+                this.total,
                 true,                           //activo siempre true
                 u,                              //usuario
                 f                               //funcion

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./CreateDiscount.css";
-import { postDescuento } from '../service/DescuentoService';
+import { postDescuento } from '../../../../globalServices/DescuentoService';
 import { useNavigate } from 'react-router-dom';
 
 

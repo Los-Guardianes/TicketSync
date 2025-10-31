@@ -2,18 +2,30 @@
 
 import "./TicketQuantitySelector.css"
 
-export const TicketQuantitySelector = ({ children, cantidadEntradas, incrementar, decrementar }) => {
+export const TicketQuantitySelector = ({ cantidadEntradas, updateCantidad, idTarifa, maxCantidad}) => {
+
+  const incrementar = () => {
+    if(maxCantidad && cantidadEntradas >= maxCantidad) return;
+    const nuevaCantidad = cantidadEntradas + 1;
+    updateCantidad(idTarifa, nuevaCantidad);
+  }
+
+  const decrementar = () => {
+    if(cantidadEntradas <= 1) return;
+    const nuevaCantidad = cantidadEntradas - 1;
+    updateCantidad(idTarifa, nuevaCantidad);
+  }
+
   return (
     <fieldset className="quantity-selector">
-      <legend className="quantity-selector-label">{children}</legend>
       <div className="quantity-selector-controls">
-        <button className="quantity-button" onClick={decrementar} aria-label="Disminuir cantidad">
+        <button type="button" className="quantity-button" onClick={decrementar} aria-label="Disminuir cantidad">
           −
         </button>
         <span className="quantity-display" aria-live="polite">
           {cantidadEntradas}
         </span>
-        <button className="quantity-button" onClick={incrementar} aria-label="Aumentar cantidad">
+        <button type="button" className="quantity-button" onClick={incrementar} aria-label="Aumentar cantidad">
           +
         </button>
       </div>

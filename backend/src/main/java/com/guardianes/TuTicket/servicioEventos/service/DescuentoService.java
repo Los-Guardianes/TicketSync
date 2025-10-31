@@ -1,12 +1,12 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.DescuentoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Descuento;
 import com.guardianes.TuTicket.servicioEventos.repo.DescuentoRepo;
+import com.guardianes.TuTicket.servicioExepciones.RecursoNoEncontradoException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.naming.NameNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +36,17 @@ public class DescuentoService {
         repo.deleteById(id);
     }
 
-    public Descuento verificarCodigo(String codigo) throws NameNotFoundException {
+    public DescuentoDTO verificarCodigo(String codigo) {
         Optional<Descuento> descuento = repo.findByCodigo(codigo);
         if(descuento.isPresent()){
-            return descuento.get();
+            return new DescuentoDTO(descuento.get());
         }else{
-            throw new NameNotFoundException("Código de descuento no encontrado");
+            throw new RecursoNoEncontradoException("Código de descuento no encontrado");
         }
+    }
+
+    public Integer actualizarUsoDescuento(Integer idDescuento){
+
     }
 }
 

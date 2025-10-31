@@ -35,7 +35,7 @@ public class GlobalExcepcionHandler {
     @ExceptionHandler(RecursoExistenteException.class)
     public ResponseEntity<Map<String, Object>> handleRecursoExistente(RecursoExistenteException ex, WebRequest request) {
         return new ResponseEntity<>(
-                construirRespuesta(ex, HttpStatus.CONFLICT, request), HttpStatus.CONFLICT);
+                    construirRespuesta(ex, HttpStatus.CONFLICT, request), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DatosInvalidosException.class)

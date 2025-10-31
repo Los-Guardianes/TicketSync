@@ -1,14 +1,13 @@
 export class OrdenCompra {
 
-    constructor(metodoPago, idUsuario, idFuncion, detallesCompras = []) {        
+    constructor(metodoPago, totalBruto, descuentoAplicado, total,idUsuario, idFuncion, idDescuentoUtilizado,detallesCompras = []) {        
         this.metodoPago = metodoPago;
+        this.totalBruto = totalBruto;
+        this.descuentoAplicado = descuentoAplicado;
+        this.total = total;
         this.idUsuario = idUsuario;
         this.idFuncion = idFuncion;
+        this.idDescuentoUtilizado = idDescuentoUtilizado;
         this.detallesCompras = detallesCompras;
     }
-
-    GetMetodoPago() { return this.metodoPago }
-    SetMetodoPago(metodoPago) { this.metodoPago = metodoPago }
-    GetIdFuncion() { return this.idFuncion }
-    SetIdFuncion(idFuncion) { this.idFuncion = idFuncion }
 }
