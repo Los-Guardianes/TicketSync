@@ -1,54 +1,66 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './ConfigEventoActions.css'; // si no existe, puedes crearlo vacío o quitar esta línea
 
 export const ConfigEventoActions = ({ idEvento }) => {
   const navigate = useNavigate();
 
-  // Cada acción es un botón. Más adelante cada path va a ser otra pantalla.
   const acciones = [
     {
       label: 'EDITAR DETALLES',
-      path: `/organizer/evento/${idEvento}/editar-detalles`,
+      onClick: () => {
+        console.log('EDITAR DETALLES', idEvento);
+        // futuro: navigate(`/organizer/evento/${idEvento}/editar-detalles`);
+      },
     },
     {
       label: 'EDITAR UBICACIÓN',
-      path: `/organizer/evento/${idEvento}/editar-ubicacion`,
+      onClick: () => {
+        console.log('EDITAR UBICACIÓN', idEvento);
+        // futuro: navigate(`/organizer/evento/${idEvento}/editar-ubicacion`);
+      },
     },
     {
       label: 'EDITAR ENTRADAS',
-      path: `/organizer/evento/${idEvento}/editar-entradas`,
+      onClick: () => {
+        console.log('EDITAR ENTRADAS', idEvento);
+        // futuro: navigate(`/organizer/evento/${idEvento}/editar-entradas`);
+      },
     },
     {
       label: 'GENERADOR DE DESCUENTOS',
-      path: `/organizer/evento/${idEvento}/generar-descuento`,
+      onClick: () => {
+        navigate(`/organizer/evento/${idEvento}/descuentos/nuevo`);
+      },
     },
     {
       label: 'GESTIÓN DE DESCUENTOS',
-      path: `/organizer/evento/${idEvento}/descuentos`,
+      onClick: () => {
+        navigate(`/organizer/evento/${idEvento}/descuentos`);
+      },
     },
     {
       label: 'CONFIGURAR POLÍTICAS DE DEVOLUCIÓN',
-      path: `/organizer/evento/${idEvento}/politicas-devolucion`,
+      onClick: () => {
+        console.log('POLÍTICAS DEVOLUCIÓN', idEvento);
+        // futuro: navigate(`/organizer/evento/${idEvento}/politicas-devolucion`);
+      },
     },
     {
       label: 'LISTADO DE INSCRITOS',
-      path: `/organizer/evento/${idEvento}/inscritos`,
+      onClick: () => {
+        console.log('LISTADO DE INSCRITOS', idEvento);
+        // futuro: navigate(`/organizer/evento/${idEvento}/inscritos`);
+      },
     },
     {
       label: 'CANCELAR EVENTO',
-      path: `/organizer/evento/${idEvento}/cancelar`,
+      onClick: () => {
+        console.log('CANCELAR EVENTO', idEvento);
+        // acá podrías abrir modal de confirmación
+      },
     },
   ];
-
-  const handleClick = (accion) => {
-    if (accion.path) {
-      navigate(accion.path);
-    } else {
-      console.log(
-        `Acción "${accion.label}" para evento ${idEvento} (sin ruta aún)`
-      );
-    }
-  };
 
   return (
     <div className="config-actions-wrapper">
@@ -56,7 +68,7 @@ export const ConfigEventoActions = ({ idEvento }) => {
         <button
           key={i}
           className="config-action-btn"
-          onClick={() => handleClick(accion)}
+          onClick={accion.onClick}
         >
           <span>{accion.label}</span>
           <span>{'>'}</span>
