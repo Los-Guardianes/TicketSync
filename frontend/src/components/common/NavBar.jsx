@@ -89,7 +89,7 @@ export const NavBar = ({
             >
               <option value="Todas">Todas</option>
               {categoriasDisponibles && categoriasDisponibles.map(cat => (
-                <option key={cat.idCategoria} value={cat.nombre}>{cat.nombre}</option>
+                <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
           </ul>

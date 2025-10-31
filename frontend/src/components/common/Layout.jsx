@@ -4,7 +4,6 @@ import { Header } from '../common/Header/Header';
 import { Footer } from '../common/Footer/Footer';
 import { useState, useEffect, use } from 'react';
 import { getDepartamentos } from '../../globalServices/UbicacionService';
-import { getCategorias } from '../../globalServices/CategoriaService';
 
 import { EventCreationProvider } from '../../context/EventCreationContext'; // 👈 1. Importa el Provider
 const Layout = () => {
@@ -30,11 +29,19 @@ const Layout = () => {
     console.log(data);
     setUbicacionesDisponibles(data);
   };
-  // categorías dinámicas
+  // categorías dinámicas 
   const categoriaFetch = async () => {
-    const data = await getCategorias();
-    console.log(data);
-    setCategoriasDisponibles(data);
+    try {
+      const response = await fetch('http://localhost:8080/api/evento'); // ruta de tus eventos
+      const data = await response.json();
+
+      // derivar categorías únicas desde los eventos
+      const categorias = [...new Set(data.map(ev => ev.categoria?.nombre || 'Sin categoría'))];
+      console.log('categorías derivadas:', categorias);
+      setCategoriasDisponibles(categorias);
+    } catch (error) {
+      console.error('Error al obtener eventos para categorías:', error);
+    }
   };
 
   useEffect(() => {
@@ -54,6 +61,8 @@ const Layout = () => {
           ubicacion={ubicacion} setUbicacion={setUbicacion}
           fecha={fecha} setFecha={setFecha}
           ubicacionesDisponibles={ubicacionesDisponibles}
+          categoria={categoria} setCategoria={setCategoria}
+          categoriasDisponibles={categoriasDisponibles}
         />
       ) : (
         <Header />
@@ -62,7 +71,7 @@ const Layout = () => {
       <main style={isHomePage ? {} : { paddingTop: 'var(--margin-top-header)' }}>
         <EventCreationProvider>
           {/* Home (y otras páginas) leen los filtros aquí */}
-          <Outlet context={{ search, precio, ubicacion, fecha }} />
+          <Outlet context={{ search, precio, ubicacion, fecha, categoria }} />
         </EventCreationProvider>
       </main>
 

@@ -14,13 +14,17 @@ export const Home = () => {
   // Cargar eventos de la API
   useEffect(() => {
     const fetchEventos = async () => {
-      const data = await getEventos()
-      console.log(data); //ver la estructura de los objetos
-      setEventos(data)
-      console.log(data)
-    }
-    fetchEventos()
-  }, [])
+      try {
+        const data = await getEventos();
+        console.log(data);
+        setEventos(data || []);
+      } catch (error) {
+        console.error('Error cargando eventos:', error);
+        setEventos([]);
+      }
+    };
+    fetchEventos();
+  }, []);
 
   // Aplicar filtros
   const eventosFiltrados = eventos.filter(evento => {
@@ -33,7 +37,7 @@ export const Home = () => {
       evento.ciudad?.dpto?.nombre === ubicacion
     const matchCategoria =
       categoria === 'Todas' ||
-      evento.categoria?.nombre === categoria;
+      (evento.categoria?.nombre?.toLowerCase() === categoria.toLowerCase());
 
     const matchPrecio = true
 
