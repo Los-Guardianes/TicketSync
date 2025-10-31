@@ -139,7 +139,8 @@ export const MisEventos = () => {
             {upcomingPag.visible.map((it) => (
               <OrganizerEventCard
                 key={`${it.idEvento}-${it.idFuncion}`}
-                id={it.idEvento}
+                idEvento={it.idEvento}           
+                idFuncion={it.idFuncion}
                 titulo={it.titulo}
                 fecha={it.fecha}
                 direccion={it.direccion}

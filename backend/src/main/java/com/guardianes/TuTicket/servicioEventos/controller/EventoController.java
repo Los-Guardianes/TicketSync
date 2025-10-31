@@ -175,4 +175,27 @@ public class EventoController {
         }
     }
 
+    @PutMapping("/evento/{idEvento}/cancelar")
+    public ResponseEntity<?> cancelarEvento(@PathVariable Integer idEvento) {
+        try {
+            Evento evento = service.getEventoById(idEvento);
+            if (evento == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Evento no encontrado");
+            }
+
+            // marcar como inactivo
+            evento.setActivo(false);
+
+            // guardar
+            Evento actualizado = service.updateEvento(evento);
+
+            return ResponseEntity.ok(actualizado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
+    }
+
+
 }

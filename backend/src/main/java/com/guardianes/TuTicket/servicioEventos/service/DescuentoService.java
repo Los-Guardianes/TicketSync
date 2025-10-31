@@ -44,5 +44,10 @@ public class DescuentoService {
             throw new NameNotFoundException("Código de descuento no encontrado");
         }
     }
+
+    public List<Descuento> getActivosByEvento(Integer idEvento) {
+        return repo.findByEvento_IdEventoAndActivoTrueOrderByFechaInicioAsc(idEvento);
+    }
+
 }
 
