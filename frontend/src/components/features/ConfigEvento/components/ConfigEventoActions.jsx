@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ConfigEventoActions.css'; // si no existe, puedes crearlo vacío o quitar esta línea
+import './ConfigEventoActions.css';
 
-export const ConfigEventoActions = ({ idEvento }) => {
+export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
   const navigate = useNavigate();
 
   const acciones = [
@@ -56,8 +56,9 @@ export const ConfigEventoActions = ({ idEvento }) => {
     {
       label: 'CANCELAR EVENTO',
       onClick: () => {
-        console.log('CANCELAR EVENTO', idEvento);
-        // acá podrías abrir modal de confirmación
+        if (onCancelar) {
+          onCancelar();
+        }
       },
     },
   ];
