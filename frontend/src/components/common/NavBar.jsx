@@ -10,6 +10,8 @@ export const NavBar = ({
   ubicacionesDisponibles
 }) => {
   const { user, logout } = useAuth();
+  // Detecta rol de organizador con tolerancia a distintas formas de guardarlo
+  const esOrganizador = user && user.rol === 'ORGANIZADOR';
 
   return (
     <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
@@ -107,9 +109,15 @@ export const NavBar = ({
           </>
         ) : (
           <>
-            <li className='nav-item'>
-                <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
-            </li>
+              <li className='nav-item'>
+                <NavLink
+                  className="nav-link"
+                  to={esOrganizador ? "/organizer/mis-eventos" : "/mistickets"}
+                >
+                  {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
+                </NavLink>
+              </li>
+
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>

@@ -15,14 +15,17 @@ import { TicketPurchase } from "../components/features/TicketPurchase/pages/Tick
 import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
 import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+
+import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
+import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
+
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 
 
 export const ClienteRoutes = () => {
-  //Este es el enrutador, cada link lo redirige a la pagina
-  // Tengan en cuenta que en el navbar el to es a que url se redirige
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
@@ -34,9 +37,8 @@ export const ClienteRoutes = () => {
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
       <Route path="home-admin" element={<AdminHome />} />
-      
 
-      {/* CON Layout - Rutas anidadas */}
+      {/* CON Layout */}
       <Route path="/*" element={<Layout />}>
         <Route path="home" element={<Home />} />
         <Route path="create-event" element={<CreateEvent />} />
@@ -47,8 +49,17 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="happy-pay" element={<HappyPay />} />
         <Route path="mistickets" element={<MisTickets />} />
-        <Route path="create-discount" element={<CreateDiscount />} />
-        <Route path="discountlist" element={<DiscountList />} />
+        <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
+        <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
+
+        <Route
+          path="organizer/evento/:idEvento/descuentos/nuevo"
+          element={<CreateDiscount />}
+        />
+        <Route
+          path="organizer/evento/:idEvento/descuentos"
+          element={<DiscountList />}
+        />
       </Route>
     </Routes>
   );

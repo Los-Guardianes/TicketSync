@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de autenticación
 import { jwtDecode } from 'jwt-decode';
+
+
 export const loginService = () => {
 
     const { login } = useAuth(); //Obtenemos la función login del contexto
