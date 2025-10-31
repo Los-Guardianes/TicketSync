@@ -34,4 +34,6 @@ public class TarifaService {
                 .map(TarifaDTO::new) //parseando a TarifaDTO con un lambda
                 .collect(Collectors.toList());
     }
+
+
 }

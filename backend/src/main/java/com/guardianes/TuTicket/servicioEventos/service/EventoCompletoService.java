@@ -2,7 +2,11 @@ package com.guardianes.TuTicket.servicioEventos.service;
 import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.*;
 import com.guardianes.TuTicket.servicioEventos.repo.*;
+import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
+import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import com.guardianes.TuTicket.servicioUbicacion.repo.CiudadRepo;
+import com.guardianes.TuTicket.servicioUsuarios.model.Organizador;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +22,29 @@ public class EventoCompletoService {
     private final ZonaRepo repoZona; // <-- Repositorio para Zona
     private final CiudadRepo repoCiudad;
     private final CatEventoRepo repoCatEvento;
+    private final EntityManager em;
+
+    private final FuncionService funcionService;
+    private final TarifaService tarifaService;
+    private final PeriodoService periodoService;
+    private final TipoEntradaService tipoEntradaService;
+    private final ZonaService zonaService;
 
     @Transactional
     public Evento crearEventoCompleto(EventoCompletoDTO dto) {
 
         // --- 1. Crear y Guardar el Evento ---
-        Evento evento = new Evento();
+        // Evento evento = new Evento();
+        Ciudad ci = em.getReference(Ciudad.class, dto.getIdCiudad());
+        CategoriaEvento ca = em.getReference(CategoriaEvento.class, dto.getIdCategoria());
+        Organizador o = em.getReference(Organizador.class, dto.getIdUsuario());
+        Evento evento = dto.toModel(ci, ca, o);
+        Evento eventoInsertado = repo.save(evento);
+        funcionService.addListFuncion(dto.getFunciones(), eventoInsertado);
+        zonaService.add
         return evento;
+
+
         /* Cambiar a nueva forma
         evento.setNombre(dto.getNombre());
         evento.setDescripcion(dto.getDescripcion());
@@ -41,7 +61,7 @@ public class EventoCompletoService {
         evento.setCategoria(categoria);
         evento.setActivo(true); // Por defecto, al crearlo está activo
 
-        Evento eventoGuardado = repoEvento.save(evento);
+        Evento eventoGuardado = repoEvento.save();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // --- 2. Crear y Guardar las Funciones ---
         dto.getFunciones().forEach(funcionDto -> {

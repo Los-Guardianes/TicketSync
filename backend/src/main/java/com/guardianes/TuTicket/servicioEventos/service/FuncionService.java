@@ -1,8 +1,13 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.FuncionDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
+import com.guardianes.TuTicket.servicioEventos.model.Periodo;
+import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
 import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
+import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
+import com.guardianes.TuTicket.servicioPedidos.service.TicketService;
 import jdk.jfr.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,7 @@ import java.util.Optional;
 public class FuncionService {
 
     private final FuncionRepo repo;
+    private final TicketService ticketService;
 
     public List<Funcion> getAllFunciones() {
         return repo.findAll();
@@ -43,5 +49,16 @@ public class FuncionService {
         Evento e = new Evento();
         e.setIdEvento(idEvento);
         return repo.findByEvento(e);
+    }
+
+    public List<Funcion> addListFuncion(List<FuncionDTO> funcionDTO, Evento evento) {
+        List<Funcion> funciones = funcionDTO.stream()
+                .map(fncDTO -> {
+                    return fncDTO.toModel(evento);
+                })
+                .toList();
+        List<Funcion> funcionesGuardadas = repo.saveAll(funciones);
+        // CAPAZ FALTA ALGO ()
+        return funcionesGuardadas;
     }
 }

@@ -17,6 +17,8 @@ import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+import CreateTickets1 from "../components/features/CreateEvent/pages/temp";
+import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 
 export const ClienteRoutes = () => {
   //Este es el enrutador, cada link lo redirige a la pagina
@@ -39,6 +41,8 @@ export const ClienteRoutes = () => {
         <Route path="create-event" element={<CreateEvent />} />
         <Route path="ubicacion-evento" element={<UbicacionEvento />} />
         <Route path="create-ticket" element={<CreateTicket />} />
+        <Route path="temp" element={<CreateTickets1 />} />
+        <Route path="temp2" element={<CreateTicket2 />} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
         <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<TicketPay />} />

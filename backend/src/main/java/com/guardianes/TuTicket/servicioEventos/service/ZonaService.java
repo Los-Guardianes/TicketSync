@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
+import com.guardianes.TuTicket.servicioEventos.DTO.ZonaDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import com.guardianes.TuTicket.servicioEventos.repo.ZonaRepo;
@@ -41,4 +42,7 @@ public class ZonaService {
         evento.setIdEvento(id_evento);
         return repo.findByEvento(evento);
     }
+
+    public List<Zona> addListaZonas(List<ZonaDTO> zonasDTO, )
+
 }

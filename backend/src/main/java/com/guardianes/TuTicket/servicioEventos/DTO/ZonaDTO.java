@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,15 @@ public class ZonaDTO {
         this.nombre = zona.getNombre();
         this.aforo = zona.getAforo();
         this.idZona = zona.getEvento().getIdEvento();
+    }
+
+    public Zona toModel(Evento evento) {
+        return new Zona(
+                idZona,
+                this.nombre,
+                this.aforo,
+                true,
+                evento
+        );
     }
 }
