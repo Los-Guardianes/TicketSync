@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "./CreateDiscount.css";
-import { postDescuento } from '../service/DescuentoService';
-import { useNavigate, useParams } from 'react-router-dom';
+import { postDescuento } from '../../../../globalServices/DescuentoService';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateDiscount = () => {
   const navigate = useNavigate();

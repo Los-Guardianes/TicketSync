@@ -7,6 +7,10 @@
   gap: 15px;
 }
 
+.info-event .discount{
+  color: rgb(247, 111, 111);
+}
+
 .info-event-image {
   width: 100%;
   max-width: 200px;

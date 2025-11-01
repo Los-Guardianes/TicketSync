@@ -11,8 +11,14 @@ export const TicketPay = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { listaDetalles = [], montoFinal = 0, funcion } = location.state || {};
     const {user} = useAuth();
+    const { listaDetalles = [],
+            idPeriodo,
+            totalBruto = 0,
+            descuentoAplicado = 0,
+            total = 0,
+            idDescuentoUtilizado = null,
+            funcion } = location.state || {};
 
     const [notification, setNotification] = useState(null)
 
@@ -41,18 +47,22 @@ export const TicketPay = () => {
 
     const handlePay = async (e) => {
         e.preventDefault();
-        console.log("Formulario de pago enviado");
         if (!validateForm()) return;
         const detallesCompras = listaDetalles.map(detalle => ({
                 cantidad: detalle.cantidad,
                 precioDetalle: detalle.precioDetalle,
-                idTarifa: detalle.tarifa?.idTarifa,
-                idPeriodo: detalle.idPeriodo
+                idTarifa: detalle.tarifa.idTarifa,
+                idPeriodo: idPeriodo
         }))
+        console.log(detallesCompras)
         const ordenCompra = new OrdenCompra(
             formData.metodoPago,
+            totalBruto,
+            descuentoAplicado,
+            total,
             user.idUsuario,
             funcion.idFuncion,
+            idDescuentoUtilizado,
             detallesCompras
         );
         console.log("Enviando orden de compra:", ordenCompra);
@@ -126,7 +136,7 @@ export const TicketPay = () => {
                 <h2>Resumen de Compra</h2>
                 <div className="tp-total">
                     <span>Total a pagar:</span>
-                    <strong>S/ {montoFinal?.toFixed(2) || "0.00"}</strong>
+                    <strong>S/ {total?.toFixed(2) || "0.00"}</strong>
                 </div>
             </section>
 

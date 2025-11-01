@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,6 +35,15 @@ public class OrdenCompra {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private EstadoOrdenCompra estado;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalBruto;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal descuentoAplicado;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal total;
 
     @Column(nullable = false)
     private Boolean activo = true;
