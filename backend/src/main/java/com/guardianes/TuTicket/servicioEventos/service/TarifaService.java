@@ -34,7 +34,6 @@ public class TarifaService {
     }
 
     public List<TarifaDTO> getTarifasByEvento(Integer idEvento) {
-
         List<Tarifa> tarifas = repo.findTarifasByEvento(idEvento);
         return tarifas.stream()
                 .map(TarifaDTO::new) //parseando a TarifaDTO con un lambda

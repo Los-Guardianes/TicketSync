@@ -32,8 +32,8 @@ export const Home = () => {
 
     const matchPrecio = true
 
-    const matchFecha =
-      !fecha || (evento.fecha && evento.fecha.startsWith(fecha))
+    const matchFecha = true
+    //!fecha || (evento.fecha && evento.fecha.startsWith(fecha))
 
     return matchSearch && matchUbicacion && matchPrecio && matchFecha
   })
@@ -49,7 +49,7 @@ export const Home = () => {
               id={evento.idEvento}
               ubicacion={evento.direccion}
               titulo={evento.nombre}
-              dia={evento.fecha || 'Sin fecha definida'}
+              fecha={evento.funciones[0]?.fechaInicio || 'Sin fecha definida'} //Del back viene con fecha ordenada
               ulrimagen={evento.urlImagen || 'Sin imagen disponible'}
             />
           ))

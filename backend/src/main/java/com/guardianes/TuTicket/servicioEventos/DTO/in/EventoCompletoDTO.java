@@ -29,13 +29,6 @@ public class EventoCompletoDTO {
     private Integer idCategoria;
     private Integer idUsuario;
 
-    // Listas de entidades relacionadas
-    private List<FuncionDTO> funciones;
-    private List<ZonaDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
-    private List<TarifaDTO> tarifas;
-    private List<PeriodoDTO> temporadas;
-    private List<TipoEntradaDTO> tiposDeEntrada; // <-- Lista de tipos de entrada a crear
-
     public Evento toModel(Ciudad ci, CategoriaEvento ca, Organizador o) {
         return new Evento(
                 null,
@@ -54,4 +47,16 @@ public class EventoCompletoDTO {
                 ca
         );
     }
+
+    /*
+    * Crear nuevos dtos, en esta misma carpeta IN, ya que los DTOS de entrada no serán los mismos que los de salida
+    * Recordar que se deben validar los datos ingresados -> no nulls si en la bd hay nulls
+    private List<FuncionDTO> funciones;
+    private List<ZonaDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
+    private List<TarifaDTO> tarifas;
+    private List<PeriodoDTO> temporadas;
+    private List<TipoEntradaDTO> tiposDeEntrada; // <-- Lista de tipos de entrada a crear
+    private List<ZonaDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
+
+     */
 }

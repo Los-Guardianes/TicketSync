@@ -4,25 +4,35 @@ import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
 public class FuncionDTO {
-    private String fechaInicio; // "2025-12-20"
-    private String fechaFin;
-    private String horaInicio;  // "20:00"
-    private String horaFin;
+    private Integer idFuncion;
+    private LocalDate fechaInicio; // "2025-12-20"
+    private LocalDate fechaFin;
+    private LocalTime horaInicio;  // "20:00"
+    private LocalTime horaFin;
+    private Integer idEvento;
+
+    public FuncionDTO(Funcion funcion){
+        this.idFuncion = funcion.getIdFuncion();
+        this.fechaInicio = funcion.getFechaInicio();
+        this.fechaFin = funcion.getFechaFin();
+        this.horaInicio = funcion.getHoraInicio();
+        this.horaFin = funcion.getHoraFin();
+        this.idEvento = funcion.getEvento().getIdEvento();
+    }
 
     public Funcion toModel(Evento e) {
         return new Funcion(
-                null,
-                LocalDate.parse(this.fechaInicio),
-                LocalDate.parse(this.fechaFin),
-                LocalTime.parse(this.horaInicio),
-                LocalTime.parse(this.horaFin),
+                idFuncion,
+                this.fechaInicio,
+                this.fechaFin,
+                this.horaInicio,
+                this.horaFin,
                 true,
                 e
         );

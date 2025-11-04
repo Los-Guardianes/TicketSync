@@ -10,7 +10,6 @@ import lombok.Data;
 public class ZonaDTO {
     private Integer idZona;
     private String nombre;
-    private Integer comprasActuales;
     private Integer aforo;
     private Integer idEvento;
 
@@ -18,7 +17,7 @@ public class ZonaDTO {
         this.idZona = zona.getIdZona();
         this.nombre = zona.getNombre();
         this.aforo = zona.getAforo();
-        this.idZona = zona.getEvento().getIdEvento();
+        this.idEvento = zona.getEvento().getIdEvento();
     }
 
     public Zona toModel(Evento evento) {

@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioExepciones;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +35,7 @@ public class GlobalExcepcionHandler {
     @ExceptionHandler(RecursoExistenteException.class)
     public ResponseEntity<Map<String, Object>> handleRecursoExistente(RecursoExistenteException ex, WebRequest request) {
         return new ResponseEntity<>(
-                construirRespuesta(ex, HttpStatus.CONFLICT, request), HttpStatus.CONFLICT);
+                    construirRespuesta(ex, HttpStatus.CONFLICT, request), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DatosInvalidosException.class)
@@ -50,6 +51,11 @@ public class GlobalExcepcionHandler {
     @ExceptionHandler(LogicaNegocioException.class)
     public ResponseEntity<Map<String, Object>> handleLogicaNegocio(LogicaNegocioException ex, WebRequest request) {
         return new ResponseEntity<>(construirRespuesta(ex, HttpStatus.CONFLICT, request), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleDataAccessException(LogicaNegocioException ex, WebRequest request) {
+        return new ResponseEntity<>(construirRespuesta(ex, HttpStatus.INTERNAL_SERVER_ERROR, request), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(GenericException.class)
