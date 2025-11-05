@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.guardianes.TuTicket.servicioEventos.model.TipoDescuento;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,6 +35,7 @@ public class Periodo {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private TipoDescuento tipoDesc;
 
     @Column(name = "valorDescuento", precision = 5, scale = 2)

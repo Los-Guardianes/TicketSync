@@ -25,28 +25,37 @@ public class EventoCompletoDTO {
     private String direccion;
     private TipoMoneda moneda;
     private Integer maxComprasTicket;
-    private Integer idCiudad;
-    private Integer idCategoria;
+
+    private Integer idCiudad; //
+    private Integer idCategoria; //
     private Integer idUsuario;
 
-    public Evento toModel(Ciudad ci, CategoriaEvento ca, Organizador o) {
-        return new Evento(
-                null,
-                this.nombre,
-                this.descripcion,
-                this.informAdic,
-                this.restricciones,
-                this.urlImagen,
-                this.urlMapa,
-                this.direccion,
-                this.moneda,
-                this.maxComprasTicket,
-                true,
-                o,
-                ci,
-                ca
-        );
-    }
+    private List<FuncionCDTO> funciones;
+    private List<PeriodoCDTO> temporadas;
+    private List<ZonaCDTO> zonas;              // <-- Lista de zonas que usan los tipos de entrada
+    private List<TarifaCDTO> tarifas;
+    private List<TipoEntradaCDTO> tiposDeEntrada; // <-- Lista de tipos de entrada a crear
+
+
+
+//    public Evento toModel(Ciudad ci, CategoriaEvento ca, Organizador o) {
+//        return new Evento(
+//                null,
+//                this.nombre,
+//                this.descripcion,
+//                this.informAdic,
+//                this.restricciones,
+//                this.urlImagen,
+//                this.urlMapa,
+//                this.direccion,
+//                this.moneda,
+//                this.maxComprasTicket,
+//                true,
+//                o,
+//                ci,
+//                ca
+//        );
+//    }
 
     /*
     * Crear nuevos dtos, en esta misma carpeta IN, ya que los DTOS de entrada no serán los mismos que los de salida
