@@ -10,6 +10,9 @@ export const Home = () => {
   // Filtros que vienen de Layout (y que controla NavBar)
   const { search, ubicacion, fechaInicio, fechaFin, categoria } = useOutletContext()
 
+  // Fecha de hoy en formato yyyy-mm-dd
+  const today = new Date().toISOString().slice(0, 10)
+
   // Cargar eventos de la API
   useEffect(() => {
     const fetchEventos = async () => {
@@ -20,8 +23,27 @@ export const Home = () => {
     fetchEventos()
   }, [])
 
+  // Función para validar rango de fechas + que sea futuro
+  const inRange = (dateStr) => {
+    if (!dateStr) return false
+
+    // Si viene con hora, nos quedamos solo con yyyy-mm-dd
+    const d = String(dateStr).slice(0, 10)
+
+    // 1) Solo fechas futuras (o hoy). Cambia a d <= today si quieres excluir hoy.
+    if (d < today) return false
+
+    // 2) Aplicar filtros del NavBar si existen
+    if (fechaInicio && d < fechaInicio) return false
+    if (fechaFin && d > fechaFin) return false
+
+    return true
+  }
+
   // Aplicar filtros
   const eventosFiltrados = eventos.filter(evento => {
+    const matchActivo = evento?.activo === true
+
     // Búsqueda por nombre
     const matchSearch =
       !search || evento.nombre?.toLowerCase().includes(search.toLowerCase())
@@ -30,25 +52,17 @@ export const Home = () => {
       ubicacion === 'Todas' ||
       evento.ciudad?.dpto?.nombre === ubicacion
 
-    const inRange = (dateStr) => {
-      if (!dateStr) return false;
-      const d = dateStr; // yyyy-mm-dd (ISO)
-      if (fechaInicio && !fechaFin) return d >= fechaInicio;
-      if (!fechaInicio && fechaFin) return d <= fechaFin;
-      if (fechaInicio && fechaFin) return d >= fechaInicio && d <= fechaFin;
-      return true; // sin filtro de fecha
-    };
     const matchFecha = (() => {
-      if (!fechaInicio && !fechaFin) return true;
-      const funciones = evento.funciones || [];
-      return funciones.some(fn => inRange(fn.fechaInicio));
-    })();
+      const funciones = evento.funciones || []
+      // Al menos una función debe ser futura y estar dentro del rango (si lo hay)
+      return funciones.some(fn => inRange(fn?.fechaInicio))
+    })()
 
     const matchCategoria =
-      (categoria === 'Todas') ||
-      (evento.categoria && String(evento.categoria.idCategoria) === String(categoria));
+      categoria === 'Todas' ||
+      (evento.categoria && String(evento.categoria.idCategoria) === String(categoria))
 
-    return matchSearch && matchUbicacion && matchFecha && matchCategoria;
+    return matchActivo && matchSearch && matchUbicacion && matchFecha && matchCategoria
   })
 
   return (
@@ -62,7 +76,7 @@ export const Home = () => {
               id={evento.idEvento}
               ubicacion={evento.direccion}
               titulo={evento.nombre}
-              fecha={evento.funciones[0]?.fechaInicio || 'Sin fecha definida'} //Del back viene con fecha ordenada
+              fecha={evento.funciones[0]?.fechaInicio || 'Sin fecha definida'}
               ulrimagen={evento.urlImagen || 'Sin imagen disponible'}
             />
           ))
