@@ -8,7 +8,7 @@ export const Home = () => {
   const [eventos, setEventos] = useState([])
 
   // Filtros que vienen de Layout (y que controla NavBar)
-  const { search, precio, ubicacion, fecha } = useOutletContext()
+  const { search, ubicacion, fechaInicio, fechaFin, categoria } = useOutletContext()
 
   // Cargar eventos de la API
   useEffect(() => {
@@ -30,12 +30,25 @@ export const Home = () => {
       ubicacion === 'Todas' ||
       evento.ciudad?.dpto?.nombre === ubicacion
 
-    const matchPrecio = true
+    const inRange = (dateStr) => {
+      if (!dateStr) return false;
+      const d = dateStr; // yyyy-mm-dd (ISO)
+      if (fechaInicio && !fechaFin) return d >= fechaInicio;
+      if (!fechaInicio && fechaFin) return d <= fechaFin;
+      if (fechaInicio && fechaFin) return d >= fechaInicio && d <= fechaFin;
+      return true; // sin filtro de fecha
+    };
+    const matchFecha = (() => {
+      if (!fechaInicio && !fechaFin) return true;
+      const funciones = evento.funciones || [];
+      return funciones.some(fn => inRange(fn.fechaInicio));
+    })();
 
-    const matchFecha = true
-    //!fecha || (evento.fecha && evento.fecha.startsWith(fecha))
+    const matchCategoria =
+      (categoria === 'Todas') ||
+      (evento.categoria && String(evento.categoria.idCategoria) === String(categoria));
 
-    return matchSearch && matchUbicacion && matchPrecio && matchFecha
+    return matchSearch && matchUbicacion && matchFecha && matchCategoria;
   })
 
   return (

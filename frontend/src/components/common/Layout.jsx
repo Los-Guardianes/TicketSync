@@ -5,15 +5,16 @@ import { Footer } from '../common/Footer/Footer';
 import { useState, useEffect, use } from 'react';
 import { getDepartamentos } from '../../globalServices/UbicacionService';
 
-import { EventCreationProvider } from '../../context/EventCreationContext'; // 👈 1. Importa el Provider
+import { EventCreationProvider } from '../../context/EventCreationContext';
 const Layout = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/home';
 
   const [search, setSearch] = useState('');
-  const [precio, setPrecio] = useState(1000);
   const [ubicacion, setUbicacion] = useState('Todas');
-  const [fecha, setFecha] = useState('');
+  const [fechaInicio, setFechaInicio] = useState(''); // yyyy-mm-dd
+  const [fechaFin, setFechaFin] = useState('');       // yyyy-mm-dd
+  const [categoria, setCategoria] = useState('Todas'); // 'Todas' o idCategoria (string)
   const [ubicacionesDisponibles, setUbicacionesDisponibles] = useState([]);
 
 
@@ -33,9 +34,10 @@ const Layout = () => {
       {isHomePage ? (
         <NavBar
           search={search} setSearch={setSearch}
-          precio={precio} setPrecio={setPrecio}
           ubicacion={ubicacion} setUbicacion={setUbicacion}
-          fecha={fecha} setFecha={setFecha}
+          fechaInicio={fechaInicio} setFechaInicio={setFechaInicio}
+          fechaFin={fechaFin} setFechaFin={setFechaFin}
+          categoria={categoria} setCategoria={setCategoria}
           ubicacionesDisponibles={ubicacionesDisponibles}
         />
       ) : (
@@ -45,7 +47,7 @@ const Layout = () => {
       <main style={isHomePage ? {} : { paddingTop: 'var(--margin-top-header)' }}>
         <EventCreationProvider>
           {/* Home (y otras páginas) leen los filtros aquí */}
-          <Outlet context={{ search, precio, ubicacion, fecha}} />
+          <Outlet context={{ search, ubicacion, fechaInicio, fechaFin, categoria }} />
         </EventCreationProvider>
       </main>
 

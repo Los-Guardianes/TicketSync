@@ -1,6 +1,5 @@
 package com.guardianes.TuTicket.config;
 
-import com.amazonaws.HttpMethod;
 import com.guardianes.TuTicket.servicioAutenticacion.filtros.JWTFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,14 +25,16 @@ public class FilterChainConfig {
 
     private final JWTFilter jwtFilter;
 
-    //Esta variable tiene las rutas que serán públicas (no necesitan autenticación)
+    // Rutas públicas (no requieren autenticación)
     private static final String[] PUBLIC_ENDPOINTS = {
-            //Para la página de registro y loginh
+            // Auth / registro
             "/api/login",
-             "/api/cliente",
+            "/api/cliente",
             "/api/register",
             "/api/organizador",
-            "/api/organizador/reporte/excel", //Cambiar luego si es publico o no
+            "/api/organizador/reporte/excel", // Cambiar luego si es publico o no
+
+            // Catálogos y consultas públicas
             "/api/evento/**",
             "/api/zona/**",
             "/api/ciudad/**",
@@ -45,7 +45,8 @@ public class FilterChainConfig {
             "/api/funcion/**",
             "/api/orden/**",
             "/api/ticket/**",
-            "/api/descuento/**"
+            "/api/descuento/**",
+            "/api/catevento/**"
     };
 
     @Bean
@@ -53,9 +54,9 @@ public class FilterChainConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Ojalá funcione xd
-                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()   // GET /api/evento también público
-                        .anyRequest().authenticated()            // el resto requiere JWT
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -71,13 +72,12 @@ public class FilterChainConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //return new BCryptPasswordEncoder(12);
+        // return new BCryptPasswordEncoder(12);
         return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-
     }
 }
