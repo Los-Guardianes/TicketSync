@@ -104,7 +104,7 @@ export const Login = () => {
                     <button
                         type="button"
                         className="btn btn-secondary btn-lg mt-3"
-                        onClick={() => navigate('/home')}  // cambia a '/' si tu home real es '/'
+                        onClick={() => navigate('/home')}  
                     >
                         Volver al inicio
                     </button>
