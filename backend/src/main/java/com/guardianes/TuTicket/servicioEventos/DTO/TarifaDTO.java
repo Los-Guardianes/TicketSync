@@ -1,6 +1,9 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
+import com.guardianes.TuTicket.servicioEventos.model.TipoEntrada;
+import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -21,5 +24,15 @@ public class TarifaDTO {
 
         this.zonaDTO = new ZonaDTO(tarifa.getZona());
 
+    }
+
+    public Tarifa toModel(Zona zona, TipoEntrada tipoEntrada) {
+        return new Tarifa(
+                this.idTarifa,
+                this.precioBase,
+                true,
+                zona,
+                tipoEntrada
+        );
     }
 }

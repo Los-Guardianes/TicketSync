@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +24,17 @@ public class FuncionDTO {
         this.horaInicio = funcion.getHoraInicio();
         this.horaFin = funcion.getHoraFin();
         this.idEvento = funcion.getEvento().getIdEvento();
+    }
+
+    public Funcion toModel(Evento e) {
+        return new Funcion(
+                idFuncion,
+                this.fechaInicio,
+                this.fechaFin,
+                this.horaInicio,
+                this.horaFin,
+                true,
+                e
+        );
     }
 }
