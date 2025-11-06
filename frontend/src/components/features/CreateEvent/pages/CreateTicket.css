@@ -348,3 +348,332 @@
 .entrada-grid .descripcion {
     grid-column: span 3; /* La descripción ocupa las 3 columnas */
 }
+
+/* MODAL STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 16px;
+    border-bottom: 2px solid #e0f2e9;
+}
+
+.modal-header h3 {
+    color: #219653;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #f3f4f6;
+    color: #333;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modal-field label {
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-cancel,
+.btn-confirm {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #333;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.btn-confirm {
+    background: #2EA062;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #25894f;
+}
+
+/* ZONAS SECTION */
+.zonas-section {
+    background: #ffffff;
+    border: 2px solid #d1fae5;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.zonas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.zonas-header h3 {
+    color: #219653;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-add-zona {
+    background: #2EA062;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-add-zona:hover {
+    background: #25894f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 160, 98, 0.3);
+}
+
+.zonas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.zona-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.zona-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(46, 160, 98, 0.2);
+    border-color: #2EA062;
+}
+
+.zona-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #bbf7d0;
+}
+
+.zona-number {
+    color: #16a34a;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+.btn-icon-delete {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-icon-delete:hover {
+    background: #fca5a5;
+    border-color: #f87171;
+    transform: scale(1.05);
+}
+
+.zona-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.zona-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+}
+
+.zona-label {
+    color: #166534;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.zona-value {
+    color: #15803d;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    background: #f9fafb;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* ZONAS CHECKBOX GRID */
+.zonas-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.zona-checkbox {
+    background: white;
+    border: 2px solid #d1fae5;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.zona-checkbox:hover {
+    border-color: #86efac;
+    background: #f0fdf4;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 2px solid #9ca3af;
+    border-radius: 4px;
+    margin: 0;
+}
+
+.form-check-input:checked {
+    background-color: #2EA062;
+    border-color: #2EA062;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0;
+    color: #333;
+    flex: 1;
+}
+
+.text-muted {
+    color: #6b7280;
+    font-style: italic;
+    padding: 12px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .zonas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .zonas-checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 20px;
+    }
+}

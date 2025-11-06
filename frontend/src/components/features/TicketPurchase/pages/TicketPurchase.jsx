@@ -46,13 +46,15 @@ export const TicketPurchase = () => {
         listaDetalles,
         totalBruto,        
         montoDescuentoPeriodo,        
-        montoDescuentoCodigo,    
+        montoDescuentoCodigo,
+        descuentoCodigo,    
         total,
         addDetalle,
         updateCantidad,
         removeDetalle,
         verificarDescuentoCodigo,
-        getDescuentoId
+        getDescuentoId,
+        eliminarDescuento
     } = useCompraTickets(periodoActual, id);
 
  
@@ -81,8 +83,7 @@ export const TicketPurchase = () => {
 
     const handleDiscount = async (e) => {
         e.preventDefault();
-        const codigo = formData.discount;
-        console.log(codigo)
+        const codigo = formData.discount;        
         if (!codigo) {
             setNotification({
                 message: "Por favor, ingresa un código de descuento.",
@@ -104,8 +105,7 @@ export const TicketPurchase = () => {
                     type: "success",
                 })
             }
-        } catch (error) {
-            console.error("Error al verificar el código de descuento:", error);
+        } catch (error) {            
             setNotification({
                 message: "Error al verificar el código de descuento.",
                 type: "error",
@@ -121,8 +121,7 @@ export const TicketPurchase = () => {
                 type: "warning",
             });
             return;
-        }
-        console.log("Antes de pagar el periodo es:", periodoActual)
+        }        
         navigate("/ticket-pay", { state: {
             listaDetalles: listaDetalles,
             idPeriodo: periodoActual.idPeriodo,
@@ -132,6 +131,11 @@ export const TicketPurchase = () => {
             funcion: selectedFuncion,
             idDescuentoUtilizado: getDescuentoId()
         }});
+    }
+
+    const handleEliminarDescuento = () =>{
+        formData.discount = ''
+        eliminarDescuento()
     }
 
     const handleAddDetalle = () => {
@@ -253,8 +257,7 @@ export const TicketPurchase = () => {
                                         >
                                             Agregar a carrito
                                         </button>
-                                        <section className='ticket-purchase-grid'>
-                                            {
+                                        <section className='ticket-purchase-grid'>                                            
                                                 <div>                    
                                                     <h2>Canjear código</h2>
                                                     <div className="form-discount">
@@ -265,20 +268,30 @@ export const TicketPurchase = () => {
                                                             maxLength={100}
                                                             value={formData.discount}
                                                             onChange={handleInputChange}
-                                                            disabled={isLoading}
+                                                            disabled={isLoading || montoDescuentoCodigo}
                                                         />
-                                                        <button 
-                                                            type="button" 
-                                                            className='btn btn-secondary btn-lg mt-3'
-                                                            disabled={isLoading}
-                                                            onClick={handleDiscount}
-                                                        >
-                                                            {isLoading ? 'Verificando...' : 'Aplicar'}
-                                                        </button>
+                                                        { !montoDescuentoCodigo ? (
+                                                            <button 
+                                                                type="button" 
+                                                                className='btn btn-secondary btn-lg mt-3'
+                                                                disabled={isLoading}
+                                                                onClick={handleDiscount}
+                                                            >
+                                                                {isLoading ? 'Verificando...' : 'Aplicar'}
+                                                            </button>
+                                                            ) : (
+                                                            <button 
+                                                                type="button" 
+                                                                className='btn btn-secondary btn-lg mt-3'
+                                                                disabled={isLoading}
+                                                                onClick={handleEliminarDescuento}
+                                                            >
+                                                                {isLoading ? 'Verificando...' : 'Eliminar'}
+                                                            </button>                                                            
+                                                            ) }                                                    
                                                     </div>                        
                                                     {errors.discount && <div className="error-form">{errors.discount}</div>}
-                                                </div>
-                                            }
+                                                </div>                                            
                                         </section>
                                         </>           
                                     ) : null}
@@ -303,6 +316,8 @@ export const TicketPurchase = () => {
                                 totalBruto={totalBruto}
                                 montoDescuentoPeriodo={montoDescuentoPeriodo}
                                 montoDescuentoCodigo={montoDescuentoCodigo}
+                                periodo={periodoActual}
+                                descuentoCodigo={descuentoCodigo}
                                 total={total}
                             />
                             <button 

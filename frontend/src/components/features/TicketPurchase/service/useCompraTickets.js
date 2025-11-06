@@ -64,11 +64,14 @@ export const useCompraTickets = (periodo, idevento) => {
     };
 
     const verificarDescuentoCodigo = async(codigo) => {
-        const descuento = await getDescuentoByCodigo(codigo);
-        console.log(descuento)
+        const descuento = await getDescuentoByCodigo(codigo);        
         if(!descuento && descuento.idEvento != idevento)return null; //cambiar si es que después es un DTO        
         setDescuentoCodigo(descuento);
         return descuento;
+    }
+
+    const eliminarDescuento = () =>{
+        setDescuentoCodigo(null)
     }
 
     useEffect(() => {
@@ -81,19 +84,21 @@ export const useCompraTickets = (periodo, idevento) => {
         setMontoDescuentoPeriodo(nuevoMontoDescuentoPeriodo)
         setMontoDescuentoCodigo(nuevoMontoDescuentoCodigo)
         setTotalBruto(nuevoTotalBruto);
-        setTotal(nuevoTotalBruto - nuevoMontoDescuentoPeriodo - nuevoMontoDescuentoCodigo);
+        setTotal(nuevoTotalBruto - nuevoMontoDescuentoPeriodo - nuevoMontoDescuentoCodigo);        
     }, [listaDetalles, descuentoCodigo]);
 
     return {
         listaDetalles,
         totalBruto,        
         montoDescuentoPeriodo,        
-        montoDescuentoCodigo,    
+        montoDescuentoCodigo,
+        descuentoCodigo,    
         total,
         addDetalle,
         updateCantidad,
         removeDetalle,
         verificarDescuentoCodigo,
-        getDescuentoId
+        getDescuentoId,
+        eliminarDescuento
     }
 }
