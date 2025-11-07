@@ -1,0 +1,41 @@
+.info-event {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.info-event .discount{
+  color: rgb(247, 111, 111);
+}
+
+.info-event-image {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}   
+
+.info-event li {
+  background: #ebf5eb;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #27ae60;
+}
+
+.info-event h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}
+
+.info-event p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #27ae60;
+}

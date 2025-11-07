@@ -1,0 +1,178 @@
+.ticket-purchase-main {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.ticket-purchase-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.ticket-purchase-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #16a34a;
+  margin-bottom: 2rem;
+}
+
+.ticket-purchase-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .ticket-purchase-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.ticket-purchase-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ticket-purchase-section {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.ticket-purchase-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.ticket-purchase-discounts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ticket-purchase-discounts-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.ticket-purchase-discounts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ticket-purchase-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.ticket-purchase-button {
+  height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.ticket-purchase-button-primary {
+  background-color: #16a34a;
+  color: white;
+}
+
+.ticket-purchase-button-primary:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.ticket-purchase-button-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.ticket-purchase-button-secondary {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ticket-purchase-button-secondary:hover {
+  background-color: #f9fafb;
+}
+
+.ticket-purchase-button-full {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .ticket-purchase-actions {
+    flex-direction: column;
+  }
+
+  .ticket-purchase-button {
+    width: 100%;
+  }
+}
+
+.ticket-purchase-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.purchase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.purchase-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .purchase-form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.purchase-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.purchase-form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.purchase-form-price-box {
+  background-color: #f0fdf4;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.purchase-form-price-text {
+  margin: 0;
+  font-weight: 600;
+}
+
+.purchase-form-price-value {
+  color: #27ae60;
+}
+
+.form-discount {
+  display: flex;
+  gap: 40px;
+}

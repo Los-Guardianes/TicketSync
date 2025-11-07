@@ -1,18 +1,24 @@
 package com.guardianes.TuTicket.servicioPedidos.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(name = "orden_compra")
 public class OrdenCompra {
 
     @Id
@@ -25,13 +31,30 @@ public class OrdenCompra {
     @Column(nullable = false, length = 50)
     private String metodoPago;
 
-    @Column
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(nullable = false)
+    private EstadoOrdenCompra estado;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalBruto;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal descuentoAplicado;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal total;
+
+    @Column(nullable = false)
     private Boolean activo = true;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
 
-
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idFuncion", referencedColumnName = "idFuncion")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Funcion funcion;
 }

@@ -1,0 +1,679 @@
+.header h2 {
+    color: #219653;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.funciones-section {
+    background: #eaf6ea;
+    border-radius: 8px;
+    padding: 18px 18px 10px 18px;
+    margin-bottom: 18px;
+}
+
+.funciones-header {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.eliminar-temporada {
+    color: #d32f2f;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+/* Contenedor principal */
+.crear-ticket-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 32px 40px 24px 40px;
+}
+
+/* Layout base */
+.fe-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: #f6f7f8;
+    padding: 16px;
+}
+
+.fe-card {
+    width: 100%;
+    max-width: 60%;
+    background: #fff;
+    /* border-radius: 16px; */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+    /* padding: 24px; */
+}
+
+/* Header */
+.fe-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* margin-bottom: 24px; */
+}
+
+.fe-badge {
+    height: 40px;
+    width: 60px;
+    display: grid;
+    place-items: center;
+    /* border-radius: 10px; */
+    background: #2EA062;
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.fe-title {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #2EA062;
+}
+
+/* Contenido */
+
+.fe-content {
+    padding: 24px;
+}
+
+
+/* Bloques y pila */
+.fe-block {
+    margin-bottom: 16px;
+}
+
+.fe-stack>*+* {
+    margin-top: 16px;
+}
+
+/* Season (card) */
+
+.season-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: #eaf7ef;
+    /* verde muy claro */
+    color: #15803d;
+    /* verde */
+    font-weight: 600;
+}
+
+.season-tab__arrow {
+    border: 0;
+    background: transparent;
+    color: #15803d;
+    font-size: 30px;
+    line-height: 1;
+    padding: 0 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.fe-season {
+    border: 1px solid #d1fae5;
+}
+
+.fe-season__header {
+    padding-bottom: 8px;
+}
+
+.fe-season__title {
+    color: #065f46;
+    font-weight: 700;
+}
+
+.fe-season__content {
+    padding-top: 0;
+}
+
+/* Grid */
+.fe-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.fe-gap-md {
+    gap: 16px;
+}
+
+.fe-col-span-2 {
+    grid-column: span 2 / span 2;
+}
+
+.fe-col-span-3 {
+    grid-column: span 3 / span 3;
+}
+
+.fe-col-span-4 {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+    .fe-grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .fe-col-span-2,
+    .fe-col-span-3,
+    .fe-col-span-4 {
+        grid-column: auto;
+    }
+}
+
+/* Fields */
+.fe-field {}
+
+.fe-label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #111827;
+}
+
+.fe-input,
+.fe-textarea,
+.fe-select {
+    width: 100%;
+}
+
+.fe-textarea {
+    min-height: 80px;
+}
+
+/* Date field */
+.fe-date {
+    position: relative;
+}
+
+.fe-date input {
+    padding-right: 28px;
+}
+
+.fe-date__icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 16px;
+    width: 16px;
+    opacity: .6;
+}
+
+/* Entry panel */
+.fe-entry {
+    background: #ecfdf5;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #d1fae5;
+}
+
+.fe-entry__header {
+    margin-bottom: 10px;
+}
+
+.fe-entry__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #065f46;
+}
+
+/* Rows / helpers */
+.fe-row {
+    display: flex;
+    align-items: center;
+}
+
+.fe-row--between {
+    justify-content: space-between;
+}
+
+.fe-gap-sm {
+    gap: 8px;
+}
+
+.fe-pt-sm {
+    padding-top: 8px;
+}
+
+/* Checkbox row */
+.fe-checkrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.fe-checkrow__label {
+    font-size: 14px;
+}
+
+.fe-checkrow__spacer {
+    margin-left: auto;
+}
+
+/* Buttons */
+.fe-btn-primary {
+    background: #059669;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+}
+
+.fe-btn-primary:hover {
+    background: #047857;
+}
+
+.fe-btn-secondary {
+    background: #eef5ef;
+}
+
+.fe-btn-outline {
+    border: 1px solid #e5e7eb;
+}
+
+.fe-btn-link {
+    color: #065f46;
+}
+
+.fe-btn-icon svg,
+.fe-btn-link svg,
+.fe-btn-secondary svg,
+.fe-btn-outline svg,
+.fe-btn-primary svg {
+    height: 16px;
+    width: 16px;
+    margin-right: 6px;
+}
+
+.fe-icon {
+    height: 16px;
+    width: 16px;
+}
+
+/* Footer */
+.fe-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.fe-footer-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* En CreateTicket.css */
+
+.funciones-section .funcion-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas de igual tamaño */
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #eaf7ef; /* El fondo verde claro */
+    border-radius: 8px;
+}
+
+.funciones-section .entrada-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas de igual tamaño */
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #eaf7ef; /* El fondo verde claro */
+    border-radius: 8px;
+}
+
+.entrada-grid .grid-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.entrada-grid .descripcion {
+    grid-column: span 3; /* La descripción ocupa las 3 columnas */
+}
+
+/* MODAL STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 16px;
+    border-bottom: 2px solid #e0f2e9;
+}
+
+.modal-header h3 {
+    color: #219653;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #f3f4f6;
+    color: #333;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modal-field label {
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-cancel,
+.btn-confirm {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #333;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.btn-confirm {
+    background: #2EA062;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #25894f;
+}
+
+/* ZONAS SECTION */
+.zonas-section {
+    background: #ffffff;
+    border: 2px solid #d1fae5;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.zonas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.zonas-header h3 {
+    color: #219653;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-add-zona {
+    background: #2EA062;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-add-zona:hover {
+    background: #25894f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 160, 98, 0.3);
+}
+
+.zonas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.zona-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.zona-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(46, 160, 98, 0.2);
+    border-color: #2EA062;
+}
+
+.zona-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #bbf7d0;
+}
+
+.zona-number {
+    color: #16a34a;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+.btn-icon-delete {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-icon-delete:hover {
+    background: #fca5a5;
+    border-color: #f87171;
+    transform: scale(1.05);
+}
+
+.zona-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.zona-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+}
+
+.zona-label {
+    color: #166534;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.zona-value {
+    color: #15803d;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    background: #f9fafb;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* ZONAS CHECKBOX GRID */
+.zonas-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.zona-checkbox {
+    background: white;
+    border: 2px solid #d1fae5;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.zona-checkbox:hover {
+    border-color: #86efac;
+    background: #f0fdf4;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 2px solid #9ca3af;
+    border-radius: 4px;
+    margin: 0;
+}
+
+.form-check-input:checked {
+    background-color: #2EA062;
+    border-color: #2EA062;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0;
+    color: #333;
+    flex: 1;
+}
+
+.text-muted {
+    color: #6b7280;
+    font-style: italic;
+    padding: 12px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .zonas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .zonas-checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 20px;
+    }
+}

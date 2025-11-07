@@ -1,0 +1,22 @@
+.min-width-ticket {
+  min-width: 200px;
+  max-width: 250px;
+}
+
+.nav-link.active {
+  color: #007bff;
+  border-left: 3px solid #007bff;
+  background-color: #e9f5ff;
+}
+
+.triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #000;
+  display: inline-block;
+}
+
+.pagination-like span { cursor: default; user-select: none; }
+.pagination-like .active { font-weight: 600; text-decoration: underline; }

@@ -2,16 +2,16 @@ package com.guardianes.TuTicket.servicioUsuarios.service;
 
 import com.guardianes.TuTicket.servicioUsuarios.model.Admin;
 import com.guardianes.TuTicket.servicioUsuarios.repo.AdminRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AdminService {
 
-    @Autowired
-    private AdminRepo repo;
+    private final AdminRepo repo;
 
     public List<Admin> getAllAdministradores() {
         return repo.findAll();
