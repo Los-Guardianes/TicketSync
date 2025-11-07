@@ -46,7 +46,7 @@ public class EventoDTO {
         this.restricciones = evento.getRestricciones();
         this.urlImagen = evento.getUrlImagen();
         this.urlMapa = evento.getUrlMapa();
-        this.direccion = evento.getUrlMapa();
+        this.direccion = evento.getDireccion();
         this.moneda = evento.getMoneda();
         this.maxComprasTickets = evento.getMaxComprasTickets();
         this.idUsuario = evento.getOrganizador().getIdUsuario();
@@ -62,7 +62,7 @@ public class EventoDTO {
         this.restricciones = evento.getRestricciones();
         this.urlImagen = evento.getUrlImagen();
         this.urlMapa = evento.getUrlMapa();
-        this.direccion = evento.getUrlMapa();
+        this.direccion = evento.getDireccion();
         this.moneda = evento.getMoneda();
         this.maxComprasTickets = evento.getMaxComprasTickets();
         this.idUsuario = evento.getOrganizador().getIdUsuario();
