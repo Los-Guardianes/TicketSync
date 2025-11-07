@@ -30,6 +30,7 @@ import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 
 
+import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
 export const ClienteRoutes = () => {
   return (
     <Routes>
@@ -41,6 +42,9 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+
+      {/* Para testeo del componente de s3 */}
+      <Route path="/test-imagen" element={<ImageUploader />} />
       <Route path="home-admin" element={<AdminHome />} />
 
       {/* CON Layout */}

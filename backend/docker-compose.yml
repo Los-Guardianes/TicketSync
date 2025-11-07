@@ -4,7 +4,13 @@ services:
     build: .
     container_name: TuTicket-back
     ports: 
-      - "80:8080" #Expone backend en http://<host>:80
+      # --- PARA PRODUCCIÓN EN EC2 ---
+      # Descomentar la siguiente línea y comentar la de desarrollo
+      # - "80:8080" #Expone backend en http://<host>:80
+      
+      # --- PARA DESARROLLO LOCAL ---
+      # Usar 8080 en el host para no chocar con el frontend
+     - "8080:8080" #Expone backend en http://localhost:8080
     restart: always
     environment:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
