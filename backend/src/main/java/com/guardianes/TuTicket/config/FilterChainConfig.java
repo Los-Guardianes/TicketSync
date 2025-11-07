@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.config;
 
-import com.amazonaws.HttpMethod;
+
 import com.guardianes.TuTicket.servicioAutenticacion.filtros.JWTFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +45,8 @@ public class FilterChainConfig {
             "/api/funcion/**",
             "/api/orden/**",
             "/api/ticket/**",
-            "/api/descuento/**"
+            "/api/descuento/**",
+            "/api/subirImagens3/**"
     };
 
     @Bean
