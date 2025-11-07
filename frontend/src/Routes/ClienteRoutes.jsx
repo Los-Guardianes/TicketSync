@@ -15,6 +15,9 @@ import { TicketPurchase } from "../components/features/TicketPurchase/pages/Tick
 import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
 import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+//Prueba
+import AdminDashboard from "../components/features/AdminDashboard/AdminDashboard";
+
 
 import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
 import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
@@ -53,6 +56,9 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="happy-pay" element={<HappyPay />} />
         <Route path="mistickets" element={<MisTickets />} />
+
+        //Prueba pantalla para Admin
+         <Route path="admin-dashboard" element={<AdminDashboard />} />
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
 
