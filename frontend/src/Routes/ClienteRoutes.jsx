@@ -25,7 +25,7 @@ import CreateTickets1 from "../components/features/CreateEvent/pages/temp";
 import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
-
+import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
 
 export const ClienteRoutes = () => {
   return (
@@ -64,6 +64,10 @@ export const ClienteRoutes = () => {
           path="organizer/evento/:idEvento/descuentos"
           element={<DiscountList />}
         />
+
+        <Route path="mis-tickets/evento/:idEvento" element={<DetalleTickets />} />
+
+        
       </Route>
     </Routes>
   );

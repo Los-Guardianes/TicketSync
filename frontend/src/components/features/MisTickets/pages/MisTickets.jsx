@@ -1,51 +1,85 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import './MisTickets.css'; // Asegúrate que tenga .triangle-down y .pagination-like (mismo que MisEventos.css)
+import './MisTickets.css';
 import { getTickets } from '../service/MisTicketsService';
-import { abrirTicket } from '../../../../globalServices/PDFService';
 import { useAuth } from '../../../../context/AuthContext';
 import { BarraLateral } from '../components/BarraLateral';
+import { useNavigate } from 'react-router-dom';
 
-// Cantidad de filas visibles antes de mostrar "Ver más" / paginación
 const PAGE_SIZE = 6;
 
-/** Convierte tus tickets del backend en filas (cards) individuales y separa futuras/pasadas */
-const buildTicketRows = (tickets) => {
-  const upcoming = [];
-  const past = [];
-  const today = new Date();
+/** Normaliza fecha a Date (acepta ISO con hora, yyyy-mm-dd, dd/mm/yyyy) */
+const toDate = (s) => {
+  if (!s) return null;
+  const str = String(s);
+  let d = new Date(str);
+  if (!isNaN(d)) return d;
+  let m = str.match(/^(\d{2})[\/-](\d{2})[\/-](\d{4})/);
+  if (m) {
+    d = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+    if (!isNaN(d)) return d;
+  }
+  m = str.match(/^(\d{4})[\/-](\d{2})[\/-](\d{2})/);
+  if (m) {
+    d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    if (!isNaN(d)) return d;
+  }
+  return null;
+};
 
+/** Construye filas por EVENTO (agrupando tickets del usuario por idEvento) */
+const buildEventRowsFromTickets = (tickets) => {
+  const map = new Map();
   tickets.forEach(tk => {
     const oc = tk?.detalleCompra?.ordenCompra;
     const fn = oc?.funcion;
     const ev = fn?.evento;
+    if (!ev?.idEvento) return;
 
-    const fechaStr = fn?.fechaInicio;
-    const fecha = fechaStr ? new Date(fechaStr) : null;
-    if (!fecha) return;
+    const evId = ev.idEvento;
 
-    const row = {
-      idTicket: tk.idTicket,
-      titulo: ev?.nombre ?? 'Evento',
-      direccion: ev?.direccion ?? '',
-      imagen: ev?.urlImagen ?? '',
-      fecha: fechaStr
-    };
-
-    if (fecha < today) {
-      past.push(row);
-    } else {
-      upcoming.push(row);
+    if (!map.has(evId)) {
+      map.set(evId, {
+        idEvento: evId,
+        titulo: ev?.nombre ?? 'Evento',
+        direccion: ev?.direccion ?? '',
+        imagen: ev?.urlImagen ?? '',
+        funciones: new Set(), // guardamos string crudo para deduplicar
+        ticketsCount: 0,
+      });
     }
+    const entry = map.get(evId);
+    entry.ticketsCount += 1;
+    if (fn?.fechaInicio) entry.funciones.add(String(fn.fechaInicio));
   });
 
-  // Orden: próximos asc, pasados desc
-  upcoming.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-  past.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  const today = new Date();
+  const rows = Array.from(map.values()).map(r => {
+    const fechas = Array.from(r.funciones).map(toDate).filter(Boolean);
+    const futuras = fechas.filter(d => d >= new Date(today.toDateString())); // hoy incluido
+    futuras.sort((a, b) => a - b);
+    const pasadas = fechas.filter(d => d < new Date(today.toDateString()));
+    pasadas.sort((a, b) => b - a);
+
+    return {
+      ...r,
+      proximaFecha: futuras[0] || null,
+      hayFuturas: futuras.length > 0,
+      ultimaPasada: pasadas[0] || null,
+    };
+  });
+
+  // Separamos: con próximas funciones vs solo pasadas
+  const upcoming = rows
+    .filter(r => r.hayFuturas)
+    .sort((a, b) => a.proximaFecha - b.proximaFecha);
+
+  const past = rows
+    .filter(r => !r.hayFuturas)
+    .sort((a, b) => b.ultimaPasada - a.ultimaPasada);
 
   return { upcoming, past };
 };
 
-/** Hook de paginación reutilizable (igual idea que en MisEventos) */
 const usePagination = (items, pageSize, showAll) => {
   const [page, setPage] = useState(1);
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
@@ -60,8 +94,7 @@ const usePagination = (items, pageSize, showAll) => {
   return { visible, page, setPage, totalPages, showPager };
 };
 
-/** Fila visual del ticket (imagen izquierda, info, botón verde a la derecha) */
-const TicketRow = ({ imagen, titulo, fecha, direccion, onAction }) => (
+const EventRow = ({ imagen, titulo, fecha, direccion, ticketsCount, onDetail }) => (
   <div className="d-flex align-items-center bg-light rounded px-3 py-3 mb-3" style={{ boxShadow: '0 0 0 1px #e9ecef inset' }}>
     {/* Imagen */}
     <div className="me-3">
@@ -72,19 +105,26 @@ const TicketRow = ({ imagen, titulo, fecha, direccion, onAction }) => (
       />
     </div>
 
-    {/* Texto */}
+    {/* Info */}
     <div className="flex-grow-1">
-      <div className="fw-semibold text-truncate">{titulo}</div>
-      <div className="text-muted" style={{ fontSize: 13 }}>
-        {new Date(fecha).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
+      <div className="fw-semibold text-truncate d-flex align-items-center gap-2">
+        <span>{titulo}</span>
+        {!!ticketsCount && (
+          <span className="badge bg-secondary">x{ticketsCount}</span>
+        )}
       </div>
+      {fecha && (
+        <div className="text-muted" style={{ fontSize: 13 }}>
+          {fecha.toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
+        </div>
+      )}
       {direccion && <div className="text-muted" style={{ fontSize: 13 }}>{direccion}</div>}
     </div>
 
-    {/* Acción */}
+    {/* Botón */}
     <div className="ms-3">
-      <button className="btn btn-success btn-sm" onClick={onAction}>
-        Ver Ticket
+      <button className="btn btn-success btn-sm" onClick={onDetail}>
+        Ver Detalle
       </button>
     </div>
   </div>
@@ -92,6 +132,7 @@ const TicketRow = ({ imagen, titulo, fecha, direccion, onAction }) => (
 
 export const MisTickets = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -100,7 +141,6 @@ export const MisTickets = () => {
   const [showAllUpcoming, setShowAllUpcoming] = useState(false);
   const [showAllPast, setShowAllPast] = useState(false);
 
-  // Cargar tickets del usuario
   useEffect(() => {
     const load = async () => {
       try {
@@ -117,22 +157,20 @@ export const MisTickets = () => {
     load();
   }, [user?.idUsuario]);
 
-  // Construir listas próximas y pasadas
-  const { upcoming, past } = useMemo(() => buildTicketRows(tickets), [tickets]);
+  const { upcoming, past } = useMemo(
+    () => buildEventRowsFromTickets(tickets),
+    [tickets]
+  );
 
-  // Paginación
   const upcomingPag = usePagination(upcoming, PAGE_SIZE, showAllUpcoming);
   const pastPag = usePagination(past, PAGE_SIZE, showAllPast);
 
-  const handleVerTicket = async (idTicket) => {
-    try {
-      await abrirTicket(idTicket);
-    } catch (err) {
-      console.error(`Error al abrir el ticket ${idTicket}:`, err);
-    }
+  const goToEventDetail = (idEvento) => {
+    // ⚠️ Ajusta esta ruta a la de tu app de detalle de evento
+    // Ejemplos típicos: `/evento/${idEvento}` o `/events/${idEvento}`
+    navigate(`/evento/${idEvento}`);
   };
 
-  // Loading / Error
   if (loading) {
     return (
       <div className="d-flex">
@@ -157,7 +195,6 @@ export const MisTickets = () => {
     );
   }
 
-  // Render normal (igual estructura visual que MisEventos)
   return (
     <div className="d-flex">
       <BarraLateral />
@@ -165,29 +202,29 @@ export const MisTickets = () => {
       <main className="flex-grow-1 p-4">
         <h3 className="mb-3">Mis Tickets</h3>
 
-        {/* Próximos */}
+        {/* Próximos (por evento, sin duplicados) */}
         <div className="row g-4">
           <div className="col-12 col-lg-6">
             {upcoming.length === 0 && (
               <p className="text-muted">No tienes tickets próximos.</p>
             )}
 
-            {upcomingPag.visible.map((tk) => (
-              <TicketRow
-                key={tk.idTicket}
-                imagen={tk.imagen}
-                titulo={tk.titulo}
-                fecha={tk.fecha}
-                direccion={tk.direccion}
-                onAction={() => handleVerTicket(tk.idTicket)}
+            {upcomingPag.visible.map(ev => (
+              <EventRow
+                key={ev.idEvento}
+                imagen={ev.imagen}
+                titulo={ev.titulo}
+                fecha={ev.proximaFecha}
+                direccion={ev.direccion}
+                ticketsCount={ev.ticketsCount}
+                onDetail={() => navigate(`/mis-tickets/evento/${ev.idEvento}`)}
               />
             ))}
           </div>
-
-          <div className="col-12 col-lg-6">{/* columna libre opcional */}</div>
+          <div className="col-12 col-lg-6">{/* para balance visual, opcional */}</div>
         </div>
 
-        {/* Ver más / Ver menos (próximos) */}
+        {/* Ver más / menos próximos */}
         {upcoming.length > PAGE_SIZE && (
           <div className="d-flex align-items-center mt-3">
             <button
@@ -213,7 +250,6 @@ export const MisTickets = () => {
             >
               &lt;
             </button>
-
             {Array.from({ length: upcomingPag.totalPages }, (_, i) => i + 1).map(n => (
               <button
                 key={n}
@@ -223,7 +259,6 @@ export const MisTickets = () => {
                 {n}
               </button>
             ))}
-
             <button
               className="btn btn-sm btn-light"
               disabled={upcomingPag.page === upcomingPag.totalPages}
@@ -243,20 +278,21 @@ export const MisTickets = () => {
               <p className="text-muted">Sin tickets pasados.</p>
             )}
 
-            {pastPag.visible.map((tk) => (
-              <TicketRow
-                key={`past-${tk.idTicket}`}
-                imagen={tk.imagen}
-                titulo={tk.titulo}
-                fecha={tk.fecha}
-                direccion={tk.direccion}
-                onAction={() => handleVerTicket(tk.idTicket)}
+            {pastPag.visible.map(ev => (
+              <EventRow
+                key={`past-${ev.idEvento}`}
+                imagen={ev.imagen}
+                titulo={ev.titulo}
+                fecha={ev.ultimaPasada}
+                direccion={ev.direccion}
+                ticketsCount={ev.ticketsCount}
+                onDetail={() => navigate(`/mis-tickets/evento/${ev.idEvento}`)}
               />
             ))}
           </div>
         </div>
 
-        {/* Ver más / Ver menos (pasados) */}
+        {/* Ver más / menos pasados */}
         {past.length > PAGE_SIZE && (
           <div className="d-flex align-items-center mt-3">
             <button
@@ -282,7 +318,6 @@ export const MisTickets = () => {
             >
               &lt;
             </button>
-
             {Array.from({ length: pastPag.totalPages }, (_, i) => i + 1).map(n => (
               <button
                 key={n}
@@ -292,7 +327,6 @@ export const MisTickets = () => {
                 {n}
               </button>
             ))}
-
             <button
               className="btn btn-sm btn-light"
               disabled={pastPag.page === pastPag.totalPages}
