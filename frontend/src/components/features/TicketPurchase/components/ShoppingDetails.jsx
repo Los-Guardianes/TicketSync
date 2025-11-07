@@ -2,15 +2,9 @@ import { TicketQuantitySelector } from "./TicketQuantitySelector"
 
 import "./ShoppingDetails.css"
 
-export const ShoppingDetails = ({listaDetalles, updateCantidad, removeDetalle, maxCantidad}) => {
+export const ShoppingDetails = ({listaDetalles, updateCantidad, maxCantidad}) => {
     return (
         <>
-            {listaDetalles.length === 0 ? (
-                <div className="empty-state">
-                    <img className="empty-state-image" src="/tuticket_logo_name.png" alt="Carrito vacío" />
-                    <p>Agregue entradas</p>
-                </div>
-            ):(
             <div className="shopping-list">                    
                 {listaDetalles.map((detalle) => (
                     <div key={detalle.tarifa.idTarifa} className={`entrada-card`}>
@@ -37,8 +31,7 @@ export const ShoppingDetails = ({listaDetalles, updateCantidad, removeDetalle, m
                         </div>
                     </div>
                 ))}
-            </div>
-            )}
+            </div>            
         </>
     );
 }
