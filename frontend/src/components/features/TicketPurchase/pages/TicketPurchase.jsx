@@ -1,54 +1,62 @@
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useTicketPurchase } from "../service/useTicketPurchase"
-import { DetalleCompra } from "../models/DetalleCompra"
+import { useTicketSelection } from "../service/useTicketSelection"
+import { useCompraTickets } from '../service/useCompraTickets'
 import { DropdownOptions } from "../components/DropdownOptions"
-import { TicketQuantitySelector } from '../components/TicketQuantitySelector'
 import { ShoppingDetails } from '../components/ShoppingDetails'
 import { InfoEventTicket } from '../components/InfoEventTicket'
+import { Notification } from "../../../../components/common/Notification/Notification"
+import { getDescuentoByCodigo } from '../../../../globalServices/DescuentoService'
 
 import "./TicketPurchase.css"
 
 export const TicketPurchase = () => {
 
     const {id} = useParams();
-    const [cantidadEntradas, setCantidadEntradas] = useState(1);
-    const [maximoEntradas, setMaximoEntradas] = useState(5);
-    const [precioCalculado, setPrecioCalculado] = useState(0.0);
-    const [precioDetalle, setPrecioDetalle] = useState(0.0);
-    const [discount, setDiscount] = useState(0.0);
-    const [montoDescuento, setMontoDescuento] = useState(0.0);
-    const [comision, setComision] = useState(10);
-    const [montoComision, setMontoComision] = useState(0.0);
-    const [totalDetalle, setTotalDetalle] = useState(0.0);
-    const [montoFinal, setMontoFinal] = useState(0.0);
-    const [listaDetalles, setListaDetalles] = useState([]);
-
     const [selectedZona, setSelectedZona] = useState(null);
-    const [selectedPeriodo, setSelectedPeriodo] = useState(null);
-    const [selectedFuncion, setSelectedFuncion] = useState(null);
-    const [selectedTipoEntrada, setSelectedTipoEntrada] = useState(null);
+    const [selectedFuncion, setSelectedFuncion] = useState(null)
+    const [selectedTipoEntrada, setSelectedTipoEntrada] = useState(null);    
+    const [notification, setNotification] = useState(null)
+
+    const [formData, setFormData] = useState({discount: ''});
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState({ text: '', type: '' });
 
     const navigate = useNavigate();
+
+
     const {
-        formData,
-        errors,
-        isLoading,
-        message,
         zonas,
-        periodo,
+        periodos,
         evento,
         funciones,
         tipoEntradas,
         tarifas,
-        handleInputChange,
+        periodoActual,
         fetchZonas,
         fetchTipoEntradas,
         fetchPeriodo,
         fetchEvento,
         fetchFunciones,
         fetchTarifas
-    } = useTicketPurchase(id);
+    } = useTicketSelection(id);
+
+    const {
+        listaDetalles,
+        totalBruto,        
+        montoDescuentoPeriodo,        
+        montoDescuentoCodigo,
+        descuentoCodigo,    
+        total,
+        addDetalle,
+        updateCantidad,
+        removeDetalle,
+        verificarDescuentoCodigo,
+        getDescuentoId,
+        eliminarDescuento
+    } = useCompraTickets(periodoActual, id);
+
  
     useEffect(() => {
         fetchEvento();
@@ -59,60 +67,83 @@ export const TicketPurchase = () => {
         fetchTipoEntradas();    
     }, [id]);
     
-
-    const getPeriodoActual = (listaPeriodos) => {
-        if (!listaPeriodos || listaPeriodos.length === 0) return null;
-
-        const hoy = new Date(); // fecha actual
-        return listaPeriodos.find((p) => {
-            const inicio = new Date(p.fechaInicio);
-            const fin = new Date(p.fechaFin);
-            return hoy >= inicio && hoy <= fin;
-        }) || null; // si no encuentra ninguno, devuelve null
-    }
-
-    useEffect(() => {
-        if (periodo && periodo.length > 0) {
-            const actual = getPeriodoActual(periodo);
-            setSelectedPeriodo(actual);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+        if (errors[name]) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: ''
+            }));
         }
-        console.log("Periodo actualizado:", selectedPeriodo);
-    }, [periodo]);
-
-
-    const incrementar = () => {
-        if (cantidadEntradas < maximoEntradas)setCantidadEntradas(prev => prev + 1);
-    };
-
-    const handleRegresar = () => {
-        navigate(-1);
-    }
-
-    const decrementar = () => {
-        setCantidadEntradas(prev => Math.max(1, prev - 1));
     };
 
     const handleDiscount = async (e) => {
         e.preventDefault();
-        //falta implementar validacion de codigo de descuento
+        const codigo = formData.discount;        
+        if (!codigo) {
+            setNotification({
+                message: "Por favor, ingresa un código de descuento.",
+                type: "warning",
+            });
+            return;
+        }
+        try {
+            const descuento =  await verificarDescuentoCodigo(codigo);
+            console.log("resputesa: ", descuento)
+            if (!descuento) {                            
+                setNotification({
+                    message: "Código de descuento inválido.",
+                    type: "error",
+                });
+            }else{
+                setNotification({
+                    message: "Código de descuento válido.",
+                    type: "success",
+                })
+            }
+        } catch (error) {            
+            setNotification({
+                message: "Error al verificar el código de descuento.",
+                type: "error",
+            });
+        }
     };
 
     const handleContinueToPay = () => {
         //falta verificar que la listaDetalles no este vacia
         if (listaDetalles.length === 0) {
-            alert("Agrega al menos un detalle de compra antes de continuar.");
+            setNotification({
+                message: "Agrega al menos un detalle de compra antes de continuar.",
+                type: "warning",
+            });
             return;
-        }
+        }        
         navigate("/ticket-pay", { state: {
             listaDetalles: listaDetalles,
-            montoFinal: totalDetalle, //falta aplicar descuento y comision
+            idPeriodo: periodoActual.idPeriodo,
+            totalBruto: totalBruto,
+            descuentoAplicado: montoDescuentoPeriodo + montoDescuentoCodigo,
+            total: total,
             funcion: selectedFuncion,
+            idDescuentoUtilizado: getDescuentoId()
         }});
     }
 
-    const agregarIncrementarDetalle = () => {
+    const handleEliminarDescuento = () =>{
+        formData.discount = ''
+        eliminarDescuento()
+    }
+
+    const handleAddDetalle = () => {
         if (!selectedZona || !selectedTipoEntrada || !selectedFuncion) {
-            alert("Selecciona una zona, un tipo de entrada y una función antes de agregar.");
+            setNotification({
+                message: "Selecciona una zona, un tipo de entrada y una función antes de agregar.",
+                type: "warning",
+            });
             return;
         }
         const selectedTarifa = tarifas.find(
@@ -121,189 +152,186 @@ export const TicketPurchase = () => {
             t.zona.idZona === selectedZona.idZona
         );
         if (!selectedTarifa) {
-            alert("No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.");
+            setNotification({
+                message: "No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.",
+                type: "error",
+            });
             return;
         }
-        
-        const listaActual = [...listaDetalles];
-        console.log("Tarifa seleccionada:", selectedTarifa);
-        console.log("Lista actual antes de agregar/incrementar:", listaActual);
-        const indexExistente = listaActual.findIndex(
-            detalle => 
-            detalle.tarifa.idTarifa === selectedTarifa.idTarifa
-        );
-        const precioDetalleAgregado = selectedTarifa.precioBase * cantidadEntradas;
-
-        if (indexExistente >= 0) {
-            const detalleExistente = listaActual[indexExistente];
-            detalleExistente.precioDetalle += precioDetalleAgregado;
-            detalleExistente.cantidad += cantidadEntradas;
-            listaActual[indexExistente] = detalleExistente;
-            setListaDetalles(listaActual);
-        } else {
-            //const descuentoPeriodo = precioDetalle * (selectedPeriodo.porcentajeDescuento / 100);
-            listaActual.push({
-                cantidad: cantidadEntradas,
-                precioDetalle: precioDetalleAgregado,
-                tarifa: selectedTarifa,
-                idPeriodo: periodo[0].idPeriodo //falta seleccionar periodo
-            });
-            setListaDetalles(listaActual);
-        }
-        setTotalDetalle(totalDetalle+precioDetalleAgregado);
-
-        /*
-        setMontoFinal((1+comision/100)*(totalDetalle+precioDetalle));
-        setPrecioCalculado(precioCalculadoLocal);
-        setPrecioDetalle(precioDetalleLocal);
-        */
-
-        setSelectedZona(null);
-        setSelectedPeriodo(null);
-        setCantidadEntradas(1);
+        addDetalle(selectedTarifa);         
     };
     
     return (
-        <main className="buy-ticket">
-            <div id="buy-ticket-data">
-                <h1>Comprar ticket</h1>
-                <section id="purchase_selection">
-                        {/* LISTA DE PERIODOS */}
-                        {periodo && periodo.length > 0 && (
-                        <div className="mb-2">
-                            <h2 className="text-xl font-semibold mb-3 text-gray-800">
-                            Periodos disponibles
-                            </h2>
-                            <div>
-                            <table className="min-w-full text-sm text-gray-700">
-                                <thead className="bg-gray-100 text-gray-900">
-                                <tr>
-                                    <th className="px-4 py-2 text-left font-medium">Nombre</th>
-                                    <th className="px-4 py-2 text-left font-medium">Fecha Inicio</th>
-                                    <th className="px-4 py-2 text-left font-medium">Fecha Fin</th>                                    
-                                    <th className="px-4 py-2 text-left font-medium">Descuento</th>                    
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {periodo.map((p) => (
-                                    <tr
-                                    key={p.idPeriodo}
-                                    className="border-t hover:bg-gray-50 transition-colors"
-                                    >
-                                    <td className="px-4 py-2">{p.nombre}</td>
-                                    <td className="px-4 py-2">{p.fechaInicio}</td>
-                                    <td className="px-4 py-2">{p.fechaFin}</td>                     
-                                    <td className="px-4 py-2">
-                                    {!p.tipoDesc || p.valorDescuento == null
-                                        ? "-"
-                                        : p.tipoDesc === "MONTO"
-                                        ? `S/. ${p.valorDescuento}`
-                                        : `${p.valorDescuento}%`}
-                                    </td>
+        <main className="ticket-purchase-main">
+            <div className="ticket-purchase-container">
 
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
-                        )}
-
-                    <div className="data_purchase">
-                        <div>
-                            <h2>Zona</h2>                        
-                            <DropdownOptions                        
-                                options={zonas}
-                                setSelectedOption={setSelectedZona}
-                                selectedOption={selectedZona}    
-                            />    
-                        </div>                        
-                        <div>
-                            <h2>Tipo Entrada</h2>
-                            <DropdownOptions                        
-                                options={tipoEntradas}
-                                setSelectedOption={setSelectedTipoEntrada}
-                                selectedOption={selectedTipoEntrada}
-                            />
-                        </div>
-                        <div>
-                            <h2>Funciones</h2>
-                            <DropdownOptions                        
-                                options={funciones}
-                                setSelectedOption={setSelectedFuncion}
-                                selectedOption={selectedFuncion}
-                                nombre={['fechaInicio','horaInicio']}
-                            />
-                        </div>                         
-                    </div>                
-                    <div className="data_purchase">
-                        {/*
-                            <div>                    
-                                <h2>Canjear código</h2>
-                                <form className="form-discount" onSubmit={handleDiscount}>
-                                    <input 
-                                        className={`input-form ${errors.discount ? 'error' : ''}`}
-                                        name='discount'
-                                        placeholder='Ingresa el código de descuento'
-                                        maxLength={100}
-                                        value={formData.discount}
-                                        onChange={handleInputChange}
-                                        disabled={isLoading}
-                                    />
-                                    <button 
-                                        type="submit" 
-                                        className='btn btn-secondary btn-lg mt-3'
-                                        disabled={isLoading}
-                                    >
-                                        {isLoading ? 'Verificando...' : 'Aplicar'}
-                                    </button>
-                                </form>                        
-                                {errors.discount && <div className="error-form">{errors.discount}</div>}
-                            </div>
-                            */}
-                        {selectedZona && selectedTipoEntrada? (
-                            <TicketQuantitySelector
-                                cantidadEntradas={cantidadEntradas}
-                                incrementar={incrementar}
-                                decrementar={decrementar}
-                            >
-                                <h2>Cantidad de entradas</h2>
-                            </TicketQuantitySelector>                        
-                        ) : null}
-                    </div>
-                </section>
-                <section id="purchase_actions">
-                    <button className='btn btn-secondary'
-                        onClick={handleRegresar}
-                    >
-                        Regresar
-                    </button>
-                    <button 
-                        className='btn btn-primary'
-                        onClick={agregarIncrementarDetalle}
-                    >
-                        Agregar
-                    </button>
-                </section>
-                <section id="list_purchase">
-                    <ShoppingDetails 
-                        totalDetalle={totalDetalle}
-                        listaDetalles={listaDetalles}
+                {notification && (
+                    <Notification
+                    message={notification.message}
+                    type={notification.type}
+                    duration={3000}
+                    onClose={() => setNotification(null)}
                     />
-                </section>
+                )}
+                <div className="ticket-purchase-grid">
+                    {/* Main Content */}
+                    <div className='ticket-purchase-content'>
+                        <section className='ticket-purchase-section'>
+                            {/* LISTA DE PERIODOS */}
+                            {periodos && periodos.length > 0 && (
+                            <div className="mb-2">
+                                <h2 className="ticket-purchase-section-title">Periodos disponibles</h2>
+                                <div>
+                                <table className="min-w-full text-sm text-gray-700">
+                                    <thead className="bg-gray-100 text-gray-900">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left font-medium">Nombre</th>
+                                        <th className="px-4 py-2 text-left font-medium">Fecha Inicio</th>
+                                        <th className="px-4 py-2 text-left font-medium">Fecha Fin</th>                                    
+                                        <th className="px-4 py-2 text-left font-medium">Descuento</th>                    
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {periodos.map((p) => (
+                                        <tr
+                                        key={p.idPeriodo}
+                                        className="border-t hover:bg-gray-50 transition-colors"
+                                        >
+                                        <td className="px-4 py-2">{p.nombre}</td>
+                                        <td className="px-4 py-2">{p.fechaInicio}</td>
+                                        <td className="px-4 py-2">{p.fechaFin}</td>                     
+                                        <td className="px-4 py-2">
+                                        {!p.tipoDesc || p.valorDescuento == null
+                                            ? "-"
+                                            : p.tipoDesc === "MONTO"
+                                            ? `S/. ${p.valorDescuento}`
+                                            : `${p.valorDescuento}%`}
+                                        </td>
+
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                            )}
+                        </section>
+                        <div className="ticket-purchase-section">
+                            <h2 className="ticket-purchase-section-title">Selecciona tus entradas</h2>
+                            <form className="purchase-form">
+                                <fieldset className="purchase-form-grid">
+                                    <div className="purchase-form-group">
+                                        <label className="purchase-form-label">Zona</label>                       
+                                        <DropdownOptions                        
+                                            options={zonas}
+                                            setSelectedOption={setSelectedZona}
+                                            selectedOption={selectedZona}
+                                        />
+                                    </div>
+                                    <div className="purchase-form-group">
+                                        <label className="purchase-form-label">Tipo de entrada</label>
+                                        <DropdownOptions                        
+                                            options={tipoEntradas}
+                                            setSelectedOption={setSelectedTipoEntrada}
+                                            selectedOption={selectedTipoEntrada}
+                                        />
+                                    </div>
+                                    <div className="purchase-form-group">
+                                        <label className="purchase-form-label">Funciones</label>
+                                        <DropdownOptions                        
+                                            options={funciones}
+                                            setSelectedOption={setSelectedFuncion}
+                                            selectedOption={selectedFuncion}
+                                            nombre={['fechaInicio','horaInicio']}
+                                        />
+                                    </div>
+                                </fieldset>
+                                <div className="data_purchase">
+                                    {selectedZona && selectedTipoEntrada && selectedFuncion ? (
+                                        <>
+                                        <button type='button'
+                                            className='ticket-purchase-button
+                                            ticket-purchase-button-primary
+                                            ticket-purchase-button-full mt-4'
+                                            onClick={handleAddDetalle}
+                                        >
+                                            Agregar a carrito
+                                        </button>
+                                        <section className='ticket-purchase-grid'>                                            
+                                                <div>                    
+                                                    <h2>Canjear código</h2>
+                                                    <div className="form-discount">
+                                                        <input 
+                                                            className={`input-form ${errors.discount ? 'error' : ''}`}
+                                                            name='discount'
+                                                            placeholder='Ingresa el código de descuento'
+                                                            maxLength={100}
+                                                            value={formData.discount}
+                                                            onChange={handleInputChange}
+                                                            disabled={isLoading || montoDescuentoCodigo}
+                                                        />
+                                                        { !montoDescuentoCodigo ? (
+                                                            <button 
+                                                                type="button" 
+                                                                className='btn btn-secondary btn-lg mt-3'
+                                                                disabled={isLoading}
+                                                                onClick={handleDiscount}
+                                                            >
+                                                                {isLoading ? 'Verificando...' : 'Aplicar'}
+                                                            </button>
+                                                            ) : (
+                                                            <button 
+                                                                type="button" 
+                                                                className='btn btn-secondary btn-lg mt-3'
+                                                                disabled={isLoading}
+                                                                onClick={handleEliminarDescuento}
+                                                            >
+                                                                {isLoading ? 'Verificando...' : 'Eliminar'}
+                                                            </button>                                                            
+                                                            ) }                                                    
+                                                    </div>                        
+                                                    {errors.discount && <div className="error-form">{errors.discount}</div>}
+                                                </div>                                            
+                                        </section>
+                                        </>           
+                                    ) : null}
+                                </div>
+                            </form>                        
+                        </div> 
+                        <section className="ticket-purchase-section">
+                            <h2 className="ticket-purchase-section-title">Tu carrito</h2>
+                            <ShoppingDetails 
+                                listaDetalles={listaDetalles}
+                                updateCantidad={updateCantidad}
+                                removeDetalle={removeDetalle}
+                                maxCantidad={evento?.maxComprasTickets}
+                            />
+                        </section>
+                    </div>
+                    {/* Sidebar */}
+                    <aside className="ticket-purchase-sidebar">
+                        <section className="ticket-purchase-section">
+                            <InfoEventTicket 
+                                evento={evento}
+                                totalBruto={totalBruto}
+                                montoDescuentoPeriodo={montoDescuentoPeriodo}
+                                montoDescuentoCodigo={montoDescuentoCodigo}
+                                periodo={periodoActual}
+                                descuentoCodigo={descuentoCodigo}
+                                total={total}
+                            />
+                            <button 
+                            className='ticket-purchase-button
+                            ticket-purchase-button-primary
+                            ticket-purchase-button-full'
+                            onClick={handleContinueToPay}
+                            >
+                                Continuar al pago
+                            </button>
+                        </section>
+                    </aside>
+                </div>
             </div>
-            <section id="info-event-ticket">
-                <InfoEventTicket 
-                    evento={evento}
-                    montoFinal={totalDetalle}
-                />
-                <button 
-                className='btn btn-primary'
-                onClick={handleContinueToPay}
-                >
-                    Continuar
-                </button>
-            </section>
         </main>
     )
 }

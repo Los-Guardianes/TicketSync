@@ -7,9 +7,13 @@ export const NavBar = ({
   precio, setPrecio,
   ubicacion, setUbicacion,
   fecha, setFecha,
-  ubicacionesDisponibles
+  ubicacionesDisponibles,
+  categoria, setCategoria,
+  categoriasDisponibles
 }) => {
   const { user, logout } = useAuth();
+  // Detecta rol de organizador con tolerancia a distintas formas de guardarlo
+  const esOrganizador = user && user.rol === 'ORGANIZADOR';
 
   return (
     <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
@@ -72,6 +76,24 @@ export const NavBar = ({
             </select>
           </ul>
         </li>
+        {/* Categoría */}
+        <li className="nav-item dropdown">
+          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+            Categoría
+          </NavLink>
+          <ul className="dropdown-menu p-3">
+            <select
+              className="form-select"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              {categoriasDisponibles && categoriasDisponibles.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </ul>
+        </li>
 
         {/* Fecha */}
         <li className="nav-item dropdown">
@@ -79,22 +101,34 @@ export const NavBar = ({
             Fecha
           </NavLink>
           <ul className="dropdown-menu p-3">
-            <input
-              type="date"
-              className="form-control"
-              value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
-            />
+            <div>
+              <label><strong>Fecha de inicio:</strong></label> {/* el título para "Fecha de inicio" */}
+              <input
+                type="date"
+                className="form-control"
+                value={fecha[0]} // Fecha de inicio
+                onChange={(e) => setFecha([e.target.value, fecha[1]])}
+              />
+            </div>
+            <div className="mt-2">
+              <label><strong>Fecha de fin:</strong></label> {/* título para "Fecha de fin" */}
+              <input
+                type="date"
+                className="form-control"
+                value={fecha[1]} // Fecha de fin
+                onChange={(e) => setFecha([fecha[0], e.target.value])}
+              />
+            </div>
           </ul>
         </li>
-         {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
-                {user && user.rol === 'ORGANIZADOR' && (
-                    <li className='nav-item'>
-                        <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
-                            Crear Evento
-                        </NavLink>
-                    </li>
-                )}
+        {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
+        {user && user.rol === 'ORGANIZADOR' && (
+          <li className='nav-item'>
+            <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
+              Crear Evento
+            </NavLink>
+          </li>
+        )}
         {/* Botones de usuario */}
         {!user ? (
           <>
@@ -108,8 +142,14 @@ export const NavBar = ({
         ) : (
           <>
             <li className='nav-item'>
-                <NavLink className={'nav-link'} to={"/mistickets"} >Mis Tickets</NavLink>
+              <NavLink
+                className="nav-link"
+                to={esOrganizador ? "/organizer/mis-eventos" : "/mistickets"}
+              >
+                {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
+              </NavLink>
             </li>
+
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>

@@ -1,6 +1,7 @@
 package com.guardianes.TuTicket.servicioPedidos.service;
 
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
+import com.guardianes.TuTicket.servicioEventos.service.DescuentoService;
 import com.guardianes.TuTicket.servicioExepciones.LogicaNegocioException;
 import com.guardianes.TuTicket.servicioPedidos.DTO.OrdenCompraDTO;
 import com.guardianes.TuTicket.servicioPedidos.model.EstadoOrdenCompra;
@@ -20,6 +21,7 @@ public class OrdenCompraService {
     private final OrdenCompraRepo repo;
     private final DetalleCompraRepo repoDetalle;
     private final DetalleCompraService detalleCompraService;
+    private final DescuentoService descuentoService;
     private final EntityManager em;
 
     public List<OrdenCompra> getAllOrdenes() {
@@ -47,8 +49,9 @@ public class OrdenCompraService {
         Funcion f = em.getReference(Funcion.class, ordenCompraDTO.getIdFuncion());
         OrdenCompra ordenCompra = ordenCompraDTO.toModel(u,f);
         OrdenCompra ocInsertada = repo.save(ordenCompra);
-        simularApiPasarelaPagos(ocInsertada,false); //true -> siempre va funcionar
+        simularApiPasarelaPagos(ocInsertada,true); //true -> siempre va funcionar
         detalleCompraService.addListDetalles(ordenCompraDTO.getDetallesCompras(), ocInsertada);
+
         return ocInsertada;
     }
 

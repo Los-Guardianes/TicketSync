@@ -1,36 +1,40 @@
-import { useState, useEffect } from 'react';
+// useTicketSelection.js
+import { useEffect, useState } from 'react';
 import { getEventosById } from "../../../../globalServices/EventoService";
-import { useAuth } from "../../../../context/AuthContext"
 import { apiFetch } from '../../../../globalServices/API';
 import { Tarifa } from '../models/Tarifa';
 import { Zona } from '../models/Zona';
 import { TipoEntrada } from '../models/TipoEntrada';
-export const useTicketPurchase = (idevento) => {
 
-    const [formData, setFormData] = useState({discount: ''});
-    const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
-    const [periodo, setPeriodos] = useState([]);
+export const useTicketSelection = (idevento) => {
+
+    const [periodoActual, setPeriodoActual] = useState(null);
+    const [periodos, setPeriodos] = useState([]);
     const [funciones, setFunciones] = useState([]);
-    const [evento, setEvento] = useState(null); 
+    const [evento, setEvento] = useState(null);
     const [tarifas, setTarifas] = useState([]);
     const [tipoEntradas, setTipoEntradas] = useState([]);
     const [zonas, setZonas] = useState([]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
+    // Calcula periodoActual cada vez que cambian periodos
+    useEffect(() => {
+        if (periodos && periodos.length > 0) {
+            const actual = getPeriodoActual(periodos);
+            setPeriodoActual(actual);
+        } else {
+            setPeriodoActual(null);
         }
-    };
+    }, [periodos]);
+
+    const getPeriodoActual = (listaPeriodos) => {
+        if (!listaPeriodos || listaPeriodos.length === 0) return null;
+        const hoy = new Date();
+        return listaPeriodos.find((p) => {
+            const inicio = new Date(p.fechaInicio);
+            const fin = new Date(p.fechaFin);
+            return hoy >= inicio && hoy <= fin;
+        }) || null;
+    }
 
     const fetchEvento = async () => {
         const data = await getEventosById(idevento);
@@ -39,15 +43,14 @@ export const useTicketPurchase = (idevento) => {
 
     const fetchPeriodo = async () => {
         const data = await apiFetch(`/api/periodo/evento/${idevento}`);
-        setPeriodos(data || []); // Corregí "strea" a "data"
+        setPeriodos(data || []);
     };
 
     const fetchTarifas = async () => {
         const data = await apiFetch(`/api/tarifa/evento/${idevento}`);
-        const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));        
+        const tarifasParseadas = (data || []).map(t => Tarifa.fromApi(t));
         setTarifas(tarifasParseadas);
     };
-
 
     const fetchFunciones = async () => {
         const data = await apiFetch(`/api/funcion/evento/${idevento}`);
@@ -56,28 +59,24 @@ export const useTicketPurchase = (idevento) => {
 
     const fetchZonas = async () => {
         const data = await apiFetch(`/api/zona/evento/${idevento}`);
-        const zonasParseadas = (data || []).map(z => Zona.fromApi(z));        
+        const zonasParseadas = (data || []).map(z => Zona.fromApi(z));
         setZonas(zonasParseadas);
     }
 
     const fetchTipoEntradas = async () => {
         const data = await apiFetch(`/api/tipoentrada/evento/${idevento}`);
-        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));        
+        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));
         setTipoEntradas(tiposParseadas);
     }
 
     return {
-        formData,
-        errors,
-        isLoading,
-        message,
         zonas,
-        periodo,
+        periodos,
         evento,
         funciones,
         tipoEntradas,
         tarifas,
-        handleInputChange,
+        periodoActual,
         fetchZonas,
         fetchTipoEntradas,
         fetchPeriodo,

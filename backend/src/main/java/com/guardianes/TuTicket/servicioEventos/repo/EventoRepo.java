@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface EventoRepo extends JpaRepository<Evento, Integer> {
 
+    // Carga relaciones útiles para listados generales
     @EntityGraph(attributePaths = {
             "ciudad",
             "categoria",
@@ -17,4 +18,11 @@ public interface EventoRepo extends JpaRepository<Evento, Integer> {
     })
     @Override
     List<Evento> findAll();
+
+    @EntityGraph(attributePaths = {
+            "ciudad",
+            "categoria",
+            "ciudad.dpto"
+    })
+    List<Evento> findByOrganizador_IdUsuario(Integer idUsuario);
 }

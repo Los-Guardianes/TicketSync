@@ -1,5 +1,7 @@
 package com.guardianes.TuTicket.servicioEventos.DTO;
 
+import com.guardianes.TuTicket.servicioEventos.model.Evento;
+import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
 import com.guardianes.TuTicket.servicioEventos.model.TipoEntrada;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,5 +19,15 @@ public class TipoEntradaDTO {
         this.nombre = tipoEntrada.getNombre();
         this.descripcion = tipoEntrada.getDescripcion();
         this.idEvento = tipoEntrada.getEvento().getIdEvento();
+    }
+
+    public TipoEntrada toModel(Evento evento){
+        return new TipoEntrada(
+                this.idTipoEntrada,
+                this.nombre,
+                this.descripcion,
+                true,
+                evento
+        );
     }
 }
