@@ -171,3 +171,8 @@
 .purchase-form-price-value {
   color: #27ae60;
 }
+
+.form-discount {
+  display: flex;
+  gap: 40px;
+}

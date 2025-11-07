@@ -70,11 +70,7 @@ public class DescuentoController {
 
     @GetMapping("/descuento/verify")
     public ResponseEntity<?> verifyDescuento(@RequestParam String codigo){
-        try{
-            return ResponseEntity.ok(service.verificarCodigo(codigo));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return ResponseEntity.ok(service.verificarCodigo(codigo));
     }
 
 

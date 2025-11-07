@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface DescuentoRepo extends JpaRepository<Descuento, Integer> {
 
-    public Optional<Descuento> findByCodigo(String codigo);
+    Optional<Descuento> findByCodigo(String codigo);
 
     List<Descuento> findByEvento_IdEventoAndActivoTrueOrderByFechaInicioAsc(Integer idEvento);
 }
