@@ -128,7 +128,7 @@ export const NavBar = ({
             <li className='nav-item'>
               <NavLink
                 className="nav-link"
-                to={esOrganizador ? "/organizer/mis-eventos" : "/mis-tickets"}
+                to={esOrganizador ? "/organizer/mis-eventos" : "/MisTickets"}
               >
                 {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
               </NavLink>
