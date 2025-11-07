@@ -1,7 +1,5 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { getCateventos } from '../../globalServices/EventoService'
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export const NavBar = ({
@@ -10,34 +8,18 @@ export const NavBar = ({
   fechaInicio, setFechaInicio,
   fechaFin, setFechaFin,
   categoria, setCategoria,
-  ubicacionesDisponibles
+  ubicacionesDisponibles,
+  categoriasDisponibles
 }) => {
   const { user, logout } = useAuth();
-  // Detecta rol de organizador con tolerancia a distintas formas de guardarlo
-  const esOrganizador = user && user.rol === 'ORGANIZADOR';
-  const [categorias, setCategorias] = useState([{ idCategoria: 0, nombre: 'Todas' }]);
-  const handleSearchSubmit = (e) => {
-    e.preventDefault(); // evita que Enter recargue/navegue
-  };
+  const esOrganizador = !!user && user.rol === 'ORGANIZADOR';
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await getCateventos();
-        const arr = Array.isArray(data) ? data : (data?.data ?? data?.content ?? data?.items ?? []);
-        const activas = (Array.isArray(arr) ? arr : []).filter(c => c?.activo === true);
-        setCategorias([{ idCategoria: 0, nombre: 'Todas' }, ...activas]);
-      } catch (e) {
-        console.error('Error cargando categorías', e);
-        setCategorias([{ idCategoria: 0, nombre: 'Todas' }]);
-      }
-    })();
-  }, []);
+  const handleSearchSubmit = (e) => e.preventDefault(); // evita submit con Enter
 
   return (
     <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
       {/* Logo */}
-      <NavLink to="/" className='navbar-brand'>
+      <NavLink to="/home" className='navbar-brand'>
         <img
           src="/tuticket_logo_name.png"
           alt="tuticketLogo"
@@ -53,17 +35,13 @@ export const NavBar = ({
           placeholder="Encuentra eventos..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }} // evita submit con Enter
+          onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
         />
       </form>
 
-
       {/* Filtros */}
       <ul className="navbar-nav ms-auto d-flex align-items-center">
-
-
-
-        {/* Ubicación dinámica */}
+        {/* Ubicación */}
         <li className="nav-item dropdown">
           <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
             Ubicación
@@ -75,19 +53,40 @@ export const NavBar = ({
               onChange={(e) => setUbicacion(e.target.value)}
             >
               <option value="Todas">Todas</option>
-              {ubicacionesDisponibles.map(ubi => (
+              {ubicacionesDisponibles?.map(ubi => (
                 <option key={ubi.idDpto} value={ubi.nombre}>{ubi.nombre}</option>
               ))}
             </select>
           </ul>
         </li>
 
+        {/* Categoría */}
+        <li className="nav-item dropdown ms-2">
+          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+            Categoría
+          </NavLink>
+          <ul className="dropdown-menu p-3">
+            <select
+              className="form-select"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              {categoriasDisponibles?.map(cat => (
+                <option key={String(cat)} value={String(cat)}>
+                  {String(cat)}
+                </option>
+              ))}
+            </select>
+          </ul>
+        </li>
+
         {/* Fecha */}
-        <li className="nav-item dropdown">
+        <li className="nav-item dropdown ms-2">
           <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
             Fecha
           </NavLink>
-          <ul className="dropdown-menu p-3">
+          <ul className="dropdown-menu p-3" style={{ minWidth: 260 }}>
             <label className="form-label small">Desde</label>
             <input
               type="date"
@@ -105,33 +104,10 @@ export const NavBar = ({
           </ul>
         </li>
 
-        {/* Categoría */}
-        <li className="nav-item dropdown ms-2">
-          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
-            Categoría
-          </NavLink>
-          <ul className="dropdown-menu p-3">
-            <select
-              className="form-select"
-              value={String(categoria)}
-              onChange={(e) => setCategoria(e.target.value)}
-            >
-              {categorias.map(cat => (
-                <option
-                  key={cat.idCategoria}
-                  value={cat.idCategoria === 0 ? 'Todas' : String(cat.idCategoria)}
-                >
-                  {cat.nombre}
-                </option>
-              ))}
-            </select>
-          </ul>
-        </li>
-
-        {/* BOTÓN CONDICIONAL PARA ORGANIZADOR */}
-        {user && user.rol === 'ORGANIZADOR' && (
-          <li className='nav-item'>
-            <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
+        {/* Botón condicional para organizador */}
+        {esOrganizador && (
+          <li className='nav-item ms-2'>
+            <NavLink className='nav-link btn btn-warning' to="/create-event">
               Crear Evento
             </NavLink>
           </li>
@@ -140,11 +116,11 @@ export const NavBar = ({
         {/* Botones de usuario */}
         {!user ? (
           <>
-            <li className='nav-item'>
-              <NavLink className='nav-link btn btn-light' to={"/register"}>Registrarse</NavLink>
+            <li className='nav-item ms-2'>
+              <NavLink className='nav-link btn btn-light' to="/register">Registrarse</NavLink>
             </li>
             <li className='nav-item ms-2'>
-              <NavLink className='nav-link btn btn-success' to={"/login"}>Login</NavLink>
+              <NavLink className='nav-link btn btn-success' to="/login">Login</NavLink>
             </li>
           </>
         ) : (
@@ -152,12 +128,11 @@ export const NavBar = ({
             <li className='nav-item'>
               <NavLink
                 className="nav-link"
-                to={esOrganizador ? "/organizer/mis-eventos" : "/mistickets"}
+                to={esOrganizador ? "/organizer/mis-eventos" : "/mis-tickets"}
               >
                 {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
               </NavLink>
             </li>
-
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>
@@ -170,5 +145,5 @@ export const NavBar = ({
         )}
       </ul>
     </nav>
-  )
-}
+  );
+};

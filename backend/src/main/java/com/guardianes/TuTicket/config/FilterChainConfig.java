@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,7 +33,7 @@ public class FilterChainConfig {
             "/api/cliente",
             "/api/register",
             "/api/organizador",
-            "/api/organizador/reporte/excel", // Cambiar luego si es publico o no
+            "/api/organizador/reporte/excel", // Cambiar luego si es público o no
 
             // Catálogos y consultas públicas
             "/api/evento/**",
@@ -46,32 +47,37 @@ public class FilterChainConfig {
             "/api/orden/**",
             "/api/ticket/**",
             "/api/descuento/**",
-            "/api/catevento/**"
+            "/api/catevento/**",
+            "/api/subirImagens3/**"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .cors(withDefaults())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(withDefaults())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+            .csrf(csrf -> csrf.disable())
+            .cors(withDefaults())
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                    .anyRequest().authenticated()
+            )
+            .httpBasic(withDefaults())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
     @Bean
     AuthenticationProvider authenticationProvider(UserDetailsService uds, PasswordEncoder pwe) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(uds);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(uds);
         provider.setPasswordEncoder(pwe);
         return provider;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // Para producción, usar BCrypt:
         // return new BCryptPasswordEncoder(12);
         return NoOpPasswordEncoder.getInstance();
     }
