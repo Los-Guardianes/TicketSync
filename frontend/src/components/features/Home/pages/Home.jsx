@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { Card } from '../components/Card'
-import { PrimImage } from '../components/PrimImage'
-import { getEventos } from '../../../../globalServices/EventoService'
-import { useOutletContext } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Card } from '../components/Card';
+import { PrimImage } from '../components/PrimImage';
+import { getEventos } from '../../../../globalServices/EventoService';
+import { useOutletContext } from 'react-router-dom';
 
 export const Home = () => {
-  const [eventos, setEventos] = useState([])
+  const [eventos, setEventos] = useState([]);
 
-  // Filtros que vienen de Layout (y que controla NavBar)
-  const { search, precio, ubicacion, fecha, categoria } = useOutletContext()
+  // Filtros que vienen de Layout/NavBar
+  const { search, ubicacion, fechaInicio, fechaFin, categoria } = useOutletContext();
 
+  // Fecha de hoy en formato yyyy-mm-dd
+  const today = new Date().toISOString().slice(0, 10);
 
   // Cargar eventos de la API
   useEffect(() => {
     const fetchEventos = async () => {
       try {
         const data = await getEventos();
-        console.log(data);
-        setEventos(data || []);
+        setEventos(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error cargando eventos:', error);
         setEventos([]);
@@ -26,53 +27,69 @@ export const Home = () => {
     fetchEventos();
   }, []);
 
+  // Valida si una fecha (yyyy-mm-dd o ISO) es futura y, opcionalmente, cae en el rango seleccionado
+  const inRange = (dateStr) => {
+    if (!dateStr) return false;
+    const d = String(dateStr).slice(0, 10);
+
+    // 1) Solo fechas futuras (incluye hoy)
+    if (d < today) return false;
+
+    // 2) Filtros del NavBar (opcionales)
+    if (fechaInicio && d < fechaInicio) return false;
+    if (fechaFin && d > fechaFin) return false;
+
+    return true;
+  };
+
   // Aplicar filtros
-  const eventosFiltrados = eventos.filter(evento => {
+  const eventosFiltrados = eventos.filter((evento) => {
+    // Si tu backend marca activo, respétalo. Si no viene, no filtres.
+    const matchActivo = evento?.activo !== false;
+
     // Búsqueda por nombre
     const matchSearch =
-      !search || evento.nombre?.toLowerCase().includes(search.toLowerCase())
+      !search || evento?.nombre?.toLowerCase().includes(search.toLowerCase());
 
+    // Ubicación por nombre de dpto
     const matchUbicacion =
       ubicacion === 'Todas' ||
-      evento.ciudad?.dpto?.nombre === ubicacion
+      evento?.ciudad?.dpto?.nombre === ubicacion;
+
+    // Categoría por nombre (case-insensitive) o por id si llegara así
     const matchCategoria =
       categoria === 'Todas' ||
-      (evento.categoria?.nombre?.toLowerCase() === categoria.toLowerCase());
+      (evento?.categoria?.nombre &&
+        evento.categoria.nombre.toLowerCase() === String(categoria).toLowerCase()) ||
+      (evento?.categoria?.idCategoria &&
+        String(evento.categoria.idCategoria) === String(categoria));
 
-    const matchPrecio = true
+    // Al menos una función futura y dentro del rango (si se eligió)
+    const funciones = Array.isArray(evento?.funciones) ? evento.funciones : [];
+    const matchFecha = funciones.some((fn) => inRange(fn?.fechaInicio));
 
-
-
-    // fecha
-    const matchFecha =
-      (!fecha[0] && !fecha[1]) || // Si no hay fechas seleccionadas, no aplicar el filtro
-      (evento.fecha &&
-        new Date(evento.fecha) >= new Date(fecha[0]) &&
-        new Date(evento.fecha) <= new Date(fecha[1])) // Si hay fechas seleccionadas, aplicamos el filtro
-
-
-    return matchSearch && matchUbicacion && matchCategoria && matchPrecio && matchFecha
-  })
+    return matchActivo && matchSearch && matchUbicacion && matchCategoria && matchFecha;
+  });
 
   return (
     <>
       <PrimImage />
-      <div className='my-4 mx-auto w-75 d-flex justify-content-around flex-wrap gap-3'>
+      <div className="my-4 mx-auto w-75 d-flex justify-content-around flex-wrap gap-3">
         {eventosFiltrados.length > 0 ? (
-          eventosFiltrados.map(evento => (
+          eventosFiltrados.map((evento) => (
             <Card
               key={evento.idEvento}
               id={evento.idEvento}
               ubicacion={evento.direccion}
               titulo={evento.nombre}
-              fecha={evento.funciones[0]?.fechaInicio || 'Sin fecha definida'} //Del back viene con fecha ordenada
+              fecha={evento.funciones?.[0]?.fechaInicio || 'Sin fecha definida'}
               ulrimagen={evento.urlImagen || 'Sin imagen disponible'}
             />
           ))
         ) : (
-          <p className='text-center mt-5'>No hay eventos disponibles.</p>
+          <p className="text-center mt-5">No hay eventos disponibles.</p>
         )}
       </div>
     </>
-  )
-}
+  );
+};

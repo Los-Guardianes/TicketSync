@@ -28,6 +28,7 @@ public class EventoDTO {
     private String direccion;
     private TipoMoneda moneda;
     private Integer maxComprasTickets;
+    private Boolean activo;
     private Integer idUsuario; //organizador
 
     private List<FuncionDTO> funciones;
@@ -49,6 +50,7 @@ public class EventoDTO {
         this.direccion = evento.getDireccion();
         this.moneda = evento.getMoneda();
         this.maxComprasTickets = evento.getMaxComprasTickets();
+        this.activo = evento.getActivo();
         this.idUsuario = evento.getOrganizador().getIdUsuario();
         this.ciudadDTO = new CiudadDTO(evento.getCiudad());
         this.categoriaDTO = new CategoriaEventoDTO(evento.getCategoria());
@@ -65,6 +67,7 @@ public class EventoDTO {
         this.direccion = evento.getDireccion();
         this.moneda = evento.getMoneda();
         this.maxComprasTickets = evento.getMaxComprasTickets();
+        this.activo = evento.getActivo();
         this.idUsuario = evento.getOrganizador().getIdUsuario();
         this.ciudadDTO = new CiudadDTO(evento.getCiudad());
         this.categoriaDTO = new CategoriaEventoDTO(evento.getCategoria());

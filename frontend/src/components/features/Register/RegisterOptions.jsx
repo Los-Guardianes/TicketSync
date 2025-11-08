@@ -5,7 +5,7 @@ export const RegisterOptions = () => {
   const navigate = useNavigate();
 
 
-  const bgUrl = "src/assets/wallhaven-4gjdrd.jpg"; 
+  const bgUrl = "src/assets/wallhaven-4gjdrd.jpg";
 
   return (
     <div
@@ -50,7 +50,7 @@ export const RegisterOptions = () => {
         <div className="d-grid gap-3 mt-3">
           <button
             type="button"
-            className="btn btn-dark py-2"
+            className="btn btn-secondary btn-lg mt-3"
             onClick={() => navigate("/register-client")}
             aria-label="Registrarse como cliente"
           >
@@ -59,12 +59,21 @@ export const RegisterOptions = () => {
 
           <button
             type="button"
-            className="btn btn-dark py-2"
+            className="btn btn-secondary btn-lg mt-3"
             onClick={() => navigate("/register-organizer")}
             aria-label="Registrarse como organizador"
           >
             Registrarse como organizador
           </button>
+
+          <button
+            type="button"
+            className="btn btn-secondary btn-lg mt-3"
+            onClick={() => navigate('/home')}  
+          >
+            Volver al inicio
+          </button>
+
         </div>
       </div>
     </div>

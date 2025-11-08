@@ -5,35 +5,34 @@ import { loginService } from '../service/loginService'; // Única importación d
 export const Login = () => {
     const navigate = useNavigate();
 
-    // El hook ahora provee toda la lógica necesaria
+    // Lógica del servicio
     const {
         formData,
         errors,
         isLoading,
         message,
         handleInputChange,
-        handleLoginSubmit // La función que maneja la validación y el fetch
+        handleLoginSubmit
     } = loginService();
 
-    // El manejador del formulario en el componente se vuelve muy simple
+    const handleBackHome = () => {
+        navigate('/home'); // si tu ruta de inicio es '/', cambia a navigate('/')
+    };
+
+    // Submit del formulario
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
-        // Llama a la función del hook que hace todo el trabajo
         const loginSuccess = await handleLoginSubmit();
-
-        // Si el hook indica que el login fue exitoso, entonces navegamos
         if (loginSuccess) {
-            // Se valida si es organizador, cliente o administrador
-            console.log(loginSuccess);
-            if(loginSuccess.rol === 'ADMINISTRADOR'){
+            if (loginSuccess.rol === 'ADMINISTRADOR') {
                 navigate('/home-admin');
-            }else navigate('/');
+            } else {
+                navigate('/');
+            }
         }
     };
 
     const handleGoogleLogin = () => {
-        // Lógica de Google sin cambios...
         setTimeout(() => {
             navigate('/verification');
         }, 1000);
@@ -46,7 +45,7 @@ export const Login = () => {
                     <img className='login-logo' src="/tuticket_logo.png" alt="TuTicket Logo" />
                     <h2>Iniciar sesión</h2>
 
-                    {/* El onSubmit ahora llama a nuestra nueva función simple */}
+                    {/* Formulario */}
                     <form className="login-inputs" onSubmit={handleFormSubmit}>
                         <input
                             className={`input-form ${errors.email ? 'error' : ''}`}
@@ -101,6 +100,16 @@ export const Login = () => {
                         <img src="/icon_google.svg" alt="Google Logo" style={{ width: '20px', marginRight: '8px' }} />
                         O inicia sesión con Google
                     </button>
+
+                    <button
+                        type="button"
+                        className="btn btn-secondary btn-lg mt-3"
+                        onClick={() => navigate('/home')}  
+                    >
+                        Volver al inicio
+                    </button>
+
+
                 </div>
             </div>
         </>

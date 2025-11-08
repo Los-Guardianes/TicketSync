@@ -4,6 +4,8 @@ import { useEventCreation } from "../../../../context/EventCreationContext";
 import "./CreateTicket.css";
 import { postEventoCompleto } from '../../../../globalServices/EventoService';
 import { X, Plus, Trash2 } from 'lucide-react';
+import { postSubirImagen } from "../../../../globalServices/S3Service"; // Importas el servicio de S3
+
 
 // COMPONENTE 
 
@@ -32,7 +34,7 @@ const Modal = ({ isOpen, onClose, children, title }) => {
 // COMPONENTE CENTRAL
 export const CreateTicket = () => {
     const navigate = useNavigate();
-
+    const [isLoading, setIsLoading] = useState(false); // añadido para vincular la imagen.
     const { eventData, updateEventData } = useEventCreation();
 
     // Estados locales para los carruseles
@@ -362,7 +364,8 @@ export const CreateTicket = () => {
     // === FUNCIÓN DE ENVÍO FINAL ===
     const handleFinalSubmit = async () => {
         console.log("Enviando datos finales al backend:", eventData);
-
+        setIsLoading(true);
+        let finalImageUrl = null; //La URL de S3 de la imagen que se guardará en la BD
         // Validaciones básicas
         if (!eventData.nombre || !eventData.idCategoria || !eventData.idCiudad) {
             alert("Por favor, completa la información básica del evento");
@@ -383,42 +386,64 @@ export const CreateTicket = () => {
             alert("Debes crear al menos una tarifa");
             return;
         }
+        try{
+            // --- PASO 1: SUBIR IMAGEN (Lógica de SubirImagen.jsx) ---
+        
+            // Verificamos si el usuario seleccionó un archivo
+            if (eventData.imagenFile) {
+                
+                // 1.1. Creas el FormData
+                const formData = new FormData();
+                formData.append('file', eventData.imagenFile); // Usas el archivo del contexto
 
-        const payload = {
-            nombre: eventData.nombre,
-            descripcion: eventData.descripcion,
-            informAdic: eventData.informAdic,
-            restricciones: eventData.restricciones,
-            direccion: eventData.direccion,
-            moneda: eventData.moneda || "SOL",
-            maxComprasTicket: eventData.maxComprasTicket || 4,
-            idCiudad: eventData.idCiudad,
-            idCategoria: eventData.idCategoria,
-            idUsuario: eventData.idUsuario || 21,
-            urlImagen: eventData.imagenFile ? "placeholder-image.jpg" : "https://via.placeholder.com/836x522.png?text=Imagen+Evento",
-            urlMapa: eventData.mapaFile ? "placeholder-map.jpg" : "https://via.placeholder.com/836x522.png?text=Mapa+Referencia",
-            funciones: (eventData.funciones || []).map(f => ({
-                ...f,
-                horaInicio: f.horaInicio ? `${f.horaInicio}:00` : "00:00:00",
-                horaFin: f.horaFin ? `${f.horaFin}:00` : "00:00:00",
-            })),
-            temporadas: eventData.temporadas || [],
-            zonas: eventData.zonas || [],
-            tiposDeEntrada: eventData.tiposDeEntrada || [],
-            tarifas: eventData.tarifas || []
-        };
+                // 1.2. Llamas a tu servicio S3
+                const s3Response = await postSubirImagen(formData);
+                
+                // 1.3. Guardas la URL devuelta por el backend
+                finalImageUrl = s3Response.url;
+            }
+            const payload = {
+                nombre: eventData.nombre,
+                descripcion: eventData.descripcion,
+                informAdic: eventData.informAdic,
+                restricciones: eventData.restricciones,
+                direccion: eventData.direccion,
+                moneda: eventData.moneda || "SOL",
+                maxComprasTicket: eventData.maxComprasTicket || 4,
+                idCiudad: eventData.idCiudad,
+                idCategoria: eventData.idCategoria,
+                idUsuario: eventData.idUsuario || 21,
+                urlImagen: finalImageUrl || "https://via.placeholder.com/836x522.png?text=Imagen+Evento",
+                urlMapa: eventData.mapaFile ? "placeholder-map.jpg" : "https://via.placeholder.com/836x522.png?text=Mapa+Referencia",
+                funciones: (eventData.funciones || []).map(f => ({
+                    ...f,
+                    horaInicio: f.horaInicio ? `${f.horaInicio}:00` : "00:00:00",
+                    horaFin: f.horaFin ? `${f.horaFin}:00` : "00:00:00",
+                })),
+                temporadas: eventData.temporadas || [],
+                zonas: eventData.zonas || [],
+                tiposDeEntrada: eventData.tiposDeEntrada || [],
+                tarifas: eventData.tarifas || []
+            };
 
-        console.log("Payload final:", JSON.stringify(payload, null, 2));
+            console.log("Payload final:", JSON.stringify(payload, null, 2));
 
-        try {
-            const eventoCreado = await postEventoCompleto(payload);
-            alert('¡Evento creado con éxito!');
-            console.log('Respuesta del servidor:', eventoCreado);
-            navigate('/home');
-        } catch (error) {
-            console.error("Error al crear el evento:", error);
-            alert(`Hubo un problema al crear el evento: ${error.message}`);
+            try {
+                const eventoCreado = await postEventoCompleto(payload);
+                alert('¡Evento creado con éxito!');
+                console.log('Respuesta del servidor:', eventoCreado);
+                navigate('/home');
+            } catch (error) {
+                console.error("Error al crear el evento:", error);
+                alert(`Hubo un problema al crear el evento: ${error.message}`);
+            }
+        }catch (error) {
+            setIsLoading(false);
+            console.error("Error en el proceso de guardado:", error);
+            //Aquí se debería mostrar un mejor mensaje al usuario
+            //La imagen puede quedar huérfana, mejorar esta lógica.
         }
+        
     };
 
     // Guarda de renderizado
