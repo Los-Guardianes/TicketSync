@@ -31,7 +31,7 @@ public class FilterChainConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             //Para la página de registro y loginh
             "/api/login",
-             "/api/cliente",
+            "/api/cliente",
             "/api/register",
             "/api/organizador",
             "/api/organizador/reporte/excel", //Cambiar luego si es publico o no
@@ -45,7 +45,11 @@ public class FilterChainConfig {
             "/api/funcion/**",
             "/api/orden/**",
             "/api/ticket/**",
-            "/api/descuento/**"
+            "/api/descuento/**",
+            "/api/usuario/**",
+            "/api/cliente/**",
+            "/api/organizador/**",
+            "/api/admin/**"
     };
 
     @Bean
