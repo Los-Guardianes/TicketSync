@@ -57,3 +57,4 @@
 Thumbs.db
 .env
 backend/logs/tuticket.log
+*.gz
