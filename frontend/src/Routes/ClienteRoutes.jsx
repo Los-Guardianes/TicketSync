@@ -21,8 +21,11 @@ import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEv
 
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+import CreateTickets1 from "../components/features/CreateEvent/pages/temp";
+import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
+import { ConfigUsers } from "../components/features/AdminHome/pages/ConfigUsers";
 
 
 export const ClienteRoutes = () => {
@@ -44,6 +47,8 @@ export const ClienteRoutes = () => {
         <Route path="create-event" element={<CreateEvent />} />
         <Route path="ubicacion-evento" element={<UbicacionEvento />} />
         <Route path="create-ticket" element={<CreateTicket />} />
+        <Route path="temp" element={<CreateTickets1 />} />
+        <Route path="temp2" element={<CreateTicket2 />} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
         <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<TicketPay />} />
@@ -51,7 +56,7 @@ export const ClienteRoutes = () => {
         <Route path="mistickets" element={<MisTickets />} />
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
-
+        <Route path="configusers" element={<ConfigUsers />} />
         <Route
           path="organizer/evento/:idEvento/descuentos/nuevo"
           element={<CreateDiscount />}
