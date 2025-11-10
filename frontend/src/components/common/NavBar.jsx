@@ -1,22 +1,25 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export const NavBar = ({
   search, setSearch,
-  precio, setPrecio,
   ubicacion, setUbicacion,
-  fecha, setFecha,
-  ubicacionesDisponibles
+  fechaInicio, setFechaInicio,
+  fechaFin, setFechaFin,
+  categoria, setCategoria,
+  ubicacionesDisponibles,
+  categoriasDisponibles
 }) => {
   const { user, logout } = useAuth();
-  // Detecta rol de organizador con tolerancia a distintas formas de guardarlo
-  const esOrganizador = user && user.rol === 'ORGANIZADOR';
+  const esOrganizador = !!user && user.rol === 'ORGANIZADOR';
+
+  const handleSearchSubmit = (e) => e.preventDefault(); // evita submit con Enter
 
   return (
     <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
       {/* Logo */}
-      <NavLink to="/" className='navbar-brand'>
+      <NavLink to="/home" className='navbar-brand'>
         <img
           src="/tuticket_logo_name.png"
           alt="tuticketLogo"
@@ -25,38 +28,20 @@ export const NavBar = ({
       </NavLink>
 
       {/* Barra de búsqueda */}
-      <form className="d-flex mx-auto" style={{ width: "40%" }}>
+      <form className="d-flex mx-auto" style={{ width: "40%" }} onSubmit={handleSearchSubmit} noValidate>
         <input
           className="form-control me-2"
           type="search"
           placeholder="Encuentra eventos..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
         />
       </form>
 
       {/* Filtros */}
       <ul className="navbar-nav ms-auto d-flex align-items-center">
-
-        {/* Precio */}
-        <li className="nav-item dropdown">
-          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
-            Precio
-          </NavLink>
-          <ul className="dropdown-menu p-3">
-            <label>Precio hasta: S/ {precio}</label>
-            <input
-              type="range"
-              min="0"
-              max="1000"
-              value={precio}
-              onChange={(e) => setPrecio(Number(e.target.value))}
-              className="form-range"
-            />
-          </ul>
-        </li>
-
-        {/* Ubicación dinámica */}
+        {/* Ubicación */}
         <li className="nav-item dropdown">
           <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
             Ubicación
@@ -68,56 +53,86 @@ export const NavBar = ({
               onChange={(e) => setUbicacion(e.target.value)}
             >
               <option value="Todas">Todas</option>
-              {ubicacionesDisponibles.map(ubi => (
+              {ubicacionesDisponibles?.map(ubi => (
                 <option key={ubi.idDpto} value={ubi.nombre}>{ubi.nombre}</option>
               ))}
             </select>
           </ul>
         </li>
 
+        {/* Categoría */}
+        <li className="nav-item dropdown ms-2">
+          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+            Categoría
+          </NavLink>
+          <ul className="dropdown-menu p-3">
+            <select
+              className="form-select"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              {categoriasDisponibles?.map(cat => (
+                <option key={String(cat)} value={String(cat)}>
+                  {String(cat)}
+                </option>
+              ))}
+            </select>
+          </ul>
+        </li>
+
         {/* Fecha */}
-        <li className="nav-item dropdown">
+        <li className="nav-item dropdown ms-2">
           <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
             Fecha
           </NavLink>
-          <ul className="dropdown-menu p-3">
+          <ul className="dropdown-menu p-3" style={{ minWidth: 260 }}>
+            <label className="form-label small">Desde</label>
+            <input
+              type="date"
+              className="form-control mb-2"
+              value={fechaInicio}
+              onChange={(e) => setFechaInicio(e.target.value)}
+            />
+            <label className="form-label small">Hasta</label>
             <input
               type="date"
               className="form-control"
-              value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
+              value={fechaFin}
+              onChange={(e) => setFechaFin(e.target.value)}
             />
           </ul>
         </li>
-         {/*BOTÓN CONDICIONAL PARA ORGANIZADOR*/}
-                {user && user.rol === 'ORGANIZADOR' && (
-                    <li className='nav-item'>
-                        <NavLink className={'nav-link btn btn-warning'} to={"/create-event"}>
-                            Crear Evento
-                        </NavLink>
-                    </li>
-                )}
+
+        {/* Botón condicional para organizador */}
+        {esOrganizador && (
+          <li className='nav-item ms-2'>
+            <NavLink className='nav-link btn btn-warning' to="/create-event">
+              Crear Evento
+            </NavLink>
+          </li>
+        )}
+
         {/* Botones de usuario */}
         {!user ? (
           <>
-            <li className='nav-item'>
-              <NavLink className='nav-link btn btn-light' to={"/register"}>Registrarse</NavLink>
+            <li className='nav-item ms-2'>
+              <NavLink className='nav-link btn btn-light' to="/register">Registrarse</NavLink>
             </li>
             <li className='nav-item ms-2'>
-              <NavLink className='nav-link btn btn-success' to={"/login"}>Login</NavLink>
+              <NavLink className='nav-link btn btn-success' to="/login">Login</NavLink>
             </li>
           </>
         ) : (
           <>
-              <li className='nav-item'>
-                <NavLink
-                  className="nav-link"
-                  to={esOrganizador ? "/organizer/mis-eventos" : "/mistickets"}
-                >
-                  {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
-                </NavLink>
-              </li>
-
+            <li className='nav-item'>
+              <NavLink
+                className="nav-link"
+                to={esOrganizador ? "/organizer/mis-eventos" : "/MisTickets"}
+              >
+                {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
+              </NavLink>
+            </li>
             <li className='nav-item'>
               <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
             </li>
@@ -130,5 +145,5 @@ export const NavBar = ({
         )}
       </ul>
     </nav>
-  )
-}
+  );
+};

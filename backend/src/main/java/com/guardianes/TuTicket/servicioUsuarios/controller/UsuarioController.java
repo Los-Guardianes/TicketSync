@@ -1,15 +1,20 @@
 package com.guardianes.TuTicket.servicioUsuarios.controller;
 
+import com.guardianes.TuTicket.servicioAutenticacion.GoogleDTO.GoogleAuthRequest;
 import com.guardianes.TuTicket.servicioAutenticacion.service.AuthService;
+import com.guardianes.TuTicket.servicioAutenticacion.service.GoogleAuthService;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.UsuarioBearerDTO;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.in.LoginDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -18,6 +23,7 @@ public class UsuarioController {
 
     private final UsuarioService service;
     private final AuthService auth;
+    private final GoogleAuthService googleAuthService;
 
     @PostMapping("/usuario")
     public ResponseEntity<?> addUsuario(@RequestBody Usuario usuario) {
@@ -71,7 +77,30 @@ public class UsuarioController {
         try{
             return ResponseEntity.ok(auth.verify(loginDTO));
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Map.of("message", "Email o contraseña incorrectos"), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    //Para google
+    @PostMapping("/auth/google")
+    public ResponseEntity<?> googleLogin(@RequestBody GoogleAuthRequest request) {
+        try {
+            // Llama a tu nuevo servicio de Google
+            UsuarioBearerDTO dto = googleAuthService.processGoogleToken(request.idToken());
+            return ResponseEntity.ok(dto); // 200 OK
+
+        } catch (UsernameNotFoundException e) {
+            // Atrapa el error 404 si el usuario no existe
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "No se encontró una cuenta con este email. Por favor, regístrese primero."));
+
+        } catch (Exception e) {
+            // Atrapa otros errores (ej. token de Google inválido)
+            System.err.println("Error en Google Auth: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Error en la autenticación con Google."));
         }
     }
 }

@@ -1,21 +1,16 @@
 package com.guardianes.TuTicket.servicioEventos.service;
-import com.guardianes.TuTicket.servicioEventos.DTO.TarifaDTO;
 import com.guardianes.TuTicket.servicioEventos.DTO.in.EventoCompletoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.*;
 import com.guardianes.TuTicket.servicioEventos.repo.*;
-import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import com.guardianes.TuTicket.servicioUbicacion.repo.CiudadRepo;
 import com.guardianes.TuTicket.servicioUsuarios.model.Organizador;
 import com.guardianes.TuTicket.servicioUsuarios.repo.OrganizadorRepo;
-import com.guardianes.TuTicket.servicioEventos.model.TipoDescuento;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;

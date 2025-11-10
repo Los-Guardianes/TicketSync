@@ -20,3 +20,4 @@ Cypress.Commands.add("loginAPI", (email, password) => {
     return resp;
   });
 });
+

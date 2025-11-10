@@ -1,6 +1,5 @@
 package com.guardianes.TuTicket.servicioEventos.DTO.in;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.*;
 import com.guardianes.TuTicket.servicioEventos.model.CategoriaEvento;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.TipoMoneda;

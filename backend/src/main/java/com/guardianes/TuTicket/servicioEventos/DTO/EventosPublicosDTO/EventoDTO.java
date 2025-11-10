@@ -1,16 +1,14 @@
-package com.guardianes.TuTicket.servicioEventos.DTO;
+package com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioEventos.model.TipoMoneda;
 import com.guardianes.TuTicket.servicioUbicacion.DTO.CiudadDTO;
-import com.guardianes.TuTicket.servicioUsuarios.DTO.OrganizadorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +26,7 @@ public class EventoDTO {
     private String direccion;
     private TipoMoneda moneda;
     private Integer maxComprasTickets;
+    private Boolean activo;
     private Integer idUsuario; //organizador
 
     private List<FuncionDTO> funciones;
@@ -49,6 +48,7 @@ public class EventoDTO {
         this.direccion = evento.getDireccion();
         this.moneda = evento.getMoneda();
         this.maxComprasTickets = evento.getMaxComprasTickets();
+        this.activo = evento.getActivo();
         this.idUsuario = evento.getOrganizador().getIdUsuario();
         this.ciudadDTO = new CiudadDTO(evento.getCiudad());
         this.categoriaDTO = new CategoriaEventoDTO(evento.getCategoria());
@@ -65,6 +65,7 @@ public class EventoDTO {
         this.direccion = evento.getDireccion();
         this.moneda = evento.getMoneda();
         this.maxComprasTickets = evento.getMaxComprasTickets();
+        this.activo = evento.getActivo();
         this.idUsuario = evento.getOrganizador().getIdUsuario();
         this.ciudadDTO = new CiudadDTO(evento.getCiudad());
         this.categoriaDTO = new CategoriaEventoDTO(evento.getCategoria());

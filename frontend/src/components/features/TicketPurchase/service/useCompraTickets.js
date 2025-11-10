@@ -1,41 +1,12 @@
 import { useEffect, useState } from "react";
-import { getDescuentoByCodigo } from "../../../../globalServices/DescuentoService";
 
-export const useCompraTickets = (periodo, idevento) => {
+export const useCompraTickets = (periodo, descuentoCodigo, tarifas) => {
     const [listaDetalles, setListaDetalles] = useState([]); // {tarifa, cantidad, precioDetalle}
 
     const [totalBruto, setTotalBruto] = useState(0);
     const [montoDescuentoPeriodo, setMontoDescuentoPeriodo] = useState(0);
-    const [montoDescuentoCodigo, setMontoDescuentoCodigo] = useState(0);
-    const [descuentoCodigo, setDescuentoCodigo] = useState(null);
+    const [montoDescuentoCodigo, setMontoDescuentoCodigo] = useState(0);    
     const [total, setTotal] = useState(0);
-
-    const buscarDetallePorTarifa = (idTarifa) => {
-        return listaDetalles.find(
-            detalle => 
-            detalle.tarifa.idTarifa === idTarifa
-        );
-    }
-
-    const getDescuentoId = () => {
-        if (!descuentoCodigo)return null;
-        return descuentoCodigo.idDescuento
-    }
-
-    const addDetalle = (tarifa) => {
-        const detalle = buscarDetallePorTarifa(tarifa.idTarifa);
-        if (detalle) {
-            updateCantidad(tarifa.idTarifa, detalle.cantidad + 1);
-            return;
-        }
-        const nuevoDetalle = {
-            tarifa: tarifa,
-            cantidad: 1,
-            precioDetalle: tarifa.precioBase,
-        };
-        const nuevaLista = [...listaDetalles, nuevoDetalle];
-        setListaDetalles(nuevaLista);
-    }
 
     const updateCantidad = (idTarifa, nuevaCantidad) => {        
         const detalle = buscarDetallePorTarifa(idTarifa);
@@ -54,22 +25,19 @@ export const useCompraTickets = (periodo, idevento) => {
         setListaDetalles(nuevaLista);
     };
 
-    const removeDetalle = (idTarifa) => {        
-        const detalleAEliminar = buscarDetallePorTarifa(idTarifa);
-        if (!detalleAEliminar) return; // No existe        
-        const nuevaLista = listaDetalles.filter(
-            det => det.tarifa.idTarifa !== idTarifa
-        );        
-        setListaDetalles(nuevaLista);
-    };
-
-    const verificarDescuentoCodigo = async(codigo) => {
-        const descuento = await getDescuentoByCodigo(codigo);
-        console.log(descuento)
-        if(!descuento && descuento.idEvento != idevento)return null; //cambiar si es que después es un DTO        
-        setDescuentoCodigo(descuento);
-        return descuento;
-    }
+    useEffect(()=>{
+        console.log(tarifas)
+        if(tarifas && tarifas.length > 0){
+            
+            const detallesIniciales = tarifas.map(t => ({
+                tarifa: {...t}, //copiar toda la tarifa para evitar asignar el mismo puntero!!!!
+                cantidad: 0,
+                precioDetalle: 0
+            }))
+            console.log(detallesIniciales)
+            setListaDetalles(detallesIniciales)
+        }
+    },[tarifas])
 
     useEffect(() => {
         if(!periodo)return;
@@ -81,8 +49,54 @@ export const useCompraTickets = (periodo, idevento) => {
         setMontoDescuentoPeriodo(nuevoMontoDescuentoPeriodo)
         setMontoDescuentoCodigo(nuevoMontoDescuentoCodigo)
         setTotalBruto(nuevoTotalBruto);
-        setTotal(nuevoTotalBruto - nuevoMontoDescuentoPeriodo - nuevoMontoDescuentoCodigo);
+        setTotal(nuevoTotalBruto - nuevoMontoDescuentoPeriodo - nuevoMontoDescuentoCodigo);        
     }, [listaDetalles, descuentoCodigo]);
+
+    const buscarDetallePorTarifa = (idTarifa) => {
+        return listaDetalles.find(
+            detalle => 
+            detalle.tarifa.idTarifa === idTarifa
+        );
+    }
+    /*
+    const handleAddDetalle = (setNotification) => {
+        if (!selectedZona || !selectedTipoEntrada || !selectedFuncion) {
+            setNotification({
+                message: "Selecciona una zona, un tipo de entrada y una función antes de agregar.",
+                type: "warning",
+            });
+            return;
+        }
+        const selectedTarifa = obtenerTarifa(tarifas)
+        if (!selectedTarifa) {
+            setNotification({
+                message: "No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.",
+                type: "error",
+            });
+            return;
+        }
+        addDetalle(selectedTarifa);         
+    };
+    */
+
+    /*
+    const addDetalle = (tarifa) => {
+        
+        const detalle = buscarDetallePorTarifa(tarifa.idTarifa);
+        if (detalle) {
+            updateCantidad(tarifa.idTarifa, detalle.cantidad + 1);
+            return;
+        }
+        const nuevoDetalle = {
+            tarifa: tarifa,
+            cantidad: 1,
+            precioDetalle: tarifa.precioBase,
+        };
+        const nuevaLista = [...listaDetalles, nuevoDetalle];
+        setListaDetalles(nuevaLista);
+    }
+    */
+
 
     return {
         listaDetalles,
@@ -90,10 +104,6 @@ export const useCompraTickets = (periodo, idevento) => {
         montoDescuentoPeriodo,        
         montoDescuentoCodigo,    
         total,
-        addDetalle,
         updateCantidad,
-        removeDetalle,
-        verificarDescuentoCodigo,
-        getDescuentoId
     }
 }

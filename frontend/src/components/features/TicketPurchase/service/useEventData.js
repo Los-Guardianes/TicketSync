@@ -6,7 +6,7 @@ import { Tarifa } from '../models/Tarifa';
 import { Zona } from '../models/Zona';
 import { TipoEntrada } from '../models/TipoEntrada';
 
-export const useTicketSelection = (idevento) => {
+export const useEventData = (idevento) => {
 
     const [periodoActual, setPeriodoActual] = useState(null);
     const [periodos, setPeriodos] = useState([]);
@@ -15,6 +15,8 @@ export const useTicketSelection = (idevento) => {
     const [tarifas, setTarifas] = useState([]);
     const [tipoEntradas, setTipoEntradas] = useState([]);
     const [zonas, setZonas] = useState([]);
+
+
 
     // Calcula periodoActual cada vez que cambian periodos
     useEffect(() => {
@@ -25,6 +27,16 @@ export const useTicketSelection = (idevento) => {
             setPeriodoActual(null);
         }
     }, [periodos]);
+
+    useEffect(()=>{
+        //Se cargan todos los datos necesarios
+        fetchEvento();
+        fetchPeriodo();
+        fetchFunciones();
+        fetchTarifas();
+        fetchZonas();
+        fetchTipoEntradas();  
+    },[idevento])
 
     const getPeriodoActual = (listaPeriodos) => {
         if (!listaPeriodos || listaPeriodos.length === 0) return null;
@@ -42,7 +54,7 @@ export const useTicketSelection = (idevento) => {
     };
 
     const fetchPeriodo = async () => {
-        const data = await apiFetch(`/api/periodo/evento/${idevento}`);
+        const data = await apiFetch(`/api/periodo/evento/${idevento}`);        
         setPeriodos(data || []);
     };
 
@@ -54,6 +66,7 @@ export const useTicketSelection = (idevento) => {
 
     const fetchFunciones = async () => {
         const data = await apiFetch(`/api/funcion/evento/${idevento}`);
+        console.log("Funciones: ", data)
         setFunciones(data || []);
     }
 
@@ -65,9 +78,10 @@ export const useTicketSelection = (idevento) => {
 
     const fetchTipoEntradas = async () => {
         const data = await apiFetch(`/api/tipoentrada/evento/${idevento}`);
-        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));
+        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));        
         setTipoEntradas(tiposParseadas);
     }
+    
 
     return {
         zonas,
@@ -76,12 +90,6 @@ export const useTicketSelection = (idevento) => {
         funciones,
         tipoEntradas,
         tarifas,
-        periodoActual,
-        fetchZonas,
-        fetchTipoEntradas,
-        fetchPeriodo,
-        fetchEvento,
-        fetchFunciones,
-        fetchTarifas
+        periodoActual,        
     };
 }
