@@ -166,8 +166,6 @@ export const MisTickets = () => {
   const pastPag = usePagination(past, PAGE_SIZE, showAllPast);
 
   const goToEventDetail = (idEvento) => {
-    // ⚠️ Ajusta esta ruta a la de tu app de detalle de evento
-    // Ejemplos típicos: `/evento/${idEvento}` o `/events/${idEvento}`
     navigate(`/evento/${idEvento}`);
   };
 
