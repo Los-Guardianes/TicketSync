@@ -1,9 +1,11 @@
 package com.guardianes.TuTicket.config;
 
 import com.guardianes.TuTicket.servicioAutenticacion.filtros.JWTFilter;
+import com.guardianes.TuTicket.servicioUsuarios.model.Rol;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -35,23 +37,29 @@ public class FilterChainConfig {
             "/api/auth/google",
             "/api/cliente",
             "/api/register",
-            "/api/organizador",
-            "/api/organizador/reporte/excel", // Cambiar luego si es público o no
 
             // Catálogos y consultas públicas
             "/api/evento/**",
             "/api/zona/**",
             "/api/ciudad/**",
             "/api/dpto/**",
-            "/api/comp/**",
-            "/api/miticket/**",
             "/api/temporada/**",
             "/api/funcion/**",
+            "/api/catevento/**",
+            "/api/tarifa/**",
+            "/api/tipoentrada/**",
+            "/api/periodo/**"
+
+            /* En caso error inesperado, descomentar esta línea
+            "/api/cliente/**",
+            "/api/organizador",
+            "/api/organizador/reporte/excel", // Cambiar luego si es público o no
+            "/api/miticket/**", //descargar ticket
             "/api/orden/**",
             "/api/ticket/**",
             "/api/descuento/**",
-            "/api/catevento/**",
             "/api/subirImagens3/**"
+             */
     };
 
     @Bean
@@ -61,7 +69,25 @@ public class FilterChainConfig {
             .cors(withDefaults())
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                    .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/register/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR")
+                    .requestMatchers("/api/cliente/**").hasAnyRole("ADMINISTRADOR", "ORGANIZADOR")
+                    .requestMatchers(HttpMethod.GET,"/api/organizador/**").hasAnyRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.GET,"/api/comp/**").authenticated()
+                    .requestMatchers(HttpMethod.GET,"/api/miticket/**").authenticated()
+                    .requestMatchers("/api/orden/**").authenticated()
+                    .requestMatchers(HttpMethod.GET ,"/api/ticket/**").authenticated()
+                    .requestMatchers("/api/descuento/**").authenticated()
+                    .requestMatchers("/api/subirImagens3/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/evento/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/zona/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/ciudad/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/dpto/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/funcion/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/catevento/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers("/api/**").hasRole(Rol.ADMINISTRADOR.name())
                     .anyRequest().authenticated()
             )
             .httpBasic(withDefaults())

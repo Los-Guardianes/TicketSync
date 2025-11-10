@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.DescuentoOutDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.DescuentoOutDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Descuento;
 import com.guardianes.TuTicket.servicioEventos.repo.DescuentoRepo;
 import com.guardianes.TuTicket.servicioExepciones.RecursoNoEncontradoException;

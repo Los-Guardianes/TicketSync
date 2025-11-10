@@ -29,23 +29,25 @@ public class JWTFilter extends OncePerRequestFilter {
 
     // Prefijos públicos (rutas que no deberían pedir token / no deben botar 401)
     private static final List<String> PUBLIC_PREFIXES = List.of(
-            "/api/login",
-            "/api/auth/google",
-            "/api/cliente",
-            "/api/register",
-            "/api/organizador",
-            "/api/organizador/reporte/excel",
-            "/api/evento",
-            "/api/zona",
-            "/api/ciudad",
-            "/api/dpto",
-            "/api/comp",
-            "/api/miticket",
-            "/api/temporada",
-            "/api/funcion",
-            "/api/orden",
-            "/api/ticket",
-            "/api/descuento" // <- IMPORTANTE para /api/descuento/evento/{id}/activos
+    /*
+     * "/api/login",
+     * "/api/auth/google",
+     * "/api/cliente",
+     * "/api/register",
+     * "/api/organizador",
+     * "/api/organizador/reporte/excel",
+     * "/api/evento/",
+     * "/api/zona/",
+     * "/api/ciudad/",
+     * "/api/dpto/",
+     * "/api/comp/",
+     * "/api/miticket/",
+     * "/api/temporada/",
+     * "/api/funcion/",
+     * "/api/orden/",
+     * "/api/ticket/",
+     * "/api/descuento/" // <- IMPORTANTE para /api/descuento/evento/{id}/activos
+     */
     );
 
     private boolean isPublic(HttpServletRequest request) {
@@ -67,8 +69,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain
-    ) throws ServletException, IOException {
+            FilterChain chain) throws ServletException, IOException {
 
         // 🔎 LOGS DE DEPURACIÓN (PASO 1)
         String path = request.getServletPath();
@@ -103,18 +104,15 @@ public class JWTFilter extends OncePerRequestFilter {
                             .username(email)
                             .password("") // no importa
                             .authorities(Collections.singletonList(
-                                    new SimpleGrantedAuthority(rol.toUpperCase())
-                            ))
+                                    new SimpleGrantedAuthority(rol.toUpperCase())))
                             .build();
 
                     if (jwtService.validateToken(token)) {
                         System.out.println("[JWTFilter] token válido, seteando SecurityContext");
-                        UsernamePasswordAuthenticationToken authToken =
-                                new UsernamePasswordAuthenticationToken(
-                                        userDetails,
-                                        null,
-                                        userDetails.getAuthorities()
-                                );
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
@@ -122,13 +120,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
             } catch (ExpiredJwtException ex) {
                 System.out.println("[JWTFilter] token EXPIRADO");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"error\": \"Token expirado. Por favor, inicie sesión nuevamente.\"}");
                 return;
             } catch (JwtException ex) {
                 System.out.println("[JWTFilter] token INVÁLIDO");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"error\": \"Token inválido.\"}");
                 return;

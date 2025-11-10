@@ -1,6 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.TarifaDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.TarifaDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
 import com.guardianes.TuTicket.servicioEventos.model.TipoEntrada;
@@ -10,7 +10,6 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

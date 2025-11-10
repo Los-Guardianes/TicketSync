@@ -1,5 +1,3 @@
-"use client"
-
 import "./Notification.css"
 import { useState, useEffect } from "react"
 

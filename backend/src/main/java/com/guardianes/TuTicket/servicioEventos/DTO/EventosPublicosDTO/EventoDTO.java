@@ -1,16 +1,14 @@
-package com.guardianes.TuTicket.servicioEventos.DTO;
+package com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioEventos.model.TipoMoneda;
 import com.guardianes.TuTicket.servicioUbicacion.DTO.CiudadDTO;
-import com.guardianes.TuTicket.servicioUsuarios.DTO.OrganizadorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

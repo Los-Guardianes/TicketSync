@@ -7,6 +7,7 @@ import { AuthProvider } from './context/AuthContext'; //Importar el autenticador
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import App from './App.jsx'
 import './index.css'
+import { NotificationProvider } from './context/NotificationContext.jsx';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <GoogleOAuthProvider clientId={googleClientId}>
         <AuthProvider> {/*"Envuelve" la app */}
-          <App />
+          <NotificationProvider>
+            <App />
+          </NotificationProvider>
         </AuthProvider>
       </GoogleOAuthProvider>
     </BrowserRouter>
