@@ -67,10 +67,16 @@ public class FilterChainConfig {
         http
             .csrf(csrf -> csrf.disable())
             .cors(withDefaults())
+            .headers(headers ->
+                    headers.addHeaderWriter(new StaticHeadersWriter(
+                            "Cross-Origin-Opener-Policy", "same-origin-allow-popups"
+                    ))
+            )
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/google").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/register/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR")
                     .requestMatchers("/api/cliente/**").hasAnyRole("ADMINISTRADOR", "ORGANIZADOR")
@@ -90,7 +96,10 @@ public class FilterChainConfig {
                     .requestMatchers("/api/**").hasRole(Rol.ADMINISTRADOR.name())
                     .anyRequest().authenticated()
             )
-            .httpBasic(withDefaults())
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+//            .httpBasic(withDefaults())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
