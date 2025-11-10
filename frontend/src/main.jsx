@@ -6,12 +6,15 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'; //Importar el autenticador
 import App from './App.jsx'
 import './index.css'
+import { NotificationProvider } from './context/NotificationContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider> {/*"Envuelve" la app */}
-        <App />
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>        
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

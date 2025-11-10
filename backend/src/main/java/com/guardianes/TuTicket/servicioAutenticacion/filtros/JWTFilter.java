@@ -29,6 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     // Prefijos públicos (rutas que no deberían pedir token / no deben botar 401)
     private static final List<String> PUBLIC_PREFIXES = List.of(
+            /*
             "/api/login",
             "/api/cliente",
             "/api/register",
@@ -45,6 +46,8 @@ public class JWTFilter extends OncePerRequestFilter {
             "/api/orden/",
             "/api/ticket/",
             "/api/descuento/" // <- IMPORTANTE para /api/descuento/evento/{id}/activos
+
+             */
     );
 
     private boolean isPublic(HttpServletRequest request) {
@@ -121,13 +124,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
             } catch (ExpiredJwtException ex) {
                 System.out.println("[JWTFilter] token EXPIRADO");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"error\": \"Token expirado. Por favor, inicie sesión nuevamente.\"}");
                 return;
             } catch (JwtException ex) {
                 System.out.println("[JWTFilter] token INVÁLIDO");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"error\": \"Token inválido.\"}");
                 return;

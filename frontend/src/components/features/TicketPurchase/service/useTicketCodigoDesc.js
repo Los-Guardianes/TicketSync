@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { getDescuentoByCodigo } from "../../../../globalServices/DescuentoService"; 
+import {useNotification} from "../../../../context/NotificationContext"
 export const useTicketCodigoDesc = () => {
     
+    const { 
+        showNotification 
+    } = useNotification()
     const [descuentoCodigo, setDescuentoCodigo] = useState(null)
     const [formData, setFormData] = useState({
             discount: ''            
@@ -24,35 +28,35 @@ const handleDeleteDiscount = () => {
         setDescuentoCodigo(null);
     }
 
-    const handleAplicarCodigo = async (e, discount, setNotification) => {
+    const handleAplicarCodigo = async (e, discount) => {
         //por cambiar el setNotification    
         e.preventDefault();
         const codigo = discount       
         if (!codigo) {
-            setNotification({
-                message: "Por favor, ingresa un código de descuento.",
-                type: "warning",
-            });
+            showNotification(
+                "Por favor, ingresa un código de descuento.",
+                "warning"
+            )
             return;
         }
         try {
             const descuento =  await verificarDescuentoCodigo(codigo);            
             if (!descuento) {                            
-                setNotification({
-                    message: "Código de descuento inválido.",
-                    type: "error",
-                });
+                showNotification(
+                    "Código de descuento inválido.",
+                    "error"
+                );
             }else{
-                setNotification({
-                    message: "Código de descuento válido.",
-                    type: "success",
-                })
+                showNotification(
+                    "Código de descuento válido.",
+                    "success"
+                )
             }
         } catch (error) {            
-            setNotification({
-                message: "Error al verificar el código de descuento.",
-                type: "error",
-            });
+            showNotification(
+                "Error al verificar el código de descuento.",
+                "error"
+            );
         }
     };
 

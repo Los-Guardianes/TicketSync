@@ -1,7 +1,7 @@
 package com.guardianes.TuTicket.servicioEventos.controller;
 
 import com.guardianes.TuTicket.servicioEventos.model.Descuento;
-import com.guardianes.TuTicket.servicioEventos.DTO.DescuentoDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.DescuentoDTO;
 import com.guardianes.TuTicket.servicioEventos.service.DescuentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

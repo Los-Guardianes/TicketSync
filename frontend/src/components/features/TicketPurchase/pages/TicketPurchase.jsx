@@ -10,19 +10,17 @@ import { TableInfoEvent } from '../components/TableInfoEvent'
 import "./TicketPurchase.css"
 import { PurchaseTicket } from '../components/PurchaseTicket'
 import { ApplyDiscount } from '../components/ApplyDiscount'
+import { useNotification } from '../../../../context/NotificationContext'
 export const TicketPurchase = () => {
 
     const {id} = useParams();
 
 
-    /*Verificar el uso de estos 3 hooks dentro de toda la página*/
-    const [notification, setNotification] = useState(null)
-
     const [selectedFuncion, setSelectedFuncion] = useState(null)
 
-    const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
+    const { 
+        showNotification 
+    } = useNotification()
 
     const navigate = useNavigate();
     const {
@@ -68,35 +66,32 @@ export const TicketPurchase = () => {
 
     const handleContinueToPay = () => {
         //falta verificar que la listaDetalles no este vacia
-        if (listaDetalles.length === 0) {
-            setNotification({
-                message: "Agrega al menos un detalle de compra antes de continuar.",
-                type: "warning",
-            });
+        if(!selectedFuncion){
+            showNotification("Seleccione almenos una funcion", "error")
+            return
+        }
+        const cantCompras = listaDetalles.reduce((acc, det) => 
+            acc += det.cantidad,0
+        );
+        if (cantCompras == 0){            
+            showNotification("Seleccione almenos un ticket", "error")
             return;
-        }        
-        navigate("/ticket-pay", { state: {
+        }
+            navigate("/ticket-pay", { state: {
             listaDetalles: listaDetalles,
             idPeriodo: periodoActual.idPeriodo,
             totalBruto: totalBruto,
             descuentoAplicado: montoDescuentoPeriodo + montoDescuentoCodigo,
             total: total,
             funcion: selectedFuncion,
-            idDescuentoUtilizado: descuentoCodigo.idDescuento
-        }});
+            idDescuentoUtilizado: descuentoCodigo?.idDescuento ?? null //Es opcional el descuento
+
+        }});        
     }
     
     return (
         <main className="ticket-purchase-main">
             <div className="ticket-purchase-container">
-                {notification && (
-                    <Notification
-                    message={notification.message}
-                    type={notification.type}
-                    duration={3000}
-                    onClose={() => setNotification(null)}
-                    />
-                )}
                 <div className="ticket-purchase-grid">
                     {/* Main Content */}
                     <div className='ticket-purchase-content'>
@@ -155,7 +150,6 @@ export const TicketPurchase = () => {
                                 montoDescuentoCodigo={montoDescuentoCodigo}
                                 periodo={periodoActual}
                                 descuentoCodigo={descuentoCodigo}
-                                setNotification={setNotification}
                                 total={total}
                             >
                             </PurchaseTicket>                                  
