@@ -30,21 +30,22 @@ public class JWTFilter extends OncePerRequestFilter {
     // Prefijos públicos (rutas que no deberían pedir token / no deben botar 401)
     private static final List<String> PUBLIC_PREFIXES = List.of(
             "/api/login",
+            "/api/auth/google",
             "/api/cliente",
             "/api/register",
             "/api/organizador",
             "/api/organizador/reporte/excel",
-            "/api/evento/",
-            "/api/zona/",
-            "/api/ciudad/",
-            "/api/dpto/",
-            "/api/comp/",
-            "/api/miticket/",
-            "/api/temporada/",
-            "/api/funcion/",
-            "/api/orden/",
-            "/api/ticket/",
-            "/api/descuento/" // <- IMPORTANTE para /api/descuento/evento/{id}/activos
+            "/api/evento",
+            "/api/zona",
+            "/api/ciudad",
+            "/api/dpto",
+            "/api/comp",
+            "/api/miticket",
+            "/api/temporada",
+            "/api/funcion",
+            "/api/orden",
+            "/api/ticket",
+            "/api/descuento" // <- IMPORTANTE para /api/descuento/evento/{id}/activos
     );
 
     private boolean isPublic(HttpServletRequest request) {

@@ -1,6 +1,7 @@
 import "./Login.css";
 import { useNavigate } from 'react-router-dom';
 import { loginService } from '../service/loginService'; // Única importación de lógica
+import { GoogleLogin } from '@react-oauth/google';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -12,30 +13,45 @@ export const Login = () => {
         isLoading,
         message,
         handleInputChange,
-        handleLoginSubmit
+        handleLoginSubmit,
+        handleGoogleLogin,
     } = loginService();
 
-    const handleBackHome = () => {
-        navigate('/home'); // si tu ruta de inicio es '/', cambia a navigate('/')
+    // Función de ayuda para la navegación (REUTILIZABLE)
+    const handleNavigation = (rol) => {
+        if (rol === 'ADMINISTRADOR') {
+            navigate('/home-admin');
+        } else {
+            navigate('/');
+        }
     };
 
     // Submit del formulario
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const loginSuccess = await handleLoginSubmit();
+
         if (loginSuccess) {
-            if (loginSuccess.rol === 'ADMINISTRADOR') {
-                navigate('/home-admin');
-            } else {
-                navigate('/');
-            }
+            handleNavigation(loginSuccess.rol); // Usa la función de navegación
         }
     };
 
-    const handleGoogleLogin = () => {
-        setTimeout(() => {
-            navigate('/verification');
-        }, 1000);
+    // Para google
+    // Wrapper para el onSuccess de Google
+    const onGoogleSuccess = async (credentialResponse) => {
+        // Llama a la función del hook
+        const loginSuccess = await handleGoogleLogin(credentialResponse);
+
+        //  Reutiliza la misma lógica de navegación
+        if (loginSuccess) {
+            handleNavigation(loginSuccess.rol);
+        }
+    };
+
+    // Wrapper para el onError de Google
+    const onGoogleError = () => {
+        console.error("Login con Google fallido");
+        // 'loginService' ya muestra el mensaje de error en la UI
     };
 
     return (
@@ -92,19 +108,21 @@ export const Login = () => {
 
                     <a href="/register" className='btn btn-secondary btn-lg mt-3'>Registrate</a>
 
-                    <button
-                        className='btn btn-secondary btn-lg mt-3 justify-content-center d-flex align-items-center'
-                        onClick={handleGoogleLogin}
-                        disabled={isLoading}
-                    >
-                        <img src="/icon_google.svg" alt="Google Logo" style={{ width: '20px', marginRight: '8px' }} />
-                        O inicia sesión con Google
-                    </button>
+                    {/* botón de Google por el componente */}
+                    <div className="mt-3">
+                        <GoogleLogin
+                            onSuccess={onGoogleSuccess}
+                            onError={onGoogleError}
+                            text="continue_with"
+                            useOneTap={false}
+                            disabled={isLoading}
+                        />
+                    </div>
 
                     <button
                         type="button"
                         className="btn btn-secondary btn-lg mt-3"
-                        onClick={() => navigate('/home')}  
+                        onClick={() => navigate('/home')}
                     >
                         Volver al inicio
                     </button>
