@@ -75,6 +75,8 @@ public class FilterChainConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
+                    .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/google").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/register/**").permitAll()
