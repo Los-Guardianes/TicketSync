@@ -1,28 +1,32 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from "../../../../context/AuthContext";
-export const Card = ({id, titulo, fecha, ubicacion,ulrimagen}) => {
+"use client"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../../../context/AuthContext"
+import "./Card.css"
 
-    // Tengan en cuenta que esta card posee parametros, deben
-    // Insertarse los argumentos en el componente para que se imprima
+export const Card = ({ id, titulo, fecha, ubicacion, ulrimagen }) => {
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
 
-    const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
-    const start_purchase = () => {
-        const target = `/ticket-purchase/${id}`;
-        if (!isAuthenticated) navigate('/login', { state: { from: target } });
-        else navigate(target);
-    }
+  const start_purchase = () => {
+    const target = `/ticket-purchase/${id}`
+    if (!isAuthenticated) navigate("/login", { state: { from: target } })
+    else navigate(target)
+  }
 
-    return (
-        <div className='card' style={{width: "15rem"}}>
-            <img className='card-img-top' src={ulrimagen} alt="ImagenDeEvento"/>
-            <div className='card-body'>
-                <p className='card-text' >{ubicacion}</p>
-                <h5 className='card-title' >{titulo}</h5>
-                <p className='card-text' >{fecha}</p>
-                <button className='btn btn-primary' onClick={start_purchase}>COMPRAR</button>
-            </div>
-        </div>
-    )
+  return (
+    <div className="event-card">
+      <div className="event-card-image-container">
+        <img className="event-card-image" src={ulrimagen || "/placeholder.png"} alt={titulo} />
+      </div>
+
+      <div className="event-card-body">
+        <p className="event-card-location">{ubicacion}</p>
+        <h3 className="event-card-title">{titulo}</h3>
+        <p className="event-card-date">{fecha}</p>
+        <button className="event-card-button" onClick={start_purchase}>
+          Ver más
+        </button>
+      </div>
+    </div>
+  )
 }
