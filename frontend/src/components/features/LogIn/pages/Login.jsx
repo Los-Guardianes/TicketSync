@@ -1,42 +1,57 @@
 import "./Login.css";
 import { useNavigate } from 'react-router-dom';
 import { loginService } from '../service/loginService'; // Única importación de lógica
+import { GoogleLogin } from '@react-oauth/google';
 
 export const Login = () => {
     const navigate = useNavigate();
 
-    // El hook ahora provee toda la lógica necesaria
+    // Lógica del servicio
     const {
         formData,
         errors,
         isLoading,
         message,
         handleInputChange,
-        handleLoginSubmit // La función que maneja la validación y el fetch
+        handleLoginSubmit,
+        handleGoogleLogin,
     } = loginService();
 
-    // El manejador del formulario en el componente se vuelve muy simple
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
-
-        // Llama a la función del hook que hace todo el trabajo
-        const loginSuccess = await handleLoginSubmit();
-
-        // Si el hook indica que el login fue exitoso, entonces navegamos
-        if (loginSuccess) {
-            // Se valida si es organizador, cliente o administrador
-            console.log(loginSuccess);
-            if(loginSuccess.rol === 'ADMINISTRADOR'){
-                navigate('/home-admin');
-            }else navigate('/');
+    // Función de ayuda para la navegación (REUTILIZABLE)
+    const handleNavigation = (rol) => {
+        if (rol === 'ADMINISTRADOR') {
+            navigate('/home-admin');
+        } else {
+            navigate('/');
         }
     };
 
-    const handleGoogleLogin = () => {
-        // Lógica de Google sin cambios...
-        setTimeout(() => {
-            navigate('/verification');
-        }, 1000);
+    // Submit del formulario
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        const loginSuccess = await handleLoginSubmit();
+
+        if (loginSuccess) {
+            handleNavigation(loginSuccess.rol); // Usa la función de navegación
+        }
+    };
+
+    // Para google
+    // Wrapper para el onSuccess de Google
+    const onGoogleSuccess = async (credentialResponse) => {
+        // Llama a la función del hook
+        const loginSuccess = await handleGoogleLogin(credentialResponse);
+
+        //  Reutiliza la misma lógica de navegación
+        if (loginSuccess) {
+            handleNavigation(loginSuccess.rol);
+        }
+    };
+
+    // Wrapper para el onError de Google
+    const onGoogleError = () => {
+        console.error("Login con Google fallido");
+        // 'loginService' ya muestra el mensaje de error en la UI
     };
 
     return (
@@ -46,7 +61,7 @@ export const Login = () => {
                     <img className='login-logo' src="/tuticket_logo.png" alt="TuTicket Logo" />
                     <h2>Iniciar sesión</h2>
 
-                    {/* El onSubmit ahora llama a nuestra nueva función simple */}
+                    {/* Formulario */}
                     <form className="login-inputs" onSubmit={handleFormSubmit}>
                         <input
                             className={`input-form ${errors.email ? 'error' : ''}`}
@@ -93,14 +108,26 @@ export const Login = () => {
 
                     <a href="/register" className='btn btn-secondary btn-lg mt-3'>Registrate</a>
 
+                    {/* botón de Google por el componente */}
+                    <div className="mt-3">
+                        <GoogleLogin
+                            onSuccess={onGoogleSuccess}
+                            onError={onGoogleError}
+                            text="continue_with"
+                            useOneTap={false}
+                            disabled={isLoading}
+                        />
+                    </div>
+
                     <button
-                        className='btn btn-secondary btn-lg mt-3 justify-content-center d-flex align-items-center'
-                        onClick={handleGoogleLogin}
-                        disabled={isLoading}
+                        type="button"
+                        className="btn btn-secondary btn-lg mt-3"
+                        onClick={() => navigate('/home')}
                     >
-                        <img src="/icon_google.svg" alt="Google Logo" style={{ width: '20px', marginRight: '8px' }} />
-                        O inicia sesión con Google
+                        Volver al inicio
                     </button>
+
+
                 </div>
             </div>
         </>

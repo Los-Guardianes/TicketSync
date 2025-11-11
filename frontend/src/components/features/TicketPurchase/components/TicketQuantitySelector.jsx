@@ -11,7 +11,7 @@ export const TicketQuantitySelector = ({ cantidadEntradas, updateCantidad, idTar
   }
 
   const decrementar = () => {
-    if(cantidadEntradas <= 1) return;
+    if(cantidadEntradas <= 0) return;
     const nuevaCantidad = cantidadEntradas - 1;
     updateCantidad(idTarifa, nuevaCantidad);
   }

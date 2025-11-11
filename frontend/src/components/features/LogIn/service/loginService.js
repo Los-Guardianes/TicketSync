@@ -19,7 +19,7 @@ export const loginService = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        
+
         // Limpiar error del campo al empezar a escribir
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
@@ -84,19 +84,19 @@ export const loginService = () => {
             }
             // COSAS NUEVAS
             const decoded = jwtDecode(result.token); //Se decodifica el token                   
-            const user  = {
-                idUsuario:result.idUsuario,
-                email:    result.email,
-                rol:      result.rol,
-                nombre:   result.nombre,
+            const user = {
+                idUsuario: result.idUsuario,
+                email: result.email,
+                rol: result.rol,
+                nombre: result.nombre,
                 apellido: result.apellido,
-            };            
+            };
             //
-            login(user, result.token ,decoded.exp); //Cambio acá también
+            login(user, result.token, decoded.exp); //Cambio acá también
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
             return user;
 
-        // eslint-disable-next-line no-unused-vars
+            // eslint-disable-next-line no-unused-vars
         } catch (error) {
             //Capturar errores de red o de la petición
             showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
@@ -106,7 +106,56 @@ export const loginService = () => {
             setIsLoading(false);
         }
     };
-    
+
+    // Para manejar el login con Google
+    const handleGoogleLogin = async (credentialResponse) => {
+        const idToken = credentialResponse.credential;
+
+        setIsLoading(true);
+        clearMessage();
+
+        try {
+            //  Llama al NUEVO endpoint de Spring
+            const response = await fetch('http://localhost:8080/api/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ idToken: idToken }), // Envía el idToken de Google
+            });
+
+            const result = await response.json(); // Este es UsuarioBearerDTO
+
+            if (!response.ok) {
+                showMessage(result.message || 'Error en el login con Google.', 'error');
+                return null;
+            }
+
+            //  Si Spring responde OK, procesa el JWT igual que el login normal
+            const decoded = jwtDecode(result.token);
+            const user = {
+                idUsuario: result.idUsuario,
+                email: result.email,
+                rol: result.rol,
+                nombre: result.nombre,
+                apellido: result.apellido,
+            };
+
+            // Llama a la MISMA función login de AuthProvider
+            login(user, result.token, decoded.exp);
+
+            showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
+            return user; // Devuelve el usuario para la navegación
+
+        } catch (error) {
+            console.error("Error en handleGoogleLogin:", error);
+            showMessage('Error de conexión con Google. Intenta nuevamente.', 'error');
+            return null;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // --- VALORES Y FUNCIONES RETORNADOS POR EL HOOK ---
     return {
         formData,
@@ -115,5 +164,6 @@ export const loginService = () => {
         message,
         handleInputChange,
         handleLoginSubmit, // La nueva función que el componente usará para el submit
+        handleGoogleLogin, // La función para el login con Google
     };
 };

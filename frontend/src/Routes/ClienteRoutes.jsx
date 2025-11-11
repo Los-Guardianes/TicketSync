@@ -15,6 +15,9 @@ import { TicketPurchase } from "../components/features/TicketPurchase/pages/Tick
 import { HappyPay } from "../components/features/TicketPurchase/pages/HappyPay";
 import Layout from "../components/common/Layout";
 import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
+//Prueba
+import AdminDashboard from "../components/features/AdminDashboard/AdminDashboard";
+
 
 import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
 import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
@@ -26,8 +29,9 @@ import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import { ConfigUsers } from "../components/features/AdminHome/pages/ConfigUsers";
+import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
 
-
+import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
 export const ClienteRoutes = () => {
   return (
     <Routes>
@@ -39,6 +43,9 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+
+      {/* Para testeo del componente de s3 */}
+      <Route path="/test-imagen" element={<ImageUploader />} />
       <Route path="home-admin" element={<AdminHome />} />
 
       {/* CON Layout */}
@@ -54,6 +61,9 @@ export const ClienteRoutes = () => {
         <Route path="ticket-pay" element={<TicketPay />} />
         <Route path="happy-pay" element={<HappyPay />} />
         <Route path="mistickets" element={<MisTickets />} />
+
+        //Prueba pantalla para Admin
+         <Route path="admin-dashboard" element={<AdminDashboard />} />
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
         <Route path="configusers" element={<ConfigUsers />} />
@@ -65,6 +75,10 @@ export const ClienteRoutes = () => {
           path="organizer/evento/:idEvento/descuentos"
           element={<DiscountList />}
         />
+
+        <Route path="mis-tickets/evento/:idEvento" element={<DetalleTickets />} />
+
+        
       </Route>
     </Routes>
   );

@@ -1,14 +1,10 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.FuncionDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.FuncionDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
-import com.guardianes.TuTicket.servicioEventos.model.Periodo;
-import com.guardianes.TuTicket.servicioEventos.model.Tarifa;
 import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
-import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import com.guardianes.TuTicket.servicioPedidos.service.TicketService;
-import jdk.jfr.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.guardianes.TuTicket.servicioPedidos.DTO.TicketDTO;
 import java.util.List;
 
 @RestController
@@ -70,4 +70,13 @@ public class TicketController {
         }
         return ResponseEntity.ok(tickets);
     }
+
+    @GetMapping("/miticket/usuario/{idUsuario}/evento/{idEvento}")
+    public ResponseEntity<List<TicketDTO>> getTicketsByUsuarioAndEvento(
+            @PathVariable Integer idUsuario,
+            @PathVariable Integer idEvento) {
+        return ResponseEntity.ok(service.getTicketsDTOByUsuarioAndEvento(idUsuario, idEvento));
+    }
+
+
 }
