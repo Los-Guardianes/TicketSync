@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEventData } from "../service/useEventData"
 import { useTicketCodigoDesc } from '../service/useTicketCodigoDesc'
@@ -14,15 +14,10 @@ import { useNotification } from '../../../../context/NotificationContext'
 export const TicketPurchase = () => {
 
     const {id} = useParams();
-
-
     const [selectedFuncion, setSelectedFuncion] = useState(null)
-
-    const { 
-        showNotification 
-    } = useNotification()
-
+    const { showNotification } = useNotification()
     const navigate = useNavigate();
+
     const {
         zonas,
         periodos,
@@ -92,19 +87,24 @@ export const TicketPurchase = () => {
     return (
         <main className="ticket-purchase-main">
             <div className="ticket-purchase-container">
-                <div className="ticket-purchase-grid">
-                    {/* Main Content */}
-                    <div className='ticket-purchase-content'>
+                <div className="ticket-purchase-info-event ticket-purchase-section">
+                        <InfoEventTicket evento={evento}></InfoEventTicket>
                         <TableInfoEvent 
                             periodos = {periodos}
                             zonas = {zonas}
                             funciones = {funciones}
                             tipoEntradas= {tipoEntradas}
                             tarifas={tarifas}
-                        ></TableInfoEvent>
+                        >
+                        </TableInfoEvent>
+                </div>
+                <div className="ticket-purchase-grid">
+                    {/* Main Content */}
+                    <div className='ticket-purchase-content'>
+
                         <section className="ticket-purchase-section">
                             <div className="ticket-header-selection">
-                                <h3 className="">Selecciona tu ticket</h3>
+                                <h3 className='ticket-purchase-section-title'>Selecciona tu ticket</h3>
                                 <div className="dropdown-wrapper">
                                     <select
                                     className="dropdown-button"
@@ -136,7 +136,6 @@ export const TicketPurchase = () => {
                     {/* Sidebar */}
                     <aside className="ticket-purchase-sidebar">
                         <section className="ticket-purchase-section">
-                            <InfoEventTicket evento={evento}></InfoEventTicket>
                             <ApplyDiscount
                                 formData={formData}
                                 handleFormData={handleFormData}
