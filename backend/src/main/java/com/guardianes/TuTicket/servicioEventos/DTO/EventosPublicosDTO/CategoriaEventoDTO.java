@@ -1,4 +1,4 @@
-package com.guardianes.TuTicket.servicioEventos.DTO;
+package com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO;
 
 import com.guardianes.TuTicket.servicioEventos.model.CategoriaEvento;
 import lombok.Data;

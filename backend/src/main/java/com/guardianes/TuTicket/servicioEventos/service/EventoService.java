@@ -1,14 +1,17 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.EventoDTO;
-import com.guardianes.TuTicket.servicioEventos.DTO.FuncionDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosOrganizador.EventOrganizadorDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosOrganizador.FuncionOrganizadorDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.EventoDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
+import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioEventos.repo.EventoRepo;
-import com.guardianes.TuTicket.servicioEventos.repo.FuncionRepo;
-import com.guardianes.TuTicket.servicioUsuarios.DTO.OrganizadorDTO;
+import com.guardianes.TuTicket.servicioExepciones.GenericException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,5 +44,33 @@ public class EventoService {
 
     public void deleteEvento(Integer id) {
         repo.deleteById(id);
+    }
+
+    public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer idUsuario) {
+        try{
+            LocalDate hoy = LocalDate.now();
+            List<Evento> eventos = repo.findByOrganizador_IdUsuario(idUsuario);
+            return eventos.stream().map(ev -> {
+
+                List<Funcion> funcionesActivas =
+                        funcionService.getFuncionByEvento(ev.getIdEvento())
+                                .stream()
+                                .filter(f -> Boolean.TRUE.equals(f.getActivo()))
+                                .toList();
+                boolean anyFutureFunc = funcionesActivas
+                        .stream()
+                        .anyMatch(f -> !f.getFechaInicio().isBefore(hoy));
+                LocalDate fechaRef = funcionesActivas.stream()
+                        .map(Funcion::getFechaInicio)
+                        .filter(d -> anyFutureFunc != d.isBefore(hoy))
+                        .min(anyFutureFunc ? Comparator.naturalOrder() : Comparator.reverseOrder())
+                        .orElse(null);
+                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesActivas.stream().map(FuncionOrganizadorDTO::new).toList();
+                return new EventOrganizadorDTO(ev,fechaRef,!anyFutureFunc,funcionesFiltradas);
+            }).collect(Collectors.toList());
+        }catch (Exception e){
+            throw new GenericException("Error al listar eventos del organizador" + e.getMessage());
+        }
+
     }
 }

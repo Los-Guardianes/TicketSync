@@ -1,15 +1,12 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
-import com.guardianes.TuTicket.servicioEventos.DTO.ZonaDTO;
+import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.ZonaDTO;
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import com.guardianes.TuTicket.servicioEventos.repo.ZonaRepo;
-import com.guardianes.TuTicket.servicioPedidos.model.DetalleCompra;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

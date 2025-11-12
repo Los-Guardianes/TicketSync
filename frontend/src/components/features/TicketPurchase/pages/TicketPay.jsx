@@ -4,7 +4,7 @@ import { OrdenCompra } from "../models/ordenCompra";
 import "./TicketPay.css"
 import { useAuth } from "../../../../context/AuthContext";
 import { postOrdenCompra } from "../service/ticketPayService";
-import { Notification } from "../../../../components/common/Notification/Notification"
+import { useNotification } from "../../../../context/NotificationContext"
 
 
 export const TicketPay = () => {
@@ -19,8 +19,11 @@ export const TicketPay = () => {
             total = 0,
             idDescuentoUtilizado = null,
             funcion } = location.state || {};
+    
 
-    const [notification, setNotification] = useState(null)
+    const { 
+        showNotification 
+    } = useNotification()
 
     const handleReturn = (e) => {
         e.preventDefault();
@@ -36,10 +39,9 @@ export const TicketPay = () => {
 
     const validateForm = () => {
         if (!formData.metodoPago.trim()) {
-            setNotification({
-                message: "El método de pago es obligatorio.", 
-                type: "error"
-            });
+            showNotification(
+                "Complete el método de pago", "error"
+            )
             return;
         }
         return true
@@ -76,10 +78,10 @@ export const TicketPay = () => {
             });
         } catch (error) {
             console.error("Error al realizar la orden de compra:", error);
-            setNotification({
-                message: "Error al procesar el pago. Por favor, inténtelo de nuevo.",
-                type: "error"
-            });
+            showNotification(                
+                "Error al procesar el pago. Por favor, inténtelo de nuevo.",
+                "error"
+            );
         }
     };
 
@@ -118,16 +120,6 @@ export const TicketPay = () => {
 
     return (
         <div className="tp-container">
-
-            {notification && (
-                <Notification
-                message={notification.message}
-                type={notification.type}
-                duration={3000}
-                onClose={() => setNotification(null)}
-                />
-            )}
-
             <header className="tp-header">
                 <h1>Pasarela de Pagos</h1>
             </header>

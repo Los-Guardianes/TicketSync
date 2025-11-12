@@ -39,7 +39,7 @@ export async function apiDownload(path) {
   return res.blob();
 }
 
-// 👇 --- INICIO DE LA NUEVA FUNCIÓN --- 👇
+// --- INICIO DE LA NUEVA FUNCIÓN ---
 
 /**
  * Función genérica para peticiones que envían FormData (ej. subida de archivos).

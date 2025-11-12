@@ -6,7 +6,7 @@ import { Tarifa } from '../models/Tarifa';
 import { Zona } from '../models/Zona';
 import { TipoEntrada } from '../models/TipoEntrada';
 
-export const useTicketSelection = (idevento) => {
+export const useEventData = (idevento) => {
 
     const [periodoActual, setPeriodoActual] = useState(null);
     const [periodos, setPeriodos] = useState([]);
@@ -15,7 +15,9 @@ export const useTicketSelection = (idevento) => {
     const [tarifas, setTarifas] = useState([]);
     const [tipoEntradas, setTipoEntradas] = useState([]);
     const [zonas, setZonas] = useState([]);
+    const [zonaxfuncion, setZonaxfuncion] = useState([]) 
 
+    const [selectedFuncion, setSelectedFuncion] = useState(null)
     // Calcula periodoActual cada vez que cambian periodos
     useEffect(() => {
         if (periodos && periodos.length > 0) {
@@ -25,6 +27,36 @@ export const useTicketSelection = (idevento) => {
             setPeriodoActual(null);
         }
     }, [periodos]);
+
+
+    const seleccionarFuncion = (idSeleccionado) => {
+    const funcion = funciones.find(
+        (f) => f.idFuncion === parseInt(idSeleccionado)
+    );
+    setSelectedFuncion(funcion);
+    };
+
+
+    const getMaxCantidadTickets = (zona) => {
+        //Aquí se calcula el máximo de tickets por zona que se pueden comprar, limitado a su vez por la cantidad máxima de compra de tickets que el evento permite
+        if(!selectedFuncion)return;
+        const zxf = zonaxfuncion.find(zf => zf.idZona === zona.idZona && zf.idFuncion ===  selectedFuncion?.idFuncion)
+        const entradasDisponibles = zona.aforo - zxf.comprasActuales;
+        const maxComprasEvento = evento?.maxComprasTickets
+        const maxCantidad = maxComprasEvento >= (entradasDisponibles >= 0 ? entradasDisponibles : 0) ? entradasDisponibles : maxComprasEvento //devuelve el menor
+        return maxCantidad
+    }
+
+    useEffect(()=>{
+        //Se cargan todos los datos necesarios
+        fetchEvento();
+        fetchPeriodo();
+        fetchFunciones();
+        fetchTarifas();
+        fetchZonas();
+        fetchTipoEntradas();
+        fetchZonaxfuncion();
+    },[idevento])
 
     const getPeriodoActual = (listaPeriodos) => {
         if (!listaPeriodos || listaPeriodos.length === 0) return null;
@@ -36,13 +68,18 @@ export const useTicketSelection = (idevento) => {
         }) || null;
     }
 
+    const fetchZonaxfuncion = async () => {
+        const data = await apiFetch(`/api/zonaxfuncion/evento/${idevento}`)
+        setZonaxfuncion(data);
+    }
+
     const fetchEvento = async () => {
         const data = await getEventosById(idevento);
         setEvento(data);
     };
 
     const fetchPeriodo = async () => {
-        const data = await apiFetch(`/api/periodo/evento/${idevento}`);
+        const data = await apiFetch(`/api/periodo/evento/${idevento}`);        
         setPeriodos(data || []);
     };
 
@@ -65,9 +102,10 @@ export const useTicketSelection = (idevento) => {
 
     const fetchTipoEntradas = async () => {
         const data = await apiFetch(`/api/tipoentrada/evento/${idevento}`);
-        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));
+        const tiposParseadas = (data || []).map(te => TipoEntrada.fromApi(te));        
         setTipoEntradas(tiposParseadas);
     }
+    
 
     return {
         zonas,
@@ -77,11 +115,9 @@ export const useTicketSelection = (idevento) => {
         tipoEntradas,
         tarifas,
         periodoActual,
-        fetchZonas,
-        fetchTipoEntradas,
-        fetchPeriodo,
-        fetchEvento,
-        fetchFunciones,
-        fetchTarifas
+        selectedFuncion,
+        setSelectedFuncion,
+        getMaxCantidadTickets,
+        seleccionarFuncion
     };
 }
