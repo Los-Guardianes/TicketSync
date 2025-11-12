@@ -5,7 +5,8 @@ import "./TicketQuantitySelector.css"
 export const TicketQuantitySelector = ({ cantidadEntradas, updateCantidad, idTarifa, maxCantidad}) => {
 
   const incrementar = () => {
-    if(maxCantidad && cantidadEntradas >= maxCantidad) return;
+    console.log(cantidadEntradas,"-",maxCantidad)
+    if(maxCantidad === 0 || (maxCantidad && cantidadEntradas >= maxCantidad)) return;
     const nuevaCantidad = cantidadEntradas + 1;
     updateCantidad(idTarifa, nuevaCantidad);
   }

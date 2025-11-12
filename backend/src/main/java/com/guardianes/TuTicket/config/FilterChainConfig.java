@@ -48,7 +48,8 @@ public class FilterChainConfig {
             "/api/catevento/**",
             "/api/tarifa/**",
             "/api/tipoentrada/**",
-            "/api/periodo/**"
+            "/api/periodo/**",
+            "/api/zonaxfuncion/**"
 
             /* En caso error inesperado, descomentar esta línea
             "/api/cliente/**",

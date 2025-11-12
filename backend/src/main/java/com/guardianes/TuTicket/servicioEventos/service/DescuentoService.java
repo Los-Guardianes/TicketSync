@@ -45,9 +45,10 @@ public class DescuentoService {
         }
     }
 
-    public Integer actualizarUsoDescuento(Integer idDescuento){
-        //Actualizar para cuando se tenga seguimiento de descuentos utilizados
-        return 0;
+    public Descuento actualizarUsoDescuento(Integer idDescuento){
+        Descuento desc = getDescuentoById(idDescuento);
+        desc.setLimiteTotal(desc.getLimiteTotal() - 1);
+        return updateDescuento(desc); //descuento actualizado
     }
     public List<Descuento> getActivosByEvento(Integer idEvento) {
         return repo.findByEvento_IdEventoAndActivoTrueOrderByFechaInicioAsc(idEvento);

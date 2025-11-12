@@ -14,7 +14,7 @@ import { useNotification } from '../../../../context/NotificationContext'
 export const TicketPurchase = () => {
 
     const {id} = useParams();
-    const [selectedFuncion, setSelectedFuncion] = useState(null)
+    
     const { showNotification } = useNotification()
     const navigate = useNavigate();
 
@@ -25,7 +25,10 @@ export const TicketPurchase = () => {
         funciones,
         tipoEntradas,
         tarifas,
-        periodoActual,    
+        periodoActual,
+        selectedFuncion,        
+        setSelectedFuncion,
+        getMaxCantidadTickets
     } = useEventData(id);
 
     const {
@@ -113,7 +116,7 @@ export const TicketPurchase = () => {
                                         const selected = funciones.find(
                                         (opt) => opt.idFuncion === parseInt(e.target.value)
                                         );
-                                        if (selected) setSelectedFuncion(selected);
+                                        setSelectedFuncion(selected);
                                     }}
                                     >
                                     <option value="">Seleccionar función</option>
@@ -129,7 +132,8 @@ export const TicketPurchase = () => {
                             <ShoppingDetails 
                                 listaDetalles={listaDetalles}
                                 updateCantidad={updateCantidad}                                
-                                maxCantidad={evento?.maxComprasTickets}
+                                getMaxCantidadTickets={getMaxCantidadTickets}
+                                disabled = {selectedFuncion}
                             />
                         </section>
                     </div>
