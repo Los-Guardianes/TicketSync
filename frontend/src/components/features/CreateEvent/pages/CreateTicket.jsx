@@ -6,7 +6,7 @@ import { postEventoCompleto } from '../../../../globalServices/EventoService';
 import { X, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { validarTemporadas } from "./Validaciones/ValidacionTicket";
 import { postSubirImagen } from "../../../../globalServices/S3Service"; // Importas el servicio de S3
-
+import { HeaderEvent } from "./Componentes/HeaderEvent";
 
 
 // COMPONENTE MODAL
@@ -496,9 +496,11 @@ export const CreateTicket = () => {
 
     return (
         <div className="crear-ticket-container">
+            {/* Header */}
+            <HeaderEvent currentStep={3} />
             <div className="header">
-                <span className="step">3</span>
-                <h2>Crear Entradas</h2>
+                {/* <span className="step">3</span>
+                <h2>Crear Entradas</h2> */}
             </div>
 
             {/* MOSTRAR RESUMEN DE ERRORES */}
