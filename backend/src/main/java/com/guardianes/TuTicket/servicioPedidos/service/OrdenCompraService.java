@@ -52,6 +52,7 @@ public class OrdenCompraService {
         simularApiPasarelaPagos(ocInsertada,true); //true -> siempre va funcionar
         detalleCompraService.addListDetalles(ordenCompraDTO.getDetallesCompras(), ocInsertada);
         descuentoService.actualizarUsoDescuento(ordenCompraDTO.getIdDescuentoUtilizado());
+
         return ocInsertada;
     }
 

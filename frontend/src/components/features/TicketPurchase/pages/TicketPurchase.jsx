@@ -1,16 +1,15 @@
-import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEventData } from "../service/useEventData"
 import { useTicketCodigoDesc } from '../service/useTicketCodigoDesc'
 import { useCompraTickets } from '../service/useCompraTickets'
 import { ShoppingDetails } from '../components/ShoppingDetails'
 import { InfoEventTicket } from '../components/InfoEventTicket'
-import { Notification } from "../../../../components/common/Notification/Notification"
 import { TableInfoEvent } from '../components/TableInfoEvent'
 import "./TicketPurchase.css"
 import { PurchaseTicket } from '../components/PurchaseTicket'
 import { ApplyDiscount } from '../components/ApplyDiscount'
 import { useNotification } from '../../../../context/NotificationContext'
+import { DropdownList } from '../../../common/DropDownList/DropDownList' 
 export const TicketPurchase = () => {
 
     const {id} = useParams();
@@ -28,7 +27,8 @@ export const TicketPurchase = () => {
         periodoActual,
         selectedFuncion,        
         setSelectedFuncion,
-        getMaxCantidadTickets
+        getMaxCantidadTickets,
+        seleccionarFuncion
     } = useEventData(id);
 
     const {
@@ -107,27 +107,17 @@ export const TicketPurchase = () => {
 
                         <section className="ticket-purchase-section">
                             <div className="ticket-header-selection">
-                                <h3 className='ticket-purchase-section-title'>Selecciona tu ticket</h3>
-                                <div className="dropdown-wrapper">
-                                    <select
-                                    className="dropdown-button"
-                                    value={selectedFuncion ? selectedFuncion.idFuncion : ""}
-                                    onChange={(e) => {
-                                        const selected = funciones.find(
-                                        (opt) => opt.idFuncion === parseInt(e.target.value)
-                                        );
-                                        setSelectedFuncion(selected);
-                                    }}
-                                    >
-                                    <option value="">Seleccionar función</option>
-                                    {funciones.map((opt) => (
-                                        <option key={opt.idFuncion} value={opt.idFuncion}>
-                                        {getNombre(opt)}
-                                        </option>
-                                    ))}
-                                    </select>
-                                </div>
-                                </div>
+                            <h3 className='ticket-purchase-section-title'>Selecciona tu ticket</h3>
+                            <DropdownList
+                                firstElement={"Selecciona una función"}
+                                list={funciones}
+                                id={"idFuncion"}
+                                value={selectedFuncion ? selectedFuncion.idFuncion : ""}
+                                onChangeOption={seleccionarFuncion}
+                                getNombre={getNombre}
+                            >                                
+                            </DropdownList>
+                            </div>
 
                             <ShoppingDetails 
                                 listaDetalles={listaDetalles}

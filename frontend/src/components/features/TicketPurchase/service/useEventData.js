@@ -29,11 +29,19 @@ export const useEventData = (idevento) => {
     }, [periodos]);
 
 
+    const seleccionarFuncion = (idSeleccionado) => {
+    const funcion = funciones.find(
+        (f) => f.idFuncion === parseInt(idSeleccionado)
+    );
+    setSelectedFuncion(funcion);
+    };
+
+
     const getMaxCantidadTickets = (zona) => {
         //Aquí se calcula el máximo de tickets por zona que se pueden comprar, limitado a su vez por la cantidad máxima de compra de tickets que el evento permite
         if(!selectedFuncion)return;
         const zxf = zonaxfuncion.find(zf => zf.idZona === zona.idZona && zf.idFuncion ===  selectedFuncion?.idFuncion)
-        const entradasDisponibles = zxf.aforo - zxf.comprasActuales;
+        const entradasDisponibles = zona.aforo - zxf.comprasActuales;
         const maxComprasEvento = evento?.maxComprasTickets
         const maxCantidad = maxComprasEvento >= (entradasDisponibles >= 0 ? entradasDisponibles : 0) ? entradasDisponibles : maxComprasEvento //devuelve el menor
         return maxCantidad
@@ -109,6 +117,7 @@ export const useEventData = (idevento) => {
         periodoActual,
         selectedFuncion,
         setSelectedFuncion,
-        getMaxCantidadTickets
+        getMaxCantidadTickets,
+        seleccionarFuncion
     };
 }
