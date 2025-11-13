@@ -22,18 +22,43 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(
                         loginDTO.getEmail(),
                         loginDTO.getPassword()
-        ));
-        if (auth.isAuthenticated()) {
-            Usuario usuario = (Usuario) auth.getPrincipal();
-            return new UsuarioBearerDTO(
-                    jwtService.generateToken(usuario.getEmail(),usuario.getRol().toString()),
-                    usuario.getIdUsuario(),
-                    usuario.getEmail(),
-                    usuario.getRol().toString(),
-                    usuario.getNombre(),
-                    usuario.getApellido()
+                )
+        );
+
+        if (!auth.isAuthenticated()) {
+            throw new UsernameNotFoundException(
+                    "No se encontró al usuario con email: " + loginDTO.getEmail()
             );
         }
-        throw new UsernameNotFoundException("No se encontró al usuario con email: " + loginDTO.getEmail());
+
+        Usuario usuario = (Usuario) auth.getPrincipal();
+
+        String token = jwtService.generateToken(
+                usuario.getEmail(),
+                usuario.getRol().toString()
+        );
+
+        // null-safety para ciudad y departamento
+        String ciudad = null;
+        String departamento = null;
+
+        if (usuario.getCiudad() != null) {
+            ciudad = usuario.getCiudad().getNombre();
+            if (usuario.getCiudad().getDpto() != null) {
+                departamento = usuario.getCiudad().getDpto().getNombre();
+            }
+        }
+
+        return new UsuarioBearerDTO(
+                token,
+                usuario.getIdUsuario(),
+                usuario.getEmail(),
+                usuario.getRol().toString(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getTelefono(),
+                ciudad,
+                departamento
+        );
     }
 }

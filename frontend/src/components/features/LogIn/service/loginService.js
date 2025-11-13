@@ -58,54 +58,55 @@ export const loginService = () => {
     // Aqui se modifico ya no se pasa TRUE O FALSE, SE PASA EL USUARIO COMPLETO
     // PARA PODER VALIDAR SU ROL
     const handleLoginSubmit = async () => {
-        // 1. Validar el formulario antes de enviar
-        if (!validateForm()) {
-            return null; // Indica que el envío falló por validación
-        }
-        //Iniciar estado de carga y limpiar mensajes previos
+        if (!validateForm()) return null;
+
         setIsLoading(true);
         clearMessage();
 
         try {
             const response = await fetch('http://localhost:8080/api/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: formData.email,
                     password: formData.password,
                 }),
             });
+
             const result = await response.json();
+            // TEMP: mirar qué llega del back
+            console.log("LOGIN NORMAL RESULT =>", result);
+
             if (!response.ok) {
                 showMessage(result.message || 'Correo o contraseña incorrectos.', 'error');
-                return null; // Indica que el login falló
+                return null;
             }
-            // COSAS NUEVAS
-            const decoded = jwtDecode(result.token); //Se decodifica el token                   
+
+            const decoded = jwtDecode(result.token);
+
             const user = {
                 idUsuario: result.idUsuario,
                 email: result.email,
                 rol: result.rol,
                 nombre: result.nombre,
                 apellido: result.apellido,
+                telefono: result.telefono,        // <-- NUEVO
+                ciudad: result.ciudad,            // <-- NUEVO
+                departamento: result.departamento // <-- NUEVO
             };
-            //
-            login(user, result.token, decoded.exp); //Cambio acá también
+
+            login(user, result.token, decoded.exp);
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
             return user;
 
-            // eslint-disable-next-line no-unused-vars
         } catch (error) {
-            //Capturar errores de red o de la petición
             showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
-            return null; // Indica que el login falló
+            return null;
         } finally {
-            //Detener el estado de carga
             setIsLoading(false);
         }
     };
+
 
     // Para manejar el login con Google
     const handleGoogleLogin = async (credentialResponse) => {
@@ -115,37 +116,36 @@ export const loginService = () => {
         clearMessage();
 
         try {
-            //  Llama al NUEVO endpoint de Spring
             const response = await fetch('http://localhost:8080/api/auth/google', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ idToken: idToken }), // Envía el idToken de Google
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken }),
             });
 
-            const result = await response.json(); // Este es UsuarioBearerDTO
+            const result = await response.json();
+            console.log("LOGIN GOOGLE RESULT =>", result);
 
             if (!response.ok) {
                 showMessage(result.message || 'Error en el login con Google.', 'error');
                 return null;
             }
 
-            //  Si Spring responde OK, procesa el JWT igual que el login normal
             const decoded = jwtDecode(result.token);
+
             const user = {
                 idUsuario: result.idUsuario,
                 email: result.email,
                 rol: result.rol,
                 nombre: result.nombre,
                 apellido: result.apellido,
+                telefono: result.telefono,        // <-- NUEVO
+                ciudad: result.ciudad,            // <-- NUEVO
+                departamento: result.departamento // <-- NUEVO
             };
 
-            // Llama a la MISMA función login de AuthProvider
             login(user, result.token, decoded.exp);
-
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
-            return user; // Devuelve el usuario para la navegación
+            return user;
 
         } catch (error) {
             console.error("Error en handleGoogleLogin:", error);
@@ -155,6 +155,7 @@ export const loginService = () => {
             setIsLoading(false);
         }
     };
+
 
     // --- VALORES Y FUNCIONES RETORNADOS POR EL HOOK ---
     return {

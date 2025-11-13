@@ -18,7 +18,7 @@ export const BarraLateral = () => {
       <nav className="nav flex-column">
 
         <NavLink
-          to="/home"
+          to="/perfil"       
           end
           className={({ isActive }) =>
             'nav-link' + (isActive ? ' active fw-bold' : '')
