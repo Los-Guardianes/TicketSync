@@ -27,41 +27,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
 
-    /**
-     * Prefijos PÚBLICOS. Deben coincidir con los que realmente son públicos
-     * en tu FilterChainConfig. OJO: quitamos /api/ticket, /api/miticket y /api/comp.
-     */
-    private static final List<String> PUBLIC_PREFIXES = List.of(
-            "/api/login",
-            "/api/auth/google",
-            "/api/cliente",     // (solo POST / register es público; GET por id lo controla la chain)
-            "/api/register",
-
-            // Catálogos realmente públicos:
-            "/api/evento",
-            "/api/zona",
-            "/api/ciudad",
-            "/api/dpto",
-            "/api/temporada",
-            "/api/funcion",
-            "/api/catevento",
-            "/api/tarifa",
-            "/api/tipoentrada",
-            "/api/periodo"
-    );
-
-    private boolean isPublic(HttpServletRequest request) {
-        String path = request.getServletPath();
-
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            return true;
-        }
-        for (String prefix : PUBLIC_PREFIXES) {
-            if (path.startsWith(prefix)) return true;
-        }
-        return false;
-    }
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -70,14 +35,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
         System.out.println("[JWTFilter] Path: " + path);
-
-        if (isPublic(request)) {
-            System.out.println("[JWTFilter] Ruta pública → skip JWT");
-            chain.doFilter(request, response);
-            return;
-        } else {
-            System.out.println("[JWTFilter] Ruta protegida → validar JWT");
-        }
 
         String authHeader = request.getHeader("Authorization");
         System.out.println("[JWTFilter] Authorization: " + authHeader);
@@ -98,7 +55,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                String springRole = (rol == null) ? "ROLE_USER"
+                String springRole = (rol == null)
+                        ? "ROLE_CLIENTE" // Asigna el rol menos privilegiado si el rol es nulo
                         : (rol.toUpperCase().startsWith("ROLE_") ? rol.toUpperCase() : "ROLE_" + rol.toUpperCase());
 
                 UserDetails userDetails = User.builder()

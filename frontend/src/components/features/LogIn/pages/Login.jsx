@@ -41,7 +41,7 @@ export const Login = () => {
     const onGoogleSuccess = async (credentialResponse) => {
         // Llama a la función del hook
         const loginSuccess = await handleGoogleLogin(credentialResponse);
-
+        console.log(loginSuccess)
         //  Reutiliza la misma lógica de navegación
         if (loginSuccess) {
             handleNavigation(loginSuccess.rol);
@@ -87,7 +87,7 @@ export const Login = () => {
                         />
                         {errors.password && <div className="error-form">{errors.password}</div>}
 
-                        <a className="link-form forgot-password" href="#">¿Olvidaste tu contraseña?</a>
+                        <a className="link-form forgot-password" onClick={() => navigate('/forgot-password')}>¿Olvidaste tu contraseña?</a>
 
                         {message.text && (
                             <div className={`message ${message.type}`}>

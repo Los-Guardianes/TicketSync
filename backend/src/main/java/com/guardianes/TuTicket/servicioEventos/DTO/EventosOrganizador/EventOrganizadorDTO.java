@@ -1,7 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.DTO.EventosOrganizador;
 
 import com.guardianes.TuTicket.servicioEventos.model.Evento;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;

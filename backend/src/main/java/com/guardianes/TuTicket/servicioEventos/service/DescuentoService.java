@@ -21,7 +21,13 @@ public class DescuentoService {
     }
 
     public Descuento getDescuentoById(Integer id) {
-        return repo.findById(id).orElse(null);
+
+        Optional<Descuento> desc =  repo.findById(id);
+        if(desc.isPresent()) {
+            return desc.get();
+        }else {
+            throw new RecursoNoEncontradoException("Descuento con ID: "+ id +"  no encontrado");
+        }
     }
 
     public Descuento addDescuento(Descuento descuento) {
@@ -45,9 +51,11 @@ public class DescuentoService {
         }
     }
 
-    public Integer actualizarUsoDescuento(Integer idDescuento){
-        //Actualizar para cuando se tenga seguimiento de descuentos utilizados
-        return 0;
+    public Descuento actualizarUsoDescuento(Integer idDescuento){
+        if(idDescuento==null)return null;
+        Descuento desc = getDescuentoById(idDescuento);
+        desc.setLimiteTotal(desc.getLimiteTotal() - 1);
+        return updateDescuento(desc); //descuento actualizado
     }
     public List<Descuento> getActivosByEvento(Integer idEvento) {
         return repo.findByEvento_IdEventoAndActivoTrueOrderByFechaInicioAsc(idEvento);

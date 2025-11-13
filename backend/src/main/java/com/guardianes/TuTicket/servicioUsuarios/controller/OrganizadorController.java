@@ -1,5 +1,7 @@
 package com.guardianes.TuTicket.servicioUsuarios.controller;
 
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.ClienteRegDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.OrganizadorRegDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Organizador;
 import com.guardianes.TuTicket.servicioUsuarios.service.OrganizadorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +61,10 @@ public class OrganizadorController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/organizador/register")
+    public ResponseEntity<?> register(@RequestBody OrganizadorRegDTO organizador) {
+        return ResponseEntity.ok(service.agregarOrganizador(organizador));
     }
 }

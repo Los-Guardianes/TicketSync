@@ -4,7 +4,9 @@ import com.guardianes.TuTicket.servicioAutenticacion.GoogleDTO.GoogleAuthRequest
 import com.guardianes.TuTicket.servicioAutenticacion.service.AuthService;
 import com.guardianes.TuTicket.servicioAutenticacion.service.GoogleAuthService;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.UsuarioBearerDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.ForgotPasswordDTO;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.in.LoginDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.ResetPasswordDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -102,5 +104,15 @@ public class UsuarioController {
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Error en la autenticación con Google."));
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDTO request) {
+        return ResponseEntity.ok(service.forgotPassword(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO request) {
+        return ResponseEntity.ok(service.resetPassword(request));
     }
 }

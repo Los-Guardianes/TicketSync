@@ -91,4 +91,9 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return activo != null && activo;
     }
+
+    @Deprecated
+    public void setPassword(String hashedPassword) {
+        setHashCtr(hashedPassword);
+    }
 }
