@@ -11,6 +11,7 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
       onClick: () => {
         console.log('EDITAR DETALLES', idEvento);
         // futuro: navigate(`/organizer/evento/${idEvento}/editar-detalles`);
+        navigate(`/organizer/evento/${idEvento}/editar-detalles`);
       },
     },
     {
