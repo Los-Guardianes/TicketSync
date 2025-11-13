@@ -104,7 +104,7 @@ export const CreateEvent = () => {
             if (funcion.inicioD && funcion.inicioH) {
                 const fechaHoraInicio = new Date(`${funcion.inicioD}T${funcion.inicioH}`);
                 const ahora = new Date();
-                
+
                 if (fechaHoraInicio < ahora) {
                     erroresFunciones[`funcion-${index}-fechaPasado`] = "La fecha/hora de inicio no puede ser en el pasado";
                 }
@@ -188,7 +188,7 @@ export const CreateEvent = () => {
     const addFunction = () => {
         const newId = Math.max(...funciones.map(f => f.id)) + 1;
         setFunciones(prev => [...prev, { id: newId, inicioD: '', inicioH: '', finD: '', finH: '' }]);
-        
+
         // Limpiar error general de funciones
         if (errores.funciones) {
             const nuevosErrores = { ...errores };
@@ -271,7 +271,7 @@ export const CreateEvent = () => {
         e.stopPropagation();
         setDragActive(false);
         dragCounter.current = 0;
-        
+
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             handleImagenChange(e.dataTransfer.files[0]);
         }
@@ -434,37 +434,40 @@ export const CreateEvent = () => {
                         inputRef={inputFileRef}
                     />
                 </div>
+                <div className="basic-info-section">
 
-                <div className="section-title">Información para los asistentes</div>
 
-                {/* RESTRICCIONES */}
-                <div className="campo">
-                    <label htmlFor="restricciones">Restricciones de acceso</label>
-                    <input
-                        id="restricciones"
-                        type="text"
-                        name="restricciones"
-                        value={eventData.restricciones || ''}
-                        onChange={handleChange}
-                        placeholder="Ej: Mayores de 18 años, Entrada con invitación"
-                    />
-                    <div className="form-helper">
-                        Especifica si hay alguna restricción de edad, acceso o requisitos especiales
+                    <div className="section-title">Información para los asistentes</div>
+
+                    {/* RESTRICCIONES */}
+                    <div className="campo">
+                        <label htmlFor="restricciones">Restricciones de acceso</label>
+                        <input
+                            id="restricciones"
+                            type="text"
+                            name="restricciones"
+                            value={eventData.restricciones || ''}
+                            onChange={handleChange}
+                            placeholder="Ej: Mayores de 18 años, Entrada con invitación"
+                        />
+                        <div className="form-helper">
+                            Especifica si hay alguna restricción de edad, acceso o requisitos especiales
+                        </div>
                     </div>
-                </div>
 
-                {/* INFORMACION ADICIONAL */}
-                <div className="campo">
-                    <label htmlFor="informAdic">Información adicional</label>
-                    <textarea
-                        id="informAdic"
-                        name="informAdic"
-                        value={eventData.informAdic || ''}
-                        onChange={handleChange}
-                        placeholder="Brinde a los usuarios mas información: Detalles del evento, duración aproximada, panelistas, links relacionados, cronograma de eventos, etc."
-                    />
-                    <div className="form-helper">
-                        Añade detalles complementarios que ayuden al público a prepararse mejor para tu evento.
+                    {/* INFORMACION ADICIONAL */}
+                    <div className="campo">
+                        <label htmlFor="informAdic">Información adicional</label>
+                        <textarea
+                            id="informAdic"
+                            name="informAdic"
+                            value={eventData.informAdic || ''}
+                            onChange={handleChange}
+                            placeholder="Brinde a los usuarios mas información: Detalles del evento, duración aproximada, panelistas, links relacionados, cronograma de eventos, etc."
+                        />
+                        <div className="form-helper">
+                            Añade detalles complementarios que ayuden al público a prepararse mejor para tu evento.
+                        </div>
                     </div>
                 </div>
 

@@ -106,6 +106,12 @@ export const UbicacionEvento = () => {
 
 
                 <form className="ubicacion-form" onSubmit={(e) => e.preventDefault()}>
+                    <div className="basic-info-section">
+                        <div className="section-title">UBICACIÓN</div>
+                        <div className="campo">
+                            
+                        </div>
+                    </div>
                     <div className="form-content">
                         <div className="form-left">
                             <div className="campo">
