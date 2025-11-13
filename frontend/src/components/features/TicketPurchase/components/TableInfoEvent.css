@@ -1,0 +1,158 @@
+.table-info-event-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Section Styling */
+.info-section {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.info-section:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: #d0d0d0;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+/* Table Styling */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background-color: #fff;
+}
+
+.info-table thead {
+  background: var(--secondary-color);
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-table thead th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+  border-bottom: 2px solid #2c3e50;
+}
+
+.info-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.info-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.info-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.info-table tbody td {
+  padding: 1rem;
+  color: #555;
+}
+
+/* Cell Styling */
+.cell-primary {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.zone-column {
+  min-width: 150px;
+  font-weight: 700;
+}
+
+.type-column {
+  min-width: 120px;
+  text-align: center;
+}
+
+.zone-cell {
+  background-color: #f5f5f5;
+  font-weight: 700;
+}
+
+.price-cell {
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Pricing Table Specific */
+.pricing-table thead th {
+  background: var(--secondary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table-info-event-container {
+    gap: 1.5rem;
+  }
+
+  .info-section {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+
+  .info-table thead th,
+  .info-table tbody td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .section-header {
+    padding-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-table {
+    font-size: 0.8rem;
+  }
+
+  .info-table thead th,
+  .info-table tbody td {
+    padding: 0.5rem;
+  }
+
+  .zone-column {
+    min-width: 100px;
+  }
+
+  .type-column {
+    min-width: 80px;
+  }
+}

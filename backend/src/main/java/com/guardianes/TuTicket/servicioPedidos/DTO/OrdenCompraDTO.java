@@ -1,16 +1,11 @@
 package com.guardianes.TuTicket.servicioPedidos.DTO;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guardianes.TuTicket.servicioEventos.model.Funcion;
 import com.guardianes.TuTicket.servicioPedidos.model.EstadoOrdenCompra;
 import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -15,9 +15,9 @@ export const useEventData = (idevento) => {
     const [tarifas, setTarifas] = useState([]);
     const [tipoEntradas, setTipoEntradas] = useState([]);
     const [zonas, setZonas] = useState([]);
+    const [zonaxfuncion, setZonaxfuncion] = useState([]) 
 
-
-
+    const [selectedFuncion, setSelectedFuncion] = useState(null)
     // Calcula periodoActual cada vez que cambian periodos
     useEffect(() => {
         if (periodos && periodos.length > 0) {
@@ -28,6 +28,25 @@ export const useEventData = (idevento) => {
         }
     }, [periodos]);
 
+
+    const seleccionarFuncion = (idSeleccionado) => {
+    const funcion = funciones.find(
+        (f) => f.idFuncion === parseInt(idSeleccionado)
+    );
+    setSelectedFuncion(funcion);
+    };
+
+
+    const getMaxCantidadTickets = (zona) => {
+        //Aquí se calcula el máximo de tickets por zona que se pueden comprar, limitado a su vez por la cantidad máxima de compra de tickets que el evento permite
+        if(!selectedFuncion)return;
+        const zxf = zonaxfuncion.find(zf => zf.idZona === zona.idZona && zf.idFuncion ===  selectedFuncion?.idFuncion)
+        const entradasDisponibles = zona.aforo - zxf.comprasActuales;
+        const maxComprasEvento = evento?.maxComprasTickets
+        const maxCantidad = maxComprasEvento >= (entradasDisponibles >= 0 ? entradasDisponibles : 0) ? entradasDisponibles : maxComprasEvento //devuelve el menor
+        return maxCantidad
+    }
+
     useEffect(()=>{
         //Se cargan todos los datos necesarios
         fetchEvento();
@@ -35,7 +54,8 @@ export const useEventData = (idevento) => {
         fetchFunciones();
         fetchTarifas();
         fetchZonas();
-        fetchTipoEntradas();  
+        fetchTipoEntradas();
+        fetchZonaxfuncion();
     },[idevento])
 
     const getPeriodoActual = (listaPeriodos) => {
@@ -46,6 +66,11 @@ export const useEventData = (idevento) => {
             const fin = new Date(p.fechaFin);
             return hoy >= inicio && hoy <= fin;
         }) || null;
+    }
+
+    const fetchZonaxfuncion = async () => {
+        const data = await apiFetch(`/api/zonaxfuncion/evento/${idevento}`)
+        setZonaxfuncion(data);
     }
 
     const fetchEvento = async () => {
@@ -66,7 +91,6 @@ export const useEventData = (idevento) => {
 
     const fetchFunciones = async () => {
         const data = await apiFetch(`/api/funcion/evento/${idevento}`);
-        console.log("Funciones: ", data)
         setFunciones(data || []);
     }
 
@@ -90,6 +114,10 @@ export const useEventData = (idevento) => {
         funciones,
         tipoEntradas,
         tarifas,
-        periodoActual,        
+        periodoActual,
+        selectedFuncion,
+        setSelectedFuncion,
+        getMaxCantidadTickets,
+        seleccionarFuncion
     };
 }

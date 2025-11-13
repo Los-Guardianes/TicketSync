@@ -1,28 +1,22 @@
-import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEventData } from "../service/useEventData"
 import { useTicketCodigoDesc } from '../service/useTicketCodigoDesc'
 import { useCompraTickets } from '../service/useCompraTickets'
 import { ShoppingDetails } from '../components/ShoppingDetails'
 import { InfoEventTicket } from '../components/InfoEventTicket'
-import { Notification } from "../../../../components/common/Notification/Notification"
 import { TableInfoEvent } from '../components/TableInfoEvent'
 import "./TicketPurchase.css"
 import { PurchaseTicket } from '../components/PurchaseTicket'
 import { ApplyDiscount } from '../components/ApplyDiscount'
 import { useNotification } from '../../../../context/NotificationContext'
+import { DropdownList } from '../../../common/DropDownList/DropDownList' 
 export const TicketPurchase = () => {
 
     const {id} = useParams();
-
-
-    const [selectedFuncion, setSelectedFuncion] = useState(null)
-
-    const { 
-        showNotification 
-    } = useNotification()
-
+    
+    const { showNotification } = useNotification()
     const navigate = useNavigate();
+
     const {
         zonas,
         periodos,
@@ -30,7 +24,11 @@ export const TicketPurchase = () => {
         funciones,
         tipoEntradas,
         tarifas,
-        periodoActual,    
+        periodoActual,
+        selectedFuncion,        
+        setSelectedFuncion,
+        getMaxCantidadTickets,
+        seleccionarFuncion
     } = useEventData(id);
 
     const {
@@ -92,51 +90,46 @@ export const TicketPurchase = () => {
     return (
         <main className="ticket-purchase-main">
             <div className="ticket-purchase-container">
-                <div className="ticket-purchase-grid">
-                    {/* Main Content */}
-                    <div className='ticket-purchase-content'>
+                <div className="ticket-purchase-info-event ticket-purchase-section">
+                        <InfoEventTicket evento={evento}></InfoEventTicket>
                         <TableInfoEvent 
                             periodos = {periodos}
                             zonas = {zonas}
                             funciones = {funciones}
                             tipoEntradas= {tipoEntradas}
                             tarifas={tarifas}
-                        ></TableInfoEvent>
+                        >
+                        </TableInfoEvent>
+                </div>
+                <div className="ticket-purchase-grid">
+                    {/* Main Content */}
+                    <div className='ticket-purchase-content'>
+
                         <section className="ticket-purchase-section">
                             <div className="ticket-header-selection">
-                                <h3 className="">Selecciona tu ticket</h3>
-                                <div className="dropdown-wrapper">
-                                    <select
-                                    className="dropdown-button"
-                                    value={selectedFuncion ? selectedFuncion.idFuncion : ""}
-                                    onChange={(e) => {
-                                        const selected = funciones.find(
-                                        (opt) => opt.idFuncion === parseInt(e.target.value)
-                                        );
-                                        if (selected) setSelectedFuncion(selected);
-                                    }}
-                                    >
-                                    <option value="">Seleccionar función</option>
-                                    {funciones.map((opt) => (
-                                        <option key={opt.idFuncion} value={opt.idFuncion}>
-                                        {getNombre(opt)}
-                                        </option>
-                                    ))}
-                                    </select>
-                                </div>
-                                </div>
+                            <h3 className='ticket-purchase-section-title'>Selecciona tu ticket</h3>
+                            <DropdownList
+                                firstElement={"Selecciona una función"}
+                                list={funciones}
+                                id={"idFuncion"}
+                                value={selectedFuncion ? selectedFuncion.idFuncion : ""}
+                                onChangeOption={seleccionarFuncion}
+                                getNombre={getNombre}
+                            >                                
+                            </DropdownList>
+                            </div>
 
                             <ShoppingDetails 
                                 listaDetalles={listaDetalles}
                                 updateCantidad={updateCantidad}                                
-                                maxCantidad={evento?.maxComprasTickets}
+                                getMaxCantidadTickets={getMaxCantidadTickets}
+                                disabled = {selectedFuncion}
                             />
                         </section>
                     </div>
                     {/* Sidebar */}
                     <aside className="ticket-purchase-sidebar">
                         <section className="ticket-purchase-section">
-                            <InfoEventTicket evento={evento}></InfoEventTicket>
                             <ApplyDiscount
                                 formData={formData}
                                 handleFormData={handleFormData}

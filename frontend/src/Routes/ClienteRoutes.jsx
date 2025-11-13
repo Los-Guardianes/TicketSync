@@ -29,8 +29,12 @@ import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
+import {ForgotPassword} from "../components/features/LogIn/pages/ForgotPassword";
+import {ResetPassword} from "../components/features/LogIn/pages/ResetPassword";
 
 import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
+
+
 export const ClienteRoutes = () => {
   return (
     <Routes>
@@ -42,6 +46,8 @@ export const ClienteRoutes = () => {
       <Route path="/register-client" element={<Register />} />
       <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Para testeo del componente de s3 */}
       <Route path="/test-imagen" element={<ImageUploader />} />

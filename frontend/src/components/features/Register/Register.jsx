@@ -1,124 +1,18 @@
-import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getCiudades } from '../../../globalServices/UbicacionService';
-import { postClient } from '../../../globalServices/ClienteService';
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
+import {useRegister} from "./service/useRegister";
+import { DropdownList } from '../../common/DropDownList/DropDownList';
 
-export const Register = () => {
-    const response = useNavigate(); /*Hook que permite redirigir al presionar el boton*/
-    const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
-    const [ciudad, setCiudad] = useState([]);
+export const Register = () => {     
+    const {
+        ciudades,
+        selectedCiudad,
+        formUsuario,
+        seleccionarCiudad,
+        handleUserForm,
+        handleSubmit
+    } = useRegister("CLIENTE")
 
-    // Fecha actual en formato YYYY-MM-DD
-    const today = new Date().toISOString().split("T")[0];
-
-    const [newClient, setNewClient] = useState({
-        nombre: "",
-        apellido: "",
-        email: "",
-        hashCtr: "",
-        verificado: false,
-        telefono: "",
-        activo: true,
-        ciudad: {
-            "idCiudad": null
-        },
-        dni: "",
-        rol: "CLIENTE",
-        fechaNacimiento: today  
-    });
-
-    // Para validar confirmación de contraseña
-    const [confirmPassword, setConfirmPassword] = useState("");
-
-    const { nombre, apellido, email, hashCtr, telefono, dni, fechaNacimiento } = newClient;
-
-    useEffect(() => {
-        const getCiudad = async () => {
-            const data = await getCiudades();
-            setCiudad(data);
-        };
-        getCiudad();
-    }, []);
-
-    //Este es quien modifica al instante cada vez que se agregue algo en el input
-    const manejarNuevoUsuario = ({ target: { name, value } }) => {
-        // Hace une nueva copia y cada nuevo valor es 
-        // reemplazado por cada vez que cambie el input
-        setNewClient({ ...newClient, [name]: value });
-    }
-
-    // Validaciones simples
-    const validar = () => {
-        const emailOk = /^\S+@\S+\.\S+$/.test((email || '').trim());
-        const dniOk = /^\d{8}$/.test((dni || '').trim());
-        const celOk = /^\d{9}$/.test((telefono || '').trim());
-        const passOk = (hashCtr || '').length >= 8;
-        const passMatch = hashCtr === confirmPassword;
-        const ciudadOk = !!newClient.ciudad.idCiudad;
-        const fechaOk = !!fechaNacimiento && fechaNacimiento <= today;
-
-        if (!(nombre || '').trim()) return 'El nombre es obligatorio.';
-        if (!(apellido || '').trim()) return 'El apellido es obligatorio.';
-        if (!emailOk) return 'Ingresa un correo válido.';
-        if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
-        if (!passMatch) return 'Las contraseñas no coinciden.';
-        if (!dniOk) return 'El DNI debe tener 8 dígitos.';
-        if (!celOk) return 'El celular debe tener 9 dígitos.';
-        if (!fechaOk) return 'Selecciona una fecha de nacimiento válida.';
-        if (!ciudadOk) return 'Debes seleccionar una ciudad.';
-        return null;
-    };
-
-    const formCreateNewClient = async (event) => {
-        event.preventDefault();
-
-        const error = validar();
-        if (error) {
-            alert(error);
-            return;
-        }
-
-        
-        const payload = {
-            nombre: (nombre || '').replace(/\s+/g, ' ').trim(),
-            apellido: (apellido || '').replace(/\s+/g, ' ').trim(),
-            email: (email || '').trim().toLowerCase(),
-            hashCtr, // el backend debe hashear
-            verificado: false,
-            telefono: (telefono || '').replace(/\D/g, ''), // solo dígitos
-            activo: true,
-            ciudad: { idCiudad: newClient.ciudad.idCiudad },
-            dni: (dni || '').replace(/\D/g, ''), // solo dígitos
-            rol: "CLIENTE",
-            fechaNacimiento
-        };
-
-        try {
-            await postClient(payload); // Llamo al service
-            alert("Cliente registrado correctamente");
-            response("/home"); // Redirige al home
-        } catch (error) {
-            alert("Hubo un error: " + error.message);
-        }
-
-        // Reset
-        setNewClient({
-            nombre: "",
-            apellido: "",
-            email: "",
-            hashCtr: "",
-            verificado: false,
-            telefono: "",
-            activo: true,
-            ciudad: { "idCiudad": null },
-            dni: "",
-            rol: "CLIENTE",
-            fechaNacimiento: today 
-        });
-        setConfirmPassword("");
-        setSelectedCiudad("Seleccionar ciudad");
-    }
 
     return (
         <div className='row vh-100 w-100 mx-0' style={{ overflow: "hidden" }}>
@@ -128,47 +22,48 @@ export const Register = () => {
                         alt="tuticketLogo" style={{ width: "10rem" }} />
                 </div>
                 <h2 className='text-center mt-4 mb-4' style={{ color: "#2EA062" }}>Bienvenidos a tu ticket</h2>
-                <form onSubmit={formCreateNewClient}>
+                <form onSubmit={handleSubmit}>
                     <div className='d-grid gap-2 form-group container mx-auto'>
                         <div className='row'>
                             <div className='col'>
                                 <label htmlFor="inpNombre" className='col-3 text-start'>Nombre</label>
                                 <input className='form-control border-0'
                                     type="text" id='inpNombre' placeholder='Ingrese su nombre' name='nombre'
-                                    value={nombre} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={formUsuario.nombre} style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                             <div className='col'>
                                 <label htmlFor="inpApellido" className='col-3 text-start'>Apellido</label>
                                 <input className='form-control border-0'
                                     type="text" id='inpApellido' placeholder='Ingrese su apellido' name='apellido'
-                                    value={apellido} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={formUsuario.apellido} style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col'>
                                 <label htmlFor="inpEmail" className='col-3 text-start'>Correo</label>
-                                <input className='form-control border-0' type="email"
+                                <input className='form-control border-0' type="email" autoComplete='email'
                                     id='inpEmail' placeholder='Ingrese un correo electronico' name='email'
-                                    value={email}
-                                    style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={formUsuario.email}
+                                    style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col'>
                                 <label htmlFor="inpPassword" className='col-3 text-start'>Contraseña</label>
                                 <input className='form-control border-0' type="password"
-                                    id='inpPassword' placeholder='Ingrese una contraseña' name='hashCtr'
-                                    value={hashCtr} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    id='inpPassword' placeholder='Ingrese una contraseña' name='hashCtr' autoComplete='new-password'
+                                    value={formUsuario.hashCtr} style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col'>
                                 <label htmlFor="inpConfirmPassword" className='col-3 text-start'>Confirmar contraseña</label>
                                 <input className='form-control border-0' type="password"
-                                    id='inpConfirmPassword' placeholder='Confirme su contraseña'
-                                    style={{ background: "#EBF5EB" }}
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)} />
+                                    id='inpConfirmPassword' placeholder='Confirme su contraseña' autoComplete='new-password'
+                                    name = 'confirmPassword'
+                                    style={{ background: "#EBF5EB" }}                                   
+                                    value={formUsuario.confirmPassword}
+                                    onChange={handleUserForm} />
                             </div>
                         </div>
                         <div className='row'>
@@ -176,13 +71,13 @@ export const Register = () => {
                                 <label htmlFor="inpDNI" className='text-start'>DNI</label>
                                 <input className='form-control border-0' type="text"
                                     id='inpDNI' placeholder='Ingrese su número de indetidad' name='dni'
-                                    value={dni} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={formUsuario.dni} style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                             <div className='col'>
                                 <label htmlFor="inpCelular" className='text-start'>Celular</label>
                                 <input className='form-control border-0' type="text"
                                     id='inpCelular' placeholder='Ingrese su número celular' name='telefono'
-                                    value={telefono} style={{ background: "#EBF5EB" }} onChange={manejarNuevoUsuario} />
+                                    value={formUsuario.telefono} style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                         </div>
 
@@ -194,41 +89,29 @@ export const Register = () => {
                                     type="date"
                                     id='inpFechaNac'
                                     name='fechaNacimiento'
-                                    value={fechaNacimiento}
-                                    max={today}
+                                    value={formUsuario.fechaNacimiento}
+                                    max={new Date()}
                                     style={{ background: "#EBF5EB" }}
-                                    onChange={manejarNuevoUsuario}
+                                    onChange={handleUserForm}
                                 />
                             </div>
                         </div>
 
                         <div className='row d-flex align-items-center mt-2'>
-                            <label htmlFor="inpCiudad" className="col-2 text-start">Ciudad</label>
+                            <p  className="col-2 text-start">Ciudad</p>
                             <div className="col">
                                 <div className="dropdown">
-                                    <button className="btn btn-light dropdown-toggle " style={{ background: "#EBF5EB" }}
-                                        type="button"
-                                        id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        {selectedCiudad}
-                                    </button>
-                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {ciudad.map((itemCiudad) => (
-                                            <li key={itemCiudad.idCiudad}>
-                                                <a className="dropdown-item" href="#"
-                                                    onClick={() => {
-                                                        setSelectedCiudad(itemCiudad.nombre);
-                                                        setNewClient({
-                                                            ...newClient,
-                                                            ciudad: { idCiudad: itemCiudad.idCiudad }
-                                                        });
-                                                    }}>
-                                                    {itemCiudad.nombre}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                        <DropdownList
+                                            firstElement={"Selecciona una ciudad"}
+                                            list={ciudades}
+                                            id={"idCiudad"}
+                                            value={selectedCiudad ? selectedCiudad.idCiudad : ""}
+                                            onChangeOption={seleccionarCiudad}
+                                            getNombre={(ciudad) => {
+                                                return ciudad.nombre
+                                            }}
+                                        >                                            
+                                        </DropdownList>                            
                                 </div>
                             </div>
                         </div>
@@ -242,7 +125,7 @@ export const Register = () => {
                         </div>
                     </div>
                     <div className='container w-100 d-flex justify-content-between'>
-                        <NavLink className={'btn btn-dark'} to={"/"} >Regresar</NavLink>
+                        <NavLink to="/login" className={'btn btn-dark'} to={"/"} >Regresar</NavLink>
                         <button className='btn btn-success' type='submit'>Registrar</button>
                     </div>
                 </form>
