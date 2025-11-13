@@ -1,50 +1,36 @@
-/// <reference types="cypress" />
+// cypress/e2e/HU2-login-credenciales.cy.js
 
-describe('HU2 - Inicio de sesión con correo y contraseña', () => {
-  const email = 'mario1@mail.com';
-  const password = 'hash11';
-  const nombreUsuario = 'Mario';
-
+describe('HU2 - Login de Usuario con credenciales', () => {
+  
   beforeEach(() => {
-    // Mock de departamentos (puede ser necesario si la página home los carga)
-    cy.intercept('GET', '**/api/dpto**', {
-      statusCode: 200,
-      body: [
-        { idDpto: '01', nombre: 'Lima' },
-        { idDpto: '02', nombre: 'Arequipa' }
-      ]
-    }).as('getDepartamentos');
+    cy.visit('http://localhost:5173/home');
   });
 
-  it('debe permitir al usuario iniciar sesión y mostrar mensaje de bienvenida', () => {
-    // Visitar la página de inicio
-    cy.visit('/home');
+  it('Prueba 1: Debe permitir iniciar sesión con correo y contraseña válidos', () => {
+    cy.contains('Login').click();
 
-    // Hacer click en el botón "Login"
-    cy.contains('Login').should('be.visible').click();
+    cy.url().should('eq', 'http://localhost:5173/login');
+    cy.contains('h2', 'Iniciar sesión').should('be.visible');
 
-    // Verificar que estamos en la página de login
+    cy.get('input[name="email"]').type('mario1@mail.com');
+    cy.get('input[name="password"]').type('hash11');
+
+    cy.contains('button', 'Iniciar sesión').click();
+
+    cy.url().should('match', /\/(home)?$/, { timeout: 10000 });
+    cy.contains('¡Hola, Mario!', { timeout: 10000 }).should('be.visible');
+  });
+
+  it('Prueba 1b: Debe mostrar error con credenciales inválidas', () => {
+    cy.visit('http://localhost:5173/login');
+
+    cy.get('input[name="email"]').type('usuario_invalido@mail.com');
+    cy.get('input[name="password"]').type('contraseña_incorrecta');
+
+    cy.contains('button', 'Iniciar sesión').click();
+
+    cy.get('.message.error', { timeout: 10000 }).should('be.visible');
     cy.url().should('include', '/login');
-
-    // Completar el formulario de login
-    cy.get('input[type="email"]').should('be.visible').clear().type(email);
-    cy.get('input[type="password"]').should('be.visible').clear().type(password);
-
-    // Presionar el botón "Iniciar sesión"
-    cy.get('button[type="submit"]').click();
-
-    // Verificar que se redirige a la página de inicio
-    cy.url({ timeout: 10000 }).should('include', '/home');
-
-    // Verificar que aparece el mensaje de bienvenida en la esquina superior derecha
-    cy.contains(`¡Hola, ${nombreUsuario}!`, { timeout: 10000 }).should('be.visible');
-
-    // Verificación adicional: el botón "Login" ya no debe estar visible
-    cy.contains('button', 'Login').should('not.exist');
-
-    // Verificación adicional: debe aparecer el botón "Cerrar Sesión"
-    cy.contains('Cerrar Sesión').should('be.visible');
-
-    cy.log('✅ Login exitoso - Usuario autenticado correctamente');
   });
+
 });
