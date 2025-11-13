@@ -54,7 +54,7 @@ public class GlobalExcepcionHandler {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Map<String, Object>> handleDataAccessException(LogicaNegocioException ex, WebRequest request) {
+    public ResponseEntity<Map<String, Object>> handleDataAccessException(DataAccessException ex, WebRequest request) {
         return new ResponseEntity<>(construirRespuesta(ex, HttpStatus.INTERNAL_SERVER_ERROR, request), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -1,7 +1,9 @@
 package com.guardianes.TuTicket.servicioUsuarios.controller;
 
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.ClienteRegDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Cliente;
 import com.guardianes.TuTicket.servicioUsuarios.service.ClienteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ClienteController {
 
-    @Autowired
-    private ClienteService service;
+    private final ClienteService service;
 
     @PostMapping("/cliente")
     public ResponseEntity<?> createCliente(@RequestBody Cliente cliente) {
@@ -59,5 +61,10 @@ public class ClienteController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/cliente/register")
+    public ResponseEntity<?> register(@RequestBody ClienteRegDTO  cliente) {
+        return ResponseEntity.ok(service.agregarCliente(cliente));
     }
 }
