@@ -31,7 +31,7 @@ import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
 import {ForgotPassword} from "../components/features/LogIn/pages/ForgotPassword";
 import {ResetPassword} from "../components/features/LogIn/pages/ResetPassword";
-
+import { MiPerfil } from "../components/features/Perfil/pages/MiPerfil";
 import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
 
 
@@ -82,7 +82,7 @@ export const ClienteRoutes = () => {
         />
 
         <Route path="mis-tickets/evento/:idEvento" element={<DetalleTickets />} />
-
+        <Route path="perfil" element={<MiPerfil />} />
         
       </Route>
     </Routes>

@@ -60,14 +60,14 @@ export const useRegister = (rol, onSuccessRedirect = "/home") => {
   const validar = () => {
     const emailOk = /^\S+@\S+\.\S+$/.test((formUsuario.email || "").trim());
     const celOk = /^\d{9}$/.test((formUsuario.telefono || "").trim());
-    const passOk = (formUsuario.hashCtr || "").length >= 8;
+    const passOk = (formUsuario.hashCtr || "").length >= 6;
     const passMatch = formUsuario.hashCtr === formUsuario.confirmPassword;
     const ciudadOk = !!formUsuario.ciudad.idCiudad;
 
     if (!(formUsuario.nombre || "").trim()) return "El nombre es obligatorio.";
     if (!(formUsuario.apellido || "").trim()) return "El apellido es obligatorio.";
     if (!emailOk) return "Ingresa un correo válido.";
-    if (!passOk) return "La contraseña debe tener al menos 8 caracteres.";
+    if (!passOk) return "La contraseña debe tener al menos 6 caracteres.";
     if (!passMatch) return "Las contraseñas no coinciden.";
     if (!celOk) return "El celular debe tener 9 dígitos.";
     if (!ciudadOk) return "Debes seleccionar una ciudad.";

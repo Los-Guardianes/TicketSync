@@ -14,4 +14,7 @@ public class UsuarioBearerDTO {
     private String rol;
     private String nombre;
     private String apellido;
+    private String telefono;
+    private String ciudad;
+    private String departamento;
 }

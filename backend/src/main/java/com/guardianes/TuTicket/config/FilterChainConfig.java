@@ -94,7 +94,7 @@ public class FilterChainConfig {
                             "/api/miticket/**",
                             "/api/ticket/**"
                     ).authenticated()
-
+                    .requestMatchers("/api/usuario/**").authenticated()
                 /*===============================================
                             4. Administrador
                 ================================================*/
