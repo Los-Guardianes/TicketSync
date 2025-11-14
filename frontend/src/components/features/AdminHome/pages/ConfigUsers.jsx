@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getUsers, getUser, updateUser, postAdmin } from '../service/UserConfigService';
 import { getCiudades } from '../../../../globalServices/UbicacionService';
+import { useNavigate } from 'react-router-dom';
 import "./ConfigUsers.css";
 
 export const ConfigUsers = () => {
@@ -8,6 +9,7 @@ export const ConfigUsers = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
   const [ciudad, setCiudad] = useState([]);
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     const data = await getUsers();
@@ -156,6 +158,11 @@ export const ConfigUsers = () => {
   return (
     <div className="config-users-wrapper">
       <div className="config-users-container">
+        <div className="back-button-wrapper">
+          <button className="back-button" onClick={() => navigate("/home-admin")}>
+            ← Volver
+          </button>
+        </div>
         {/* Filtros */}
         <div className="filters">
           <div className="filters-left">
@@ -280,7 +287,7 @@ export const ConfigUsers = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <div className="dropdown">
-                  <button className="btn btn-light dropdown-toggle " style={{ background: "#EBF5EB" }}
+                  <button className="btn btn-light dropdown-toggle " style={{ background: "#ffffffff" }}
                       type="button"
                       id="dropdownMenuButton"
                       data-bs-toggle="dropdown"

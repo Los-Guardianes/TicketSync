@@ -29,6 +29,7 @@ import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import { ConfigUsers } from "../components/features/AdminHome/pages/ConfigUsers";
+import { ConfigParams } from "../components/features/AdminHome/pages/ConfigParams";
 import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
 
 import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
@@ -67,6 +68,7 @@ export const ClienteRoutes = () => {
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
         <Route path="configusers" element={<ConfigUsers />} />
+        <Route path="configparams" element={<ConfigParams />} />
         <Route
           path="organizer/evento/:idEvento/descuentos/nuevo"
           element={<CreateDiscount />}

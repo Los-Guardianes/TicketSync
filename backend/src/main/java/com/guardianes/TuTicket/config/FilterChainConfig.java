@@ -77,13 +77,15 @@ public class FilterChainConfig {
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/api/cliente/**").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/cliente/**").permitAll() //sino no funcionaba
                     .requestMatchers(HttpMethod.POST, "/api/organizador").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/google").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/register/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR")
                     .requestMatchers(HttpMethod.PUT, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR") //para gestión de clientes
+                    .requestMatchers("/api/params/**").permitAll() //cambiar
+                    .requestMatchers("/api/params").permitAll() //cambiar 
                     .requestMatchers("/api/cliente/**").hasAnyRole("ADMINISTRADOR", "ORGANIZADOR")
                     .requestMatchers(HttpMethod.GET,"/api/organizador/**").hasAnyRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.GET,"/api/comp/**").authenticated()
