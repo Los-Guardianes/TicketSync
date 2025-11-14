@@ -48,18 +48,19 @@ public class FilterChainConfig {
             "/api/catevento/**",
             "/api/tarifa/**",
             "/api/tipoentrada/**",
-            "/api/periodo/**"
+            "/api/periodo/**",
+            "/api/cliente/**"
+             //En caso error inesperado, descomentar esta línea
 
-            /* En caso error inesperado, descomentar esta línea
-            "/api/cliente/**",
-            "/api/organizador",
+            /*,"/api/organizador",
             "/api/organizador/reporte/excel", // Cambiar luego si es público o no
             "/api/miticket/**", //descargar ticket
             "/api/orden/**",
             "/api/ticket/**",
             "/api/descuento/**",
-            "/api/subirImagens3/**"
-             */
+            "/api/subirImagens3/**",
+            "/api/administrador"*/
+
     };
 
     @Bean
@@ -76,11 +77,13 @@ public class FilterChainConfig {
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/cliente/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/organizador").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/google").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/register/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR")
+                    .requestMatchers(HttpMethod.PUT, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR") //para gestión de clientes
                     .requestMatchers("/api/cliente/**").hasAnyRole("ADMINISTRADOR", "ORGANIZADOR")
                     .requestMatchers(HttpMethod.GET,"/api/organizador/**").hasAnyRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.GET,"/api/comp/**").authenticated()
@@ -94,7 +97,7 @@ public class FilterChainConfig {
                     .requestMatchers(HttpMethod.POST,"/api/ciudad/**").hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.POST,"/api/dpto/**").hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.POST,"/api/funcion/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/catevento/**").hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,"/api/usuario/**").hasRole(Rol.ADMINISTRADOR.name())
                     .requestMatchers("/api/**").hasRole(Rol.ADMINISTRADOR.name())
                     .anyRequest().authenticated()
             )

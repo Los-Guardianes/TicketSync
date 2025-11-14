@@ -1,6 +1,8 @@
 import { apiFetch } from '../../../../globalServices/API';
 
 export const getUsers = () => apiFetch(`/api/usuario`);
+export const postAdmin = (admin) =>
+  apiFetch('/api/admin', { method: 'POST', body: JSON.stringify(admin) });
 export const getUser = (idUsuario, rol) => {
   switch (rol) {
     case "ADMINISTRADOR":
@@ -16,25 +18,25 @@ export const getUser = (idUsuario, rol) => {
        throw new Error(`Rol desconocido: ${rol}`);
   }
 };
-export const updateUser = async (user, rol) => {
-  const idUsuario = user.idUsuario;
+export const updateUser = async (user, id) => {
+  const rol = user.rol;
 
   let url = "";
   switch (rol) {
     case "ADMINISTRADOR":
-      url = `/api/admin/${idUsuario}`;
+      url = `/api/admin/${id}`;
       break;
     case "ORGANIZADOR":
-      url = `/api/organizador/${idUsuario}`;
+      url = `/api/organizador/${id}`;
       break;
     case "CLIENTE":
-      url = `/api/cliente/${idUsuario}`;
+      url = `/api/cliente/${id}`;
       break;
     default:
       throw new Error(`Rol desconocido: ${rol}`);
   }
-
-  return fetch(url, {
+  console.log(url)
+  return apiFetch(url, {
     method: "PUT",
     body: JSON.stringify(user),
   });
