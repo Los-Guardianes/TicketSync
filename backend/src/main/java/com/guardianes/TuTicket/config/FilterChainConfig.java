@@ -71,6 +71,7 @@ public class FilterChainConfig {
                         2. Autenticados (roles específicos)
                 ================================================*/
                     .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole(Rol.CLIENTE.name(), Rol.ORGANIZADOR.name())
+                    .requestMatchers("/api/subirImagens3/**").hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.POST,
                             "/api/evento/**",
                             "/api/zona/**",
