@@ -137,7 +137,7 @@ export const GoogleVerification = () => {
                 )}
                 
                 <button
-                    className='btn btn-primary btn-lg mt-3' 
+                    className='btn-primary btn-lg mt-3' 
                     onClick={handleVerification}
                     disabled={!isCodeComplete}
                 >

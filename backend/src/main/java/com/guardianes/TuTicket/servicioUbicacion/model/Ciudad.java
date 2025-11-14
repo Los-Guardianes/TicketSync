@@ -1,6 +1,5 @@
 package com.guardianes.TuTicket.servicioUbicacion.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +21,6 @@ public class Ciudad {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idDpto", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Dpto dpto;
 
     @Column(length = 10)
