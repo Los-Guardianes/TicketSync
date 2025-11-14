@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useEventData } from "../service/useEventData"
 import { useTicketCodigoDesc } from '../service/useTicketCodigoDesc'
 import { useCompraTickets } from '../service/useCompraTickets'
@@ -16,6 +16,7 @@ export const TicketPurchase = () => {
     
     const { showNotification } = useNotification()
     const navigate = useNavigate();
+    const location = useLocation(); // 1. OBTÉN LA UBICACIÓN
 
     const {
         zonas,
@@ -82,8 +83,8 @@ export const TicketPurchase = () => {
             descuentoAplicado: montoDescuentoPeriodo + montoDescuentoCodigo,
             total: total,
             funcion: selectedFuncion,
-            idDescuentoUtilizado: descuentoCodigo?.idDescuento ?? null //Es opcional el descuento
-
+            idDescuentoUtilizado: descuentoCodigo?.idDescuento ?? null, //Es opcional el descuento
+            returnTo: location.pathname
         }});        
     }
     

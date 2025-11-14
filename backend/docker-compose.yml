@@ -10,7 +10,7 @@ services:
       
       # --- PARA DESARROLLO LOCAL ---
       # Usar 8080 en el host para no chocar con el frontend
-     - "80:8080" #Expone backend en http://localhost:8080
+     - "8080:8080" #Expone backend en http://localhost:8080
     restart: always
     environment:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}

@@ -24,7 +24,7 @@ export const BarraLateral = () => {
             'nav-link' + (isActive ? ' active fw-bold' : '')
           }
         >
-          Mi perfil
+          Mi Perfil
         </NavLink>
 
         {esOrganizador ? (

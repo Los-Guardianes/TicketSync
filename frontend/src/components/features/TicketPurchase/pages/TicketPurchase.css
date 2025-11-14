@@ -195,3 +195,28 @@
   display: flex;
   gap: 40px;
 }
+
+/* --- AÑADIR ESTO AL FINAL DE TU ShoppingDetails.css --- */
+
+/* Estilo para la tarjeta cuando está agotada */
+.entrada-card.agotado {
+  background-color: #f8f8f8; /* Un fondo gris muy claro */
+  opacity: 0.7;             /* La atenuamos para indicar que no está disponible */
+  border-color: #e0e0e0;
+}
+
+/* Contenedor para el mensaje "Agotado" */
+.agotado-mensaje {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; /* Alinea a la derecha, donde iría el selector */
+  align-items: center;
+  min-height: 30px; /* Damos una altura similar a la del selector */
+}
+
+/* Estilo para el texto "Agotado" (usa <strong>) */
+.agotado-mensaje strong {
+  color: #e74c3c; /* Un color rojo para "agotado" */
+  font-weight: 700;
+  font-size: 14px;
+}

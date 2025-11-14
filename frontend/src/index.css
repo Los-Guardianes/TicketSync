@@ -37,11 +37,10 @@ body {
     border: none;
     border-radius: 5px;
     padding: 10px;
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    color: white;
 }
 
 .btn-primary:hover {
@@ -61,10 +60,9 @@ body {
     border-radius: 5px;
     padding: 10px;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    color: white;
 }
 
 .btn-secondary:hover {
