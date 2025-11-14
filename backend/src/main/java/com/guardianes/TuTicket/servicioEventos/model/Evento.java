@@ -1,5 +1,6 @@
 package com.guardianes.TuTicket.servicioEventos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guardianes.TuTicket.servicioUbicacion.model.Ciudad;
 import com.guardianes.TuTicket.servicioUsuarios.model.Organizador;
 import com.guardianes.TuTicket.servicioEventos.model.TipoMoneda;

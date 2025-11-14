@@ -3,6 +3,8 @@ package com.guardianes.TuTicket.servicioUsuarios.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @NoArgsConstructor
 @Data

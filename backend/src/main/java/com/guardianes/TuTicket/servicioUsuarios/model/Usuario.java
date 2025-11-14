@@ -54,6 +54,7 @@ public class Usuario implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "idCiudad", referencedColumnName = "idCiudad")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Ciudad ciudad;
 
     @Override

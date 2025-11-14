@@ -41,9 +41,12 @@ export const ClienteRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
-      <Route path="home" element={<Home />} />
+
+      {/* SIN Layout */}
       <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
+      <Route path="/register" element={<RegisterOptions />} />
+      <Route path="/register-client" element={<Register />} />
+      <Route path="/register-organizer" element={<RegisterOrganizer />} />
       <Route path="verification" element={<GoogleVerification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />

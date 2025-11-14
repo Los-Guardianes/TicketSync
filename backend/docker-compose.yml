@@ -10,13 +10,9 @@ services:
       
       # --- PARA DESARROLLO LOCAL ---
       # Usar 8080 en el host para no chocar con el frontend
-     - "80:8080" #Expone backend en http://localhost:8080
+     - "8080:8080" #Expone backend en http://localhost:8080
     restart: always
     environment:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
