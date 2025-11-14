@@ -81,6 +81,8 @@ public class FilterChainConfig {
                             "/api/funcion/**",
                             "/api/catevento/**"
                     ).hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.PUT, "/api/evento/**")
+                    .hasRole(Rol.ORGANIZADOR.name())
 
                     .requestMatchers(HttpMethod.GET,"/api/organizador/**")
                     .hasAnyRole(Rol.ORGANIZADOR.name(), Rol.ADMINISTRADOR.name())
