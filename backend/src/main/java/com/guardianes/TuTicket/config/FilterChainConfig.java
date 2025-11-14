@@ -87,7 +87,7 @@ public class FilterChainConfig {
                     .requestMatchers("/api/params/**").permitAll() //cambiar
                     .requestMatchers("/api/params").permitAll() //cambiar
                     .requestMatchers("/api/cliente/**").hasAnyRole("ADMINISTRADOR", "ORGANIZADOR")
-                    .requestMatchers(HttpMethod.GET,"/api/organizador/**").hasAnyRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.GET,"/api/organizador/**").hasAnyRole(Rol.ORGANIZADOR.name(), Rol.ADMINISTRADOR.name())
                     .requestMatchers(HttpMethod.GET,"/api/comp/**").authenticated()
                     .requestMatchers(HttpMethod.GET,"/api/miticket/**").authenticated()
                     .requestMatchers("/api/orden/**").authenticated()

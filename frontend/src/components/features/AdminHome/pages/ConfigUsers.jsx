@@ -119,20 +119,32 @@ export const ConfigUsers = () => {
     try {
       const usuario = await getUser(id, rol);
       console.log(usuario); 
-      
-      const payload = {
-            nombre: usuario.nombre,
-            apellido: usuario.apellido,
-            email: usuario.email,
-            hashCtr: usuario.hashCtr,
-            verificado: usuario.verificado,
-            telefono: usuario.telefono,
-            activo: nuevoEstado,
-            ciudad: usuario.ciudad,
-            dni: usuario.dni,
-            rol: usuario.rol,
-            fechaNacimiento: usuario.fechaNacimiento
+      console.log("SE OBTUVO ESE USUARIO");
+      let payload = {
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email,
+        hashCtr: usuario.hashCtr,
+        verificado: usuario.verificado,
+        telefono: usuario.telefono,
+        rol: usuario.rol,
+        activo: nuevoEstado,
+        ciudad: usuario.ciudad
+      };
+
+      if (rol !== "ORGANIZADOR") {
+        payload = {
+          ...payload,
+          dni: usuario.dni,
+          fechaNacimiento: usuario.fechaNacimiento
         };
+      } else {
+        payload = {
+          ...payload,
+          ruc: usuario.ruc,
+          razonSocial: usuario.razonSocial
+        };
+      }
       console.log(payload);
       await updateUser(payload, id);
       console.log(usuario.idUsuario + " se actualizó");
