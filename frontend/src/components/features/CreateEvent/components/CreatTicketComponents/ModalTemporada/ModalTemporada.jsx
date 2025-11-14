@@ -13,10 +13,6 @@ export const ModalTemporada = ({
   // SI NO ESTA ABIERTO, NO RETORNARÁ NADA
   if (!isOpen) return null;
 
-  console.log('ModalTemporada - nuevaTemporada:', nuevaTemporada);
-  console.log('ModalTemporada - isEditMode:', isEditMode);
-
-
   // SI ESTA ABIERTO
   return (
     <div className="modal-overlay" onClick={onClose}>

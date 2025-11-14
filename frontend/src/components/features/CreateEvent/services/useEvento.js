@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useAuth } from '../../../../context/AuthContext'; // Importa el hook de autenticación
 import { postEventoCompleto } from './../../../../globalServices/EventoService';
 import { postSubirImagen } from "./../../../../globalServices/S3Service";
 
 export const useEvento = (eventData, updateEventData, navigate) => {
     const [isLoading, setIsLoading] = useState(false);
+    const { user } = useAuth(); // Obtener el usuario del contexto
 
     const handleMonedaChange = (e) => {
         updateEventData({ moneda: e.target.value });
@@ -18,6 +20,13 @@ export const useEvento = (eventData, updateEventData, navigate) => {
         setIsLoading(true);
         let finalImageUrl = null;
         let finalMapaUrl = null;
+
+        // ✅ Validar que el usuario esté autenticado
+        if (!user || !user.idUsuario) {
+            alert("Debes iniciar sesión para crear un evento");
+            setIsLoading(false);
+            return;
+        }
 
         // Validaciones básicas
         if (!eventData.nombre || !eventData.idCategoria || !eventData.idCiudad) {
@@ -89,7 +98,7 @@ export const useEvento = (eventData, updateEventData, navigate) => {
                 maxComprasTicket: eventData.maxComprasTicket || 4,
                 idCiudad: eventData.idCiudad,
                 idCategoria: eventData.idCategoria,
-                idUsuario: eventData.idUsuario || 21,
+                idUsuario: user.idUsuario, // ✅ Usar el ID del usuario logueado
                 urlImagen: finalImageUrl,
                 urlMapa: finalMapaUrl,
                 funciones: (eventData.funciones || []).map(f => ({
@@ -104,6 +113,7 @@ export const useEvento = (eventData, updateEventData, navigate) => {
             };
 
             console.log("Payload final:", JSON.stringify(payload, null, 2));
+            console.log("Usuario creador:", user); // Para debug
 
             // Enviar evento completo al backend
             const eventoCreado = await postEventoCompleto(payload);

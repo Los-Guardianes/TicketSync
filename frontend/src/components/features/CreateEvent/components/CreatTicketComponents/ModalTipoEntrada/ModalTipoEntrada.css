@@ -112,9 +112,7 @@
 
 .seccion-tipo-entrada,
 .seccion-tarifas {
-  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e9ecef;
 }
 
 .seccion-tipo-entrada h4,
@@ -210,9 +208,14 @@
 }
 
 .tarifa-content {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tarifa-details {
+  display: flex;
+  flex-direction: row;
   gap: 0.5rem;
 }
 

@@ -16,7 +16,6 @@ export const ModalTipoEntrada = ({
     const [tarifasTemporales, setTarifasTemporales] = useState([]);
     const [indiceActualScroll, setIndiceActualScroll] = useState(0);
 
-    // SI NO ESTA ABIERTO, NO RETORNARÁ NADA
     if (!isOpen) return null;
 
     const zonasSeleccionadas = tarifasTemporales.map(t => t.zona).filter(z => z);
@@ -29,7 +28,7 @@ export const ModalTipoEntrada = ({
         
         setTarifasTemporales([
             ...tarifasTemporales,
-            { zona: zonasDisponibles[0]?.nombre || '', precio: '' }
+            { zona: zonasDisponibles[0]?.nombre || '', precio: '', cantidad: '' } // ✅ Agregado cantidad
         ]);
     };
 
@@ -66,14 +65,43 @@ export const ModalTipoEntrada = ({
             return;
         }
 
-        // Guardar todas las tarifas temporales usando la función de parámetro
-        tarifasTemporales.forEach(tarifa => {
-            if (tarifa.zona && tarifa.precio) {
-                onHandleAsignarPrecioZona(tarifa.zona, Number(tarifa.precio));
-            }
-        });
+        // Validar que haya al menos una tarifa
+        if (tarifasTemporales.length === 0) {
+            alert("Debes agregar al menos una tarifa para este tipo de entrada");
+            return;
+        }
 
+        // Validar que todas las tarifas tengan datos completos
+        const tarifasIncompletas = tarifasTemporales.filter(
+            tarifa => !tarifa.zona || !tarifa.precio || tarifa.precio === '' || !tarifa.cantidad || tarifa.cantidad === ''
+        );
+
+        if (tarifasIncompletas.length > 0) {
+            alert("Por favor completa todos los campos de precio y cantidad para cada zona");
+            return;
+        }
+
+        // ✅ PRIMERO crear el tipo de entrada
         handleAgregarTipoEntrada();
+
+        // ✅ DESPUÉS asignar TODAS las tarifas de una vez
+        const tarifasValidas = tarifasTemporales.filter(
+            tarifa => tarifa.zona && tarifa.precio && tarifa.cantidad
+        );
+
+        if (tarifasValidas.length > 0) {
+          // ✅ Agregar idTarifa único a cada tarifa
+          const tarifasConIds = tarifasValidas.map((tarifa, index) => ({
+              ...tarifa,
+              idTarifa: Date.now() + index // ✅ ID único para cada tarifa
+          }));
+          
+          onHandleAsignarPrecioZona(
+              tarifasConIds,  // ✅ Pasar array con IDs
+              nuevoTipoEntrada.nombre
+          );
+      }
+
         setTarifasTemporales([]);
         setIndiceActualScroll(0);
     };
@@ -98,6 +126,19 @@ export const ModalTipoEntrada = ({
                     placeholder="VIP, GENERAL, PALCO"
                     value={nuevoTipoEntrada.nombre}
                     onChange={e => setNuevoTipoEntrada({ ...nuevoTipoEntrada, nombre: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="seccion-tipo-entrada">
+                <div className="modal-field">
+                  <label>Descripción</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Escribe información adicional..."
+                    value={nuevoTipoEntrada.descripcion}
+                    onChange={e => setNuevoTipoEntrada({ ...nuevoTipoEntrada, descripcion: e.target.value })}
                   />
                 </div>
               </div>
@@ -162,23 +203,40 @@ export const ModalTipoEntrada = ({
                                   })}
                                 </select>
                               </div>
-                              <div className="tarifa-field">
-                                <label>Precio ({currentMoneda})</label>
-                                <div className="input-group">
-                                  <input
-                                    type="number"
-                                    className="form-control"
-                                    placeholder="0.00"
-                                    value={tarifa.precio}
-                                    onChange={e => actualizarTarifaTemporal(index, 'precio', e.target.value)}
-                                    min="0"
-                                    step="0.01"
-                                  />
+                              <div className="tarifa-details">
+                                <div className="tarifa-field">
+                                  <label>Precio ({currentMoneda})</label>
+                                  <div className="input-group">
+                                    <input
+                                      type="number"
+                                      className="form-control"
+                                      placeholder="0.00"
+                                      value={tarifa.precio}
+                                      onChange={e => actualizarTarifaTemporal(index, 'precio', e.target.value)}
+                                      min="0"
+                                      step="0.01"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="tarifa-field">
+                                  <label>Cantidad</label>
+                                  <div className="input-group">
+                                    <input
+                                      type="number"
+                                      className="form-control"
+                                      placeholder="0"
+                                      value={tarifa.cantidad}
+                                      onChange={e => actualizarTarifaTemporal(index, 'cantidad', e.target.value)}
+                                      min="0"
+                                      step="1"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
                             <button
-                              className="btn-eliminar-tarifa"
+                              className="btn-action btn-eliminar"
                               onClick={() => eliminarTarifaTemporal(index)}
                               title="Eliminar zona"
                             >
@@ -197,11 +255,6 @@ export const ModalTipoEntrada = ({
                     >
                       <ChevronRight style={{ width: 20, height: 20 }} />
                     </button>
-
-                    {/* Indicador de posición */}
-                    <div className="scroll-indicator">
-                      {indiceActualScroll + 1} de {tarifasTemporales.length}
-                    </div>
                   </div>
                 )}
               </div>
@@ -215,11 +268,11 @@ export const ModalTipoEntrada = ({
                   Cancelar
                 </button>
                 <button className="btn-primary" onClick={handleFinalizarModal}>
-                  Finalizar
+                  Agregar tipo de entrada
                 </button>
               </div>
           </div>
         </div>
       </div>
     );
-}
+};

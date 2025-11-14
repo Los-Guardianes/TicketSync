@@ -62,28 +62,20 @@ export const CreateTicket = () => {
             
             <EntradasSection
                 eventData={eventData}
-                currentTipoEntrada={entradas.currentTipoEntrada}
+                eliminarTipoEntrada={entradas.eliminarTipoEntrada} // ✅ Asegúrate de que esta función exista
                 currentMoneda={currentMoneda}
-                entradaActual={entradas.entradaActual}
-                onAddEntrada={entradas.addEntrada}
-                onRemoveCurrentEntrada={entradas.removeCurrentEntrada}
-                onIrEntradaIzq={entradas.irEntradaIzq}
-                onIrEntradaDer={entradas.irEntradaDer}
-                onHandleTipoNombreChange={entradas.handleTipoNombreChange}
-                onHandleItemChange={entradas.handleItemChange}
-                onHandleAsignarPrecioZona={entradas.handleAsignarPrecioZona}
                 onAbrirModalTipoEntrada={entradas.abrirModalTipoEntrada}
             />
 
             {/* BOTONES DE ACCIÓN */}
             <div className="form-actions">
-                <button type="button" className="cancel" onClick={() => navigate("/ubicacion-evento")}>
+                <button type="button" className="btn-secondary" onClick={() => navigate("/ubicacion-evento")}>
                     Regresar
                 </button>
                 <button 
                     type="button" 
                     className="btn-primary" 
-                    onClick={() => evento.handleFinalSubmit}
+                    onClick={evento.handleFinalSubmit}
                     disabled={evento.isLoading}
                 >
                     {evento.isLoading ? 'Guardando...' : 'Finalizar'}

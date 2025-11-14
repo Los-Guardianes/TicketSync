@@ -21,9 +21,7 @@ export const TemporadasSection = ({
           <Plus style={{ width: 24, height: 24 }}/>
         </button>
       </div>
-
-      {console.log("TemporadasSection - temporadas:", temporadas)}
-
+      
       <div className="temporadas-list">
         {temporadas.length > 0 ? (
           temporadas.map((temporada, index) => (

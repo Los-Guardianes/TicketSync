@@ -1,25 +1,27 @@
 import { useState } from 'react';
 
-export const useEntradas = (eventData, updateEventData, currentMoneda) => {
+export const useEntradas = (eventData, updateEventData) => {
     const [entradaActual, setEntradaActual] = useState(0);
     const [modalTipoEntradaAbierto, setModalTipoEntradaAbierto] = useState(false);
-    const [nuevoTipoEntrada, setNuevoTipoEntrada] = useState({ nombre: "", tarifas: []});
-
-    const currentTipoEntrada = eventData.tiposDeEntrada?.[entradaActual] || { nombre: "", tarifas: []};
+    const [nuevoTipoEntrada, setNuevoTipoEntrada] = useState({ nombre: "", descripcion: ""});
 
     const addEntrada = () => {
-        const nuevosTipos = [...eventData.tiposDeEntrada, { nombre: "", tarifas: []}];
+        const nuevosTipos = [...eventData.tiposDeEntrada, { nombre: "", descripcion: ""}];
         updateEventData({ tiposDeEntrada: nuevosTipos });
         setEntradaActual(nuevosTipos.length - 1);
     };
 
-    const removeCurrentEntrada = () => {
-        if (eventData.tiposDeEntrada.length <= 1) return;
-        const nuevosTipos = eventData.tiposDeEntrada.filter((_, i) => i !== entradaActual);
-        updateEventData({ tiposDeEntrada: nuevosTipos });
-        if (entradaActual >= nuevosTipos.length) {
-            setEntradaActual(nuevosTipos.length - 1);
-        }
+    const eliminarTipoEntrada = (index) => {
+        const tipoAEliminar = eventData.tiposDeEntrada[index].nombre;
+        const nuevosTipos = eventData.tiposDeEntrada.filter((_, i) => i !== index);
+        const nuevasTarifas = eventData.tarifas.filter(
+        (t) => t.tipoEntrada.nombre !== tipoAEliminar
+        );
+        updateEventData({
+        ...eventData,
+        tiposDeEntrada: nuevosTipos,
+        tarifas: nuevasTarifas,
+        });
     };
 
     const abrirModalTipoEntrada = () => {
@@ -38,77 +40,76 @@ export const useEntradas = (eventData, updateEventData, currentMoneda) => {
         setNuevoTipoEntrada({ nombre: "", descripcion: "" });
     };
 
-    const handleItemChange = (arrayName, index, field, value) => {
-        const newArray = [...eventData[arrayName]];
-        const isNumericField = ['valorDescuento'].includes(field);
-        const finalValue = isNumericField ? Number(value) : value;
-        newArray[index] = { ...newArray[index], [field]: finalValue };
-        updateEventData({ [arrayName]: newArray });
-    };
-
-    const handleTipoNombreChange = (e) => {
-        const newName = e.target.value;
-        handleItemChange('tiposDeEntrada', entradaActual, 'nombre', newName);
-    };
-
-    const handleAsignarPrecioZona = (nombreZona, precio) => {
-        const nombreTipoEntrada = currentTipoEntrada.nombre;
+    const handleAsignarPrecioZona = (tarifasArray, nombreTipoEntradaParam = null) => {
+        // ✅ Ahora recibe un array de tarifas en lugar de parámetros individuales
+        
+        const nombreTipoEntrada = nombreTipoEntradaParam || 
+                                eventData.tiposDeEntrada?.[entradaActual]?.nombre || 
+                                "";
 
         if (!nombreTipoEntrada || nombreTipoEntrada.trim() === '') {
             alert('Debes ingresar un nombre para el tipo de entrada primero');
             return;
         }
 
-        const precioNumerico = Number(precio);
+        const tarifasActuales = eventData.tarifas || [];
+        let nuevasTarifas = [...tarifasActuales];
 
-        if (!precio || precioNumerico <= 0) {
-            const nuevasTarifas = (eventData.tarifas || []).filter(
-                t => !(t.tipoEntrada.nombre === nombreTipoEntrada && t.zona.nombre === nombreZona)
+        // ✅ Procesar todas las tarifas del array
+        tarifasArray.forEach(tarifaData => {
+            const { zona: nombreZona, precio, cantidad, idTarifa } = tarifaData;
+            
+            const precioNumerico = Number(precio);
+            const cantidadNumerico = Number(cantidad);
+
+            // Validar datos
+            if (!nombreZona || !precio || precioNumerico <= 0 || !cantidad || cantidadNumerico <= 0) {
+                console.warn('Tarifa inválida omitida:', tarifaData);
+                return; // Continuar con la siguiente tarifa
+            }
+
+            // Buscar si ya existe una tarifa para esta combinación zona+tipo
+            const indiceExistente = nuevasTarifas.findIndex(
+                t => t.tipoEntrada.nombre === nombreTipoEntrada && 
+                    t.zona.nombre === nombreZona
             );
-            updateEventData({ tarifas: nuevasTarifas });
-            return;
-        }
 
-        const tarifas = eventData.tarifas || [];
-        const indiceExistente = tarifas.findIndex(
-            t => t.tipoEntrada.nombre === nombreTipoEntrada && t.zona.nombre === nombreZona
-        );
+            if (indiceExistente >= 0) {
+                // Actualizar tarifa existente
+                nuevasTarifas[indiceExistente] = {
+                    ...nuevasTarifas[indiceExistente],
+                    precioBase: precioNumerico,
+                    cantidad: cantidadNumerico
+                };
+            } else {
+                // ✅ CORREGIDO: Agregar nueva tarifa CON idTarifa
+                const nuevaTarifa = {
+                    precioBase: precioNumerico,
+                    tipoEntrada: { nombre: nombreTipoEntrada },
+                    zona: { nombre: nombreZona },
+                    cantidad: cantidadNumerico,
+                    idTarifa: idTarifa || Date.now() + Math.random() // ✅ AGREGAR idTarifa
+                };
+                nuevasTarifas.push(nuevaTarifa);
+            }
+        });
 
-        if (indiceExistente >= 0) {
-            const nuevasTarifas = [...tarifas];
-            nuevasTarifas[indiceExistente] = {
-                ...nuevasTarifas[indiceExistente],
-                precioBase: precioNumerico
-            };
-            updateEventData({ tarifas: nuevasTarifas });
-        } else {
-            const nuevaTarifa = {
-                precioBase: precioNumerico,
-                tipoEntrada: { nombre: nombreTipoEntrada },
-                zona: { nombre: nombreZona }
-            };
-            updateEventData({ tarifas: [...tarifas, nuevaTarifa] });
-        }
+        // ✅ Actualizar el estado UNA sola vez con todas las tarifas
+        updateEventData({ tarifas: nuevasTarifas });
+        
+        console.log('Tarifas actualizadas con IDs:', nuevasTarifas);
     };
-
-    const irEntradaIzq = () => setEntradaActual(p => (p === 0 ? eventData.tiposDeEntrada.length - 1 : p - 1));
-    const irEntradaDer = () => setEntradaActual(p => (p === eventData.tiposDeEntrada.length - 1 ? 0 : p + 1));
 
     return {
         entradaActual,
-        currentTipoEntrada,
         modalTipoEntradaAbierto,
         nuevoTipoEntrada,
         setNuevoTipoEntrada,
         addEntrada,
-        removeCurrentEntrada,
+        eliminarTipoEntrada,
         abrirModalTipoEntrada,
         handleAgregarTipoEntrada,
-        handleTipoNombreChange,
-        handleItemChange,
         handleAsignarPrecioZona,
-        irEntradaIzq,
-        irEntradaDer,
         setModalTipoEntradaAbierto
     };
 };

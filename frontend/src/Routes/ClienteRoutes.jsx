@@ -25,11 +25,6 @@ import { EditEvent } from "../components/features/ConfigEvento/pages/EditEvent";
 
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
-<<<<<<< HEAD
-import CreateTickets1 from "../components/features/CreateEvent/pages/temp";
-import { CreateTicket2 } from "../components/features/CreateEvent/pages/temp2";
-=======
->>>>>>> 5a43aca (feat(entradas): Actualización de carpetas y visualización de registro de entradas)
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import { ConfigUsers } from "../components/features/AdminHome/pages/ConfigUsers";
