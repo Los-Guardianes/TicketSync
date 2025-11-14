@@ -41,6 +41,7 @@ public class FilterChainConfig {
             )
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/").permitAll()
                 /*=================================
                        1. ENDPOINTS PÚBLICOS
                 =================================*/
@@ -71,6 +72,7 @@ public class FilterChainConfig {
                         2. Autenticados (roles específicos)
                 ================================================*/
                     .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole(Rol.CLIENTE.name(), Rol.ORGANIZADOR.name())
+                    .requestMatchers("/api/subirImagens3/**").hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.POST,
                             "/api/evento/**",
                             "/api/zona/**",
@@ -81,7 +83,8 @@ public class FilterChainConfig {
                     ).hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.PUT, "/api/evento/**")
                     .hasRole(Rol.ORGANIZADOR.name())
-
+                    .requestMatchers(HttpMethod.PUT, "/api/cliente/{id}", "/api/admin/{id}", "/api/organizador/{id}", "/api/params/**")
+                    .hasRole(Rol.ADMINISTRADOR.name())
                     .requestMatchers(HttpMethod.GET,"/api/organizador/**")
                     .hasAnyRole(Rol.ORGANIZADOR.name(), Rol.ADMINISTRADOR.name())
                 /*===============================================

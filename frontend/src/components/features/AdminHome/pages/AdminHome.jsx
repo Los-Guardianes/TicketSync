@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { NavBarAdmin } from '../../../common/NavBarAdmin';
 import { HiArrowCircleRight } from "react-icons/hi";
 import { getReporte } from '../service/reporteService';
 
 // --- Componente AdminHome ---
 export const AdminHome = () => {
-
+  const navigate = useNavigate();
   const [isLoadingReport, setIsLoadingReport] = useState(false);
-  // Estilo para las tarjetas, más parecido al de la imagen
+
   const cardStyle = {
-    background: "#B6E6C9", // Un verde más pálido
+    background: "#B6E6C9", 
     border: '1px solid #B6E6C9'
   };
 
   // Estilo para el botón de las tarjetas
   const cardButtonStyle = {
-    background: '#34A853', // Un verde más oscuro para el botón
+    background: '#34A853',
     color: 'white',
     border: 'none',
     borderRadius: '50%',
@@ -24,7 +25,7 @@ export const AdminHome = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 0, // Asegurarse que el ícono quede centrado
+    padding: 0,
   };
 
   const handleClick = async (title) => {
@@ -33,7 +34,7 @@ export const AdminHome = () => {
       setIsLoadingReport(true);
 
       try {
-        // 1. Llamar al servicio (esto ya funciona)
+        // 1. Llamar al servicio
         const { blob, filename } = await getReporte();
 
         // 2. Crear un URL local
@@ -58,6 +59,14 @@ export const AdminHome = () => {
       } finally {
         setIsLoadingReport(false);
       }
+    }
+    if (title == "Gestionar Roles")
+    {
+      navigate("/configusers"); 
+    }
+    if (title == "Configurar Comisión")
+    {
+      navigate("/configparams"); 
     }
   };
 
