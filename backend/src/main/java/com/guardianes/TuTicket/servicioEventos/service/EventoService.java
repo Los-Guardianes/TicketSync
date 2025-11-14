@@ -46,6 +46,34 @@ public class EventoService {
         repo.deleteById(id);
     }
 
+//    public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer idUsuario) {
+//        try{
+//            LocalDate hoy = LocalDate.now();
+//            List<Evento> eventos = repo.findByOrganizador_IdUsuario(idUsuario);
+//            return eventos.stream().map(ev -> {
+//
+//                List<Funcion> funcionesActivas =
+//                        funcionService.getFuncionByEvento(ev.getIdEvento())
+//                                .stream()
+//                                .filter(f -> Boolean.TRUE.equals(f.getActivo()))
+//                                .toList();
+//                boolean anyFutureFunc = funcionesActivas
+//                        .stream()
+//                        .anyMatch(f -> !f.getFechaInicio().isBefore(hoy));
+//                LocalDate fechaRef = funcionesActivas.stream()
+//                        .map(Funcion::getFechaInicio)
+//                        .filter(d -> anyFutureFunc != d.isBefore(hoy))
+//                        .min(anyFutureFunc ? Comparator.naturalOrder() : Comparator.reverseOrder())
+//                        .orElse(null);
+//                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesActivas.stream().map(FuncionOrganizadorDTO::new).toList();
+//                return new EventOrganizadorDTO(ev,fechaRef,!anyFutureFunc,funcionesFiltradas);
+//            }).collect(Collectors.toList());
+//        }catch (Exception e){
+//            throw new GenericException("Error al listar eventos del organizador" + e.getMessage());
+//        }
+//
+//    }
+
     public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer idUsuario) {
         try{
             LocalDate hoy = LocalDate.now();

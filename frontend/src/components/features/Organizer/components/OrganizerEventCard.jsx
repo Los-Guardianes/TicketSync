@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const OrganizerEventCard = ({
   idEvento,        // <= pásame esto desde MisEventos
-  idFuncion,       // (si lo necesitas para key)
+  // idFuncion,       // (si lo necesitas para key)
   titulo,
   fecha,
   direccion,
