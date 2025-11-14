@@ -21,11 +21,12 @@ import AdminDashboard from "../components/features/AdminDashboard/AdminDashboard
 
 import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
 import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
+import { EditEvent } from "../components/features/ConfigEvento/pages/EditEvent";
 
 import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
 import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
 import CreateTickets1 from "../components/features/CreateEvent/pages/temp";
-import {CreateTicket2} from "../components/features/CreateEvent/pages/temp2";
+import { CreateTicket2 } from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
@@ -73,6 +74,11 @@ export const ClienteRoutes = () => {
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
 
+
+        <Route
+          path="organizer/evento/:idEvento/editar-detalles"
+          element={<EditEvent />}
+        />
         <Route
           path="organizer/evento/:idEvento/descuentos/nuevo"
           element={<CreateDiscount />}
