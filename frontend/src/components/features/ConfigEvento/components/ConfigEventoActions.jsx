@@ -11,6 +11,7 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
       onClick: () => {
         console.log('EDITAR DETALLES', idEvento);
         // futuro: navigate(`/organizer/evento/${idEvento}/editar-detalles`);
+        navigate(`/organizer/evento/${idEvento}/editar-detalles`);
       },
     },
     {
@@ -72,7 +73,11 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
           onClick={accion.onClick}
         >
           <span>{accion.label}</span>
-          <span>{'>'}</span>
+          <span className="arrow-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </span>
         </button>
       ))}
     </div>
