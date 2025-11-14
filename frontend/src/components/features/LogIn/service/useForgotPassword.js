@@ -1,10 +1,10 @@
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Se quitó 'data' que no se usaba
 import { useState } from "react";
 import {useNotification} from "../../../../context/NotificationContext"
 import { apiFetch } from "../../../../globalServices/API";
-export const useForgotPassword = () =>{
 
-    
+export const useForgotPassword = () =>{
+ 
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ export const useForgotPassword = () =>{
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);        
+        setIsLoading(true);       
         try {
             await postForgotPassword(email); // No necesitas await doble ni revisar ok
             showNotification("Se ha enviado un enlace a tu correo electrónico.", "success");

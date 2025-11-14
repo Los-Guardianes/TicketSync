@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { NavLink } from 'react-router-dom';
-import {useRegister} from "./service/useRegister";
+import { useRegister } from "./service/useRegister";
 import { DropdownList } from '../../common/DropDownList/DropDownList';
 
-export const Register = () => {     
+export const Register = () => {
     const {
         ciudades,
         selectedCiudad,
@@ -60,8 +60,8 @@ export const Register = () => {
                                 <label htmlFor="inpConfirmPassword" className='col-3 text-start'>Confirmar contraseña</label>
                                 <input className='form-control border-0' type="password"
                                     id='inpConfirmPassword' placeholder='Confirme su contraseña' autoComplete='new-password'
-                                    name = 'confirmPassword'
-                                    style={{ background: "#EBF5EB" }}                                   
+                                    name='confirmPassword'
+                                    style={{ background: "#EBF5EB" }}
                                     value={formUsuario.confirmPassword}
                                     onChange={handleUserForm} />
                             </div>
@@ -98,20 +98,20 @@ export const Register = () => {
                         </div>
 
                         <div className='row d-flex align-items-center mt-2'>
-                            <p  className="col-2 text-start">Ciudad</p>
+                            <p className="col-2 text-start">Ciudad</p>
                             <div className="col">
                                 <div className="dropdown">
-                                        <DropdownList
-                                            firstElement={"Selecciona una ciudad"}
-                                            list={ciudades}
-                                            id={"idCiudad"}
-                                            value={selectedCiudad ? selectedCiudad.idCiudad : ""}
-                                            onChangeOption={seleccionarCiudad}
-                                            getNombre={(ciudad) => {
-                                                return ciudad.nombre
-                                            }}
-                                        >                                            
-                                        </DropdownList>                            
+                                    <DropdownList
+                                        firstElement={"Selecciona una ciudad"}
+                                        list={ciudades}
+                                        id={"idCiudad"}
+                                        value={selectedCiudad ? selectedCiudad.idCiudad : ""}
+                                        onChangeOption={seleccionarCiudad}
+                                        getNombre={(ciudad) => {
+                                            return ciudad.nombre
+                                        }}
+                                    >
+                                    </DropdownList>
                                 </div>
                             </div>
                         </div>
@@ -125,9 +125,14 @@ export const Register = () => {
                         </div>
                     </div>
                     <div className='container w-100 d-flex justify-content-between'>
-                        <NavLink to="/login" className={'btn btn-dark'} to={"/"} >Regresar</NavLink>
-                        <button className='btn btn-success' type='submit'>Registrar</button>
+                        <NavLink to="/" className="btn btn-dark">
+                            Regresar
+                        </NavLink>
+                        <button className="btn btn-success" type="submit">
+                            Registrar
+                        </button>
                     </div>
+
                 </form>
 
             </div>

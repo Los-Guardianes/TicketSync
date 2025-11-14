@@ -82,7 +82,7 @@ export const ResetPassword = () => {
             */
            showNotification("Contraseña actualizada correctamente", "success")
             setTimeout(() => {
-                navigate("/");
+                navigate("/login");
             }, 2000);
         } catch (error) {
             showNotification("La sesión para cambiar su contraseña caducó, intentelo nuevamente.", "error")

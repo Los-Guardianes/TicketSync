@@ -1,23 +1,56 @@
 .config-actions-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 14px;
 }
 
+/* Botón moderno y suave */
 .config-action-btn {
+  background: #fafafa;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+
   width: 100%;
-  background-color: #000; /* negro */
-  color: #fff;
-  border: none;
-  border-radius: 0;
-  padding: 0.9rem 1rem;
-  text-align: left;
+  padding: 16px 20px;
+
   display: flex;
   justify-content: space-between;
-  font-weight: 500;
-  font-size: 0.95rem;
+  align-items: center;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
+/* Estilo del texto y flecha */
+.config-action-btn span {
+  font-weight: 700;
+  color: #777;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+/* Hover suave */
 .config-action-btn:hover {
-  background-color: #222;
+  background: #e9f7ef;
+  border-color: #40a85f;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+.config-action-btn:hover span {
+  color: #45b067;
+  transform: translateX(4px);
+}
+.arrow-icon svg {
+  color: #777;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.config-action-btn:hover .arrow-icon svg {
+  color: #45b067;
+  transform: translateX(4px);
 }

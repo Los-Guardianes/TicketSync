@@ -63,7 +63,8 @@ export const ConfigEvento = () => {
   // estados intermedios de carga / error
   if (loading) {
     return (
-      <div className="d-flex">
+      <div className="config-page">
+      
         <BarraLateral />
         <main className="flex-grow-1 p-4">
           <div className="config-card">
@@ -103,10 +104,8 @@ export const ConfigEvento = () => {
       <main className="flex-grow-1 p-4">
         <div className="config-card">
           <h3 className="config-card-title">Configuración de evento</h3>
-
-          <div className="row g-4 align-items-start">
-            {/* COLUMNA IZQUIERDA */}
-            <div className="col-12 col-lg-6 config-event-left">
+          <div className="config-layout">
+            <div className="config-left">
               <h5 className="config-event-name">{tituloEvento}</h5>
 
               <div
@@ -121,27 +120,19 @@ export const ConfigEvento = () => {
               <p className="config-event-location">{direccion}</p>
 
               {evento.activo === false && (
-                <p
-                  style={{
-                    marginTop: '8px',
-                    color: '#d00',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                  }}
-                >
-                  Este evento está cancelado.
-                </p>
+                <p className="evento-cancelado">Este evento está cancelado.</p>
               )}
             </div>
 
-            {/* COLUMNA DERECHA */}
-            <div className="col-12 col-lg-6">
+            <div className="config-right">
               <ConfigEventoActions
                 idEvento={idEvento}
                 onCancelar={() => setShowCancelModal(true)}
               />
             </div>
           </div>
+
+
         </div>
       </main>
 
