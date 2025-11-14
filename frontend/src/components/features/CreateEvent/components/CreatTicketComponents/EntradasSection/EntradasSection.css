@@ -1,0 +1,35 @@
+.entradas-section {
+  margin-bottom: 2rem;
+}
+
+.funciones-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.season-tab__arrow {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #28a745;
+  padding: 0.25rem 0.5rem;
+}
+
+.season-tab__arrow:hover {
+  background-color: #e9ecef;
+  border-radius: 4px;
+}
+
+.btn-outline-success {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: white;
+}

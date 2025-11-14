@@ -1,0 +1,64 @@
+.temporadas-section {
+  margin-bottom: 2rem;
+}
+
+.temporadas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.temporadas-header h3 {
+  margin: 0;
+  color: #28a745;
+}
+
+.btn-agregar-temporada {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.temporadas-list {
+  max-height: 150px; /* Altura máxima fija */
+  overflow-y: auto; /* Scroll vertical */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 0.5rem;
+}
+
+/* Personalizar scrollbar */
+.temporadas-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.temporadas-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.temporadas-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.temporadas-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+}
