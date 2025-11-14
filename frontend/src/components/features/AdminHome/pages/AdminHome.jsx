@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { NavBarAdmin } from '../../../common/NavBarAdmin';
 import { HiArrowCircleRight } from "react-icons/hi";
 import { getReporte } from '../service/reporteService';
 
 // --- Componente AdminHome ---
 export const AdminHome = () => {
-
+  const response = useNavigate();
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   // Estilo para las tarjetas, más parecido al de la imagen
   const cardStyle = {
@@ -58,6 +59,10 @@ export const AdminHome = () => {
       } finally {
         setIsLoadingReport(false);
       }
+    }
+    if (title == "Configurar Comisión")
+    {
+      response("/configusers"); 
     }
   };
 
