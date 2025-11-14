@@ -1,0 +1,129 @@
+/* CONTENEDOR PRINCIPAL */
+.crear-evento-container {
+    max-width: 950px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    font-family: "Inter", sans-serif;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+}
+
+.header h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #2f3e46;
+    margin: 0;
+}
+
+.step i {
+    font-size: 26px;
+    color: #4CAF50;
+}
+/* FORMULARIO */
+.evento-form {
+    width: 100%;
+}
+
+.form-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+}
+
+/* CAMPOS */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2e2e2e;
+}
+
+/* INPUTS, SELECT Y TEXTAREAS MÁS BONITOS */
+.campo input,
+.campo select,
+.campo textarea {
+    border: 1px solid #cfd8dc;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 15px;
+    transition: all 0.25s ease;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    border-color: #4CAF50;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+    outline: none;
+}
+
+.campo textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+/* ACCIONES */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 38px;
+    gap: 18px;
+}
+
+/* BOTÓN CANCELAR */
+.cancel {
+    padding: 12px 28px;
+    background: #eceff1;
+    color: #37474f;
+    border: none;
+    border-radius: 12px;
+
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.cancel:hover {
+    background: #dfe4e6;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+/* BOTÓN GUARDAR */
+.next {
+    padding: 12px 28px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 12px;
+
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.25);
+}
+
+.next:hover {
+    background: #43a047;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.35);
+}
+    

@@ -4,15 +4,23 @@ import com.guardianes.TuTicket.servicioAutenticacion.GoogleDTO.GoogleAuthRequest
 import com.guardianes.TuTicket.servicioAutenticacion.service.AuthService;
 import com.guardianes.TuTicket.servicioAutenticacion.service.GoogleAuthService;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.UsuarioBearerDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.ForgotPasswordDTO;
 import com.guardianes.TuTicket.servicioUsuarios.DTO.in.LoginDTO;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.ResetPasswordDTO;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
+import com.guardianes.TuTicket.servicioUsuarios.repo.UsuarioRepo;
 import com.guardianes.TuTicket.servicioUsuarios.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import com.guardianes.TuTicket.servicioUsuarios.DTO.in.CambioPasswordDTO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +30,10 @@ import java.util.Map;
 public class UsuarioController {
 
     private final UsuarioService service;
+    private final UsuarioRepo usuarioRepo;
     private final AuthService auth;
     private final GoogleAuthService googleAuthService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/usuario")
     public ResponseEntity<?> addUsuario(@RequestBody Usuario usuario) {
@@ -103,4 +113,57 @@ public class UsuarioController {
                     .body(Map.of("message", "Error en la autenticación con Google."));
         }
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDTO request) {
+        return ResponseEntity.ok(service.forgotPassword(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO request) {
+        return ResponseEntity.ok(service.resetPassword(request));
+    }
+
+    @PostMapping("/usuario/cambiar-password")
+    public ResponseEntity<?> cambiarPassword(@RequestBody CambioPasswordDTO dto,
+                                             Authentication authentication) {
+
+        // 1) Usuario autenticado desde el JWT (Spring User)
+        User springUser = (User) authentication.getPrincipal();
+        String email = springUser.getUsername();
+
+        // 2) Buscar tu entidad Usuario por email
+        Usuario usuarioAuth = usuarioRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // 3) Validaciones simples
+        if (dto.getPasswordActual() == null || dto.getNuevaPassword() == null) {
+            return respBad("Todos los campos son obligatorios.");
+        }
+
+        if (dto.getNuevaPassword().length() < 6) {
+            return respBad("La nueva contraseña debe tener al menos 6 caracteres.");
+        }
+
+        // 4) Verificar contraseña actual
+        if (!passwordEncoder.matches(dto.getPasswordActual(), usuarioAuth.getPassword())) {
+            return respBad("La contraseña actual no es correcta.");
+        }
+
+        // 5) Actualizar contraseña
+        String nuevaHash = passwordEncoder.encode(dto.getNuevaPassword());
+        usuarioAuth.setHashCtr(nuevaHash);
+        usuarioRepo.save(usuarioAuth);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "Contraseña cambiada con éxito.");
+        return ResponseEntity.ok(body);
+    }
+
+    private ResponseEntity<Map<String, String>> respBad(String msg) {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", msg);
+        return ResponseEntity.badRequest().body(body);
+    }
+
 }

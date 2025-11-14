@@ -36,7 +36,23 @@ public class JWTService {
                 .compact();
     }
 
+    public String generateResetPasswordToken(String email) {
+        long resetExpiration = 5 * 60 * 1000; // 15 minutos en milisegundos
+        Map<String, Object> claims = new HashMap<>();
+
+        return Jwts.builder()
+                .claims()
+                .add(claims)
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + resetExpiration))
+                .and()
+                .signWith(getSecretKey())
+                .compact();
+    }
+
     public boolean validateToken(String token) {
+        //Valida firma y expiracion
         try {
             getClaimsFromToken(token); // Si no lanza excepción, es válido
             return !isTokenExpired(token);

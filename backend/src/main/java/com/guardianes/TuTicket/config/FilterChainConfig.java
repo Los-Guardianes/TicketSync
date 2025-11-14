@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,38 +28,6 @@ public class FilterChainConfig {
 
     private final JWTFilter jwtFilter;
 
-    // Rutas públicas (no requieren autenticación)
-    private static final String[] PUBLIC_ENDPOINTS = {
-            // Auth / registro
-            "/api/login",
-            "/api/auth/google",
-            "/api/cliente",
-            "/api/register",
-
-            // Catálogos y consultas públicas
-            "/api/evento/**",
-            "/api/zona/**",
-            "/api/ciudad/**",
-            "/api/dpto/**",
-            "/api/temporada/**",
-            "/api/funcion/**",
-            "/api/catevento/**",
-            "/api/tarifa/**",
-            "/api/tipoentrada/**",
-            "/api/periodo/**",
-            "/api/zonaxfuncion/**"
-
-            /* En caso error inesperado, descomentar esta línea
-            "/api/cliente/**",
-            "/api/organizador",
-            "/api/organizador/reporte/excel", // Cambiar luego si es público o no
-            "/api/miticket/**", //descargar ticket
-            "/api/orden/**",
-            "/api/ticket/**",
-            "/api/descuento/**",
-            "/api/subirImagens3/**"
-             */
-    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -75,45 +41,81 @@ public class FilterChainConfig {
             )
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/organizador").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/google").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/register/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole("CLIENTE", "ORGANIZADOR")
-                    .requestMatchers("/api/cliente/**").hasAnyRole("ADMINISTRADOR", "ORGANIZADOR")
-                    .requestMatchers(HttpMethod.GET,"/api/organizador/**").hasAnyRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.GET,"/api/comp/**").authenticated()
-                    .requestMatchers(HttpMethod.GET,"/api/miticket/**").authenticated()
-                    .requestMatchers("/api/orden/**").authenticated()
-                    .requestMatchers(HttpMethod.GET ,"/api/ticket/**").authenticated()
-                    .requestMatchers("/api/descuento/**").authenticated()
-                    .requestMatchers("/api/subirImagens3/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/evento/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/zona/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/ciudad/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/dpto/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/funcion/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.POST,"/api/catevento/**").hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers("/api/**").hasRole(Rol.ADMINISTRADOR.name())
+                /*=================================
+                       1. ENDPOINTS PÚBLICOS
+                =================================*/
+                    //Endpoints de autenticacion y registro
+                    .requestMatchers(HttpMethod.POST,
+                            "/api/login",
+                            "/api/auth/google",
+                            "/api/cliente/register",
+                            "/api/organizador/register",
+                            "/api/forgot-password",
+                            "/api/reset-password"
+                    ).permitAll()
+                    // --- Endpoints de Consulta Pública (Solo GET) ---
+                    .requestMatchers(HttpMethod.GET,
+                            "/api/evento/**",
+                            "/api/zona/**",
+                            "/api/ciudad/**",
+                            "/api/dpto/**",
+                            "/api/temporada/**",
+                            "/api/funcion/**",
+                            "/api/catevento/**",
+                            "/api/tarifa/**",
+                            "/api/tipoentrada/**",
+                            "/api/periodo/**",
+                            "/api/zonaxfuncion/**"
+                    ).permitAll()
+                /*===============================================
+                        2. Autenticados (roles específicos)
+                ================================================*/
+                    .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole(Rol.CLIENTE.name(), Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.POST,
+                            "/api/evento/**",
+                            "/api/zona/**",
+                            "/api/ciudad/**",
+                            "/api/dpto/**",
+                            "/api/funcion/**",
+                            "/api/catevento/**"
+                    ).hasRole(Rol.ORGANIZADOR.name())
+
+                    .requestMatchers(HttpMethod.GET,"/api/organizador/**")
+                    .hasAnyRole(Rol.ORGANIZADOR.name(), Rol.ADMINISTRADOR.name())
+                /*===============================================
+                        3. Autenticados en general
+                ================================================*/
+                    .requestMatchers(
+                            "/api/orden/**",
+                            "/api/descuento/**"
+                    ).authenticated()
+                    .requestMatchers(HttpMethod.GET,
+                            "/api/comp/**",
+                            "/api/miticket/**",
+                            "/api/ticket/**"
+                    ).authenticated()
+                    .requestMatchers("/api/usuario/**").authenticated()
+                /*===============================================
+                            4. Administrador
+                ================================================*/
+                    .requestMatchers("/api/cliente/**")
+                    .hasRole(Rol.ADMINISTRADOR.name())
+
+                     /*Regla catch-all todo lo demás bajo api es solo admin*/
+                    .requestMatchers("/api/**")
+                    .hasRole(Rol.ADMINISTRADOR.name())
+
+                /*===============================================
+                            5. Administrador (regla final, si hay alguna específica de rol agregar arriba)
+                ================================================*/
                     .anyRequest().authenticated()
             )
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-//            .httpBasic(withDefaults())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    AuthenticationProvider authenticationProvider(UserDetailsService uds, PasswordEncoder pwe) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(uds);
-        provider.setPasswordEncoder(pwe);
-        return provider;
     }
 
     @Bean

@@ -51,8 +51,9 @@ public class OrdenCompraService {
         OrdenCompra ocInsertada = repo.save(ordenCompra);
         simularApiPasarelaPagos(ocInsertada,true); //true -> siempre va funcionar
         detalleCompraService.addListDetalles(ordenCompraDTO.getDetallesCompras(), ocInsertada);
-        descuentoService.actualizarUsoDescuento(ordenCompraDTO.getIdDescuentoUtilizado());
-
+        if(ordenCompraDTO.getIdDescuentoUtilizado() != null) {
+            descuentoService.actualizarUsoDescuento(ordenCompraDTO.getIdDescuentoUtilizado());
+        }
         return ocInsertada;
     }
 

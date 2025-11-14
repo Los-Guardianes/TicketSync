@@ -1,168 +1,180 @@
-/* Tarjeta blanca principal */
+/* Tarjeta principal */
 .config-card {
-  background-color: #fff;
-  border-radius: 4px;
-  border: 1px solid #dcdcdc;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 1.5rem 2rem;
-  width: 100%;
-  max-width: 1100px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 1100px;
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
-/* Título verde grande "Configuración de evento" */
+/* Título */
 .config-card-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #00833E;
-  margin-bottom: 1.5rem;
+    font-size: 28px;
+    font-weight: 700;
+    color: #00833E;
+    margin-bottom: 28px;
 }
 
-/* Columna izquierda (nombre, imagen, dirección) */
-.config-event-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+/* NUEVO LAYOUT */
+.config-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* COLUMNA IZQUIERDA */
+.config-left {
+    flex: 1;
+    text-align: center;
 }
 
 /* Nombre del evento */
 .config-event-name {
-  font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
-  text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
 }
 
-/* Imagen/portada del evento */
+/* Imagen del evento */
 .config-event-cover {
-  width: 100%;
-  max-width: 360px;
-  min-height: 180px;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  background-color: #f5f5f5;
-  background-size: cover;
-  background-position: center;
+    width: 100%;
+    max-width: 380px;
+    height: 210px;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    background-color: #eaeaea;
+    border: 1px solid #ddd;
+    margin: 10px auto;
 }
 
-/* Dirección del evento */
+/* Dirección */
 .config-event-location {
-  color: #6c757d;
-  font-size: 0.8rem;
-  margin-top: 0.75rem;
-  margin-bottom: 0;
+    color: #777;
+    font-size: 0.9rem;
 }
 
-/* Contenedor de acciones derechas */
-.config-actions-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+/* Evento cancelado */
+.evento-cancelado {
+    margin-top: 8px;
+    color: #d00;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
-/* Cada botón negro "EDITAR DETALLES >" */
+/* COLUMNA DERECHA */
+.config-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Botones */
 .config-action-btn {
-  background-color: #000;
-  color: #fff;
-  border-radius: 4px;
-  border: none;
-  width: 100%;
-  text-align: left;
-  padding: 0.9rem 1rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background: #fafafa;
+    border: 1px solid #d7d7d7;
+    border-radius: 14px;
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
 }
-/* === Modal de cancelación === */
+
+.config-action-btn:hover {
+    background: #e9f7ef;
+    border-color: #40a85f;
+    transform: translateY(-2px);
+}
+
+/* Flecha */
+.config-action-btn span {
+    font-weight: 700;
+    color: #777;
+    transition: 0.25s ease;
+}
+
+.config-action-btn:hover span {
+    color: #45b067;
+    transform: translateX(4px);
+}
+
+/* Modal */
 .cancel-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
 }
 
 .cancel-modal {
-  background: #fff;
-  border-radius: 6px;
-  max-width: 480px;
-  width: 90%;
-  padding: 24px 28px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  border: 1px solid #d9d9d9;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #fff;
+    border-radius: 8px;
+    max-width: 480px;
+    width: 90%;
+    padding: 24px 28px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
 
 .cancel-modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .cancel-modal-text {
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.4;
-  margin-bottom: 16px;
+    font-size: 0.95rem;
+    color: #444;
 }
 
 .cancel-modal-details {
-  background: #fafafa;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  padding: 12px;
-  font-size: 0.9rem;
-  margin-bottom: 20px;
-}
-
-.cancel-modal-name {
-  font-weight: 600;
-  color: #111;
-}
-
-.cancel-modal-location {
-  color: #666;
-  font-size: 0.8rem;
-}
-
-.cancel-modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
 }
 
 .btn-cancelar-outline {
-  background: #fff;
-  border: 1px solid #999;
-  border-radius: 4px;
-  padding: 10px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  font-weight: 500;
-  color: #222;
-}
-
-.btn-cancelar-outline:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
 }
 
 .btn-cancelar-danger {
-  background: #000;
-  color: #fff;
-  border-radius: 4px;
-  padding: 10px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  font-weight: 500;
-  border: none;
+    background: #000;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
 }
 
-.btn-cancelar-danger:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* Responsive */
+@media (max-width: 768px) {
+    .config-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .config-event-cover {
+        max-width: 100%;
+    }
+}
+.config-page {
+    display: flex;
+    width: 100%;
 }
