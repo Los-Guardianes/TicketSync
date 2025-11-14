@@ -60,7 +60,7 @@ export const AdminHome = () => {
         setIsLoadingReport(false);
       }
     }
-    if (title == "Configurar Comisión")
+    if (title == "Gestionar Roles")
     {
       response("/configusers"); 
     }
