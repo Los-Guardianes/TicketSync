@@ -28,7 +28,7 @@ export const EditEvent = () => {
                 const categorias = await getCateventos();
                 setCatEvento(categorias);
 
-                const evento = await apiFetch(`/api/evento/${idEvento}`);
+                const evento = await apiFetch(`/api/evento/${idEvento}`, "GET");
 
                 const data = {
                     nombre: evento.nombre || "",
@@ -85,20 +85,11 @@ export const EditEvent = () => {
 
         try {
             const payload = {
-                nombre: form.nombre,
-                descripcion: form.descripcion,
-                informAdic: form.informAdic,
-                restricciones: form.restricciones,
-                categoria: {
-                    idCategoria: Number(form.idCategoria)
-                }
+                ...form,
+                categoria: { idCategoria: Number(form.idCategoria) }
             };
-            
 
-            await apiFetch(`/api/evento/${idEvento}`, {
-                method: "PUT",
-                body: JSON.stringify(payload)
-            });
+            await apiFetch(`/api/evento/${idEvento}`, "PUT", payload);
 
             alert("Evento actualizado con éxito.");
 

@@ -1,13 +1,10 @@
 import "./Login.css";
-// 1. Importa 'useLocation'
-import { useNavigate, useLocation } from 'react-router-dom';
-import { loginService } from '../service/loginService'; 
+import { useNavigate } from 'react-router-dom';
+import { loginService } from '../service/loginService'; // Única importación de lógica
 import { GoogleLogin } from '@react-oauth/google';
 
 export const Login = () => {
     const navigate = useNavigate();
-    // 2. Obtén la 'location'
-    const location = useLocation();
 
     // Lógica del servicio
     const {
@@ -20,43 +17,19 @@ export const Login = () => {
         handleGoogleLogin,
     } = loginService();
 
-    const handleNavigation = (rol) => {    
-        /*
-            De Rodrigo: Recordar que ProtectedRoute manda a login cuando no esta autenticado
-            A su vez manda un state con los datos de a que página trataba de ir y de donde llegaba
-            En caso la ruta la no este protegida (si se va al login manualmente) entonces ignorará todos los states
-            Esto fue implementado para mejorar la usabilidad, ya que antes cuando el login siempre te enviaba al home si o si
-        */
-        const state = location.state || {};        
-        const fromPath = state.from || null;
-        const fromData = state.data || {};        
-        const returnTo = fromData.returnTo || null; // ej: "/ticket-purchase/123"
-
-        if (returnTo) {
-            // Prioridad #1: Si existe un 'returnTo', volvemos a la página de selección.
-            // (Usamos 'replace' para que el login no quede en el historial)
-            navigate(returnTo, { replace: true });
-        
-        } else if (fromPath) {
-            // Prioridad #2: Si no había 'returnTo' (ej: un usuario fue a /profile)
-            // lo mandamos a 'fromPath'.
-            navigate(fromPath, { replace: true });
-        
+    // Función de ayuda para la navegación (REUTILIZABLE)
+    const handleNavigation = (rol) => {
+        if (rol === 'ADMINISTRADOR') {
+            navigate('/home-admin');
         } else {
-            // Prioridad #3: Si no había 'state' (el usuario fue a /login directamente)
-            // usamos la lógica de roles.
-            if (rol === 'ADMINISTRADOR') {
-                navigate('/home-admin');
-            } else {
-                navigate('/');
-            }
+            navigate('/');
         }
     };
 
     // Submit del formulario
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const loginSuccess = await handleLoginSubmit(); // Esto devuelve el { user }
+        const loginSuccess = await handleLoginSubmit();
 
         if (loginSuccess) {
             handleNavigation(loginSuccess.rol); // Usa la función de navegación
@@ -64,16 +37,21 @@ export const Login = () => {
     };
 
     // Para google
+    // Wrapper para el onSuccess de Google
     const onGoogleSuccess = async (credentialResponse) => {
-        const loginSuccess = await handleGoogleLogin(credentialResponse); // Devuelve { user }
-
+        // Llama a la función del hook
+        const loginSuccess = await handleGoogleLogin(credentialResponse);
+        console.log(loginSuccess)
+        //  Reutiliza la misma lógica de navegación
         if (loginSuccess) {
             handleNavigation(loginSuccess.rol);
         }
     };
 
+    // Wrapper para el onError de Google
     const onGoogleError = () => {
         console.error("Login con Google fallido");
+        // 'loginService' ya muestra el mensaje de error en la UI
     };
 
     return (
@@ -144,10 +122,11 @@ export const Login = () => {
                     <button
                         type="button"
                         className="btn btn-secondary btn-lg mt-3"
-                        onClick={() => navigate('/home')} // Asumo que '/home' es tu inicio público
+                        onClick={() => navigate('/home')}
                     >
                         Volver al inicio
                     </button>
+
 
                 </div>
             </div>

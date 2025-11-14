@@ -9,12 +9,8 @@ export const Card = ({ id, titulo, fecha, ubicacion, ulrimagen }) => {
 
   const start_purchase = () => {
     const target = `/ticket-purchase/${id}`
-    /* Prueba del ProtecRoute
     if (!isAuthenticated) navigate("/login", { state: { from: target } })
-    else{
-    } 
-    */
-    navigate(target)
+    else navigate(target)
   }
 
   return (
