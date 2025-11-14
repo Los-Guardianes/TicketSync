@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { getParams, putParams } from "../service/paramsService";
+import { useNavigate } from 'react-router-dom';
+import "./ConfigUsers.css";
 
 export const ConfigParams = () => {
+  const navigate = useNavigate();
   const [comisionGlobal, setComisionGlobal] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +40,7 @@ export const ConfigParams = () => {
 
       await putParams(payload, 1);
       alert("Parámetros guardados correctamente.");
+      navigate("/home-admin");
     } catch (err) {
       console.error("Error al guardar parámetros", err);
       alert("No se pudieron guardar los parámetros.");
@@ -51,6 +55,7 @@ export const ConfigParams = () => {
     justifyContent: "center",
     alignItems: "flex-start",
     padding: "40px 20px",
+    gap: "20px",
   };
 
   const cardStyle = {
@@ -70,6 +75,11 @@ export const ConfigParams = () => {
 
   return (
     <div style={wrapperStyle}>
+      <div className="back-button-wrapper">
+        <button className="back-button" onClick={() => navigate("/home-admin")}>
+          ← Volver
+        </button>
+      </div>
       <div style={cardStyle}>
         <h6 className="fw-bold">
           <i className="bi bi-gear-fill me-2"></i>Parámetros de la plataforma

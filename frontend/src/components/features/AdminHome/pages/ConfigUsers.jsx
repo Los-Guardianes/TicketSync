@@ -247,7 +247,7 @@ export const ConfigUsers = () => {
       {showAddUserModal && (
         <div className="add-user-modal-overlay">
           <div className="add-user-modal">
-            <h4>Agregar nuevo usuario</h4>
+            <h4>Agregar nuevo usuario (administrador)</h4>
 
             <div className="add-user-form">
               <input

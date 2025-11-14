@@ -6,7 +6,7 @@ import { getReporte } from '../service/reporteService';
 
 // --- Componente AdminHome ---
 export const AdminHome = () => {
-  const response = useNavigate();
+  const navigate = useNavigate();
   const [isLoadingReport, setIsLoadingReport] = useState(false);
 
   const cardStyle = {
@@ -62,11 +62,11 @@ export const AdminHome = () => {
     }
     if (title == "Gestionar Roles")
     {
-      response("/configusers"); 
+      navigate("/configusers"); 
     }
     if (title == "Configurar Comisión")
     {
-      response("/configparams"); 
+      navigate("/configparams"); 
     }
   };
 
