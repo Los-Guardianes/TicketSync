@@ -38,7 +38,26 @@ public class EventoService {
         return repo.save(evento);
     }
 
-    public Evento updateEvento(Evento evento) {
+    //public Evento updateEvento(Evento evento) {
+    //    return repo.save(evento);
+    //}
+    public Evento updateEvento(Evento datos) {
+
+        // 1. Buscar el evento real
+        Evento evento = repo.findById(datos.getIdEvento())
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+
+        // 2. Actualizar SOLO los campos que tu formulario modifica
+        evento.setNombre(datos.getNombre());
+        evento.setInformAdic(datos.getInformAdic());
+        evento.setRestricciones(datos.getRestricciones());
+        evento.setDescripcion(datos.getDescripcion());
+
+        if (datos.getCategoria() != null) {
+            evento.setCategoria(datos.getCategoria());
+        }
+
+        // 3. Guardar
         return repo.save(evento);
     }
 
