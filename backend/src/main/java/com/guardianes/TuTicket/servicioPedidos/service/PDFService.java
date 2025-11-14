@@ -48,7 +48,8 @@ public class PDFService {
         PdfWriter.getInstance(document, baos);
         document.open();
 
-        Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+        //Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+        Image logo = Image.getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png")
         logo.scaleToFit(100, 100);
         logo.setAlignment(Image.ALIGN_CENTER);
         document.add(logo);
@@ -113,7 +114,8 @@ public class PDFService {
         header.setWidthPercentage(100);
         header.setWidths(new float[]{1, 3});
 
-        Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+        //Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+        Image logo = Image.getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png")
         logo.scaleToFit(60, 25);
         PdfPCell logoCell = new PdfPCell(logo);
         logoCell.setBorder(Rectangle.NO_BORDER);
