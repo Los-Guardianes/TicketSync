@@ -191,9 +191,6 @@ export const ConfigEvento = () => {
                   funciones={funciones}
                 />
               </div>
-              {evento.activo === false && (
-                <p className="evento-cancelado">Este evento está cancelado.</p>
-              )}
               <EntradasAccordion
                 isActive={isActive('entradas')}
                 onToggle={toggleAccordion}
@@ -201,7 +198,10 @@ export const ConfigEvento = () => {
                 deleteItem={deleteItem}
                 addItem={addItem}
                 entradas={entradas}
-              />
+              s/>
+              {evento.activo === false && (
+                <p className="evento-cancelado">Este evento está cancelado.</p>
+              )}
 
             </div>
 

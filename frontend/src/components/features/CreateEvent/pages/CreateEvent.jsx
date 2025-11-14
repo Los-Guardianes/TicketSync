@@ -140,7 +140,7 @@ export const CreateEvent = () => {
         const erroresValidacion = {
             ...validarInformacionBasica(),
             ...validarFunciones(),
-            ...validarImagen()
+            // ...validarImagen()
         };
 
         setErrores(erroresValidacion);

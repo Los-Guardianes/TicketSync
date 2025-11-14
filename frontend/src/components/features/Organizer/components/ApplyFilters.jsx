@@ -9,13 +9,13 @@
         return false;
       }
     }
+    console.log(evento);
 
     // Filtro por ubicación
     if (filters.location) {
       const locationLower = filters.location.toLowerCase();
       // if (!evento.direccion?.toLowerCase().includes(locationLower)) {
-      console.log(typeof evento.ciudad.dpto.idDpto)
-      console.log(typeof filters.location)
+      // console.log(typeof filters.location);
       if (String(evento.ciudad.dpto.idDpto) !== filters.location) {
         return false;
       }

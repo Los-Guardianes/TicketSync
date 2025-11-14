@@ -73,6 +73,7 @@ export const MisEventos = () => {
         if (!user?.idUsuario) return; // protección: no intentes llamar aún
         const data = await getEventosByOrganizer(user.idUsuario);
         // setEventos(Array.isArray(data) ? data : []);
+        console.log(data)
         const eventosArray = Array.isArray(data) ? data : [];
         // Aplica los filtros si existen
         const eventosFiltrados = applyFiltersToEvents(eventosArray, filters);
