@@ -1,0 +1,139 @@
+.card-temporada {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  padding: 0.75rem 1rem; /* Reducir padding vertical */
+  min-height: 60px; /* Altura mínima consistente */
+}
+
+.card-temporada:hover {
+  border-color: #28a745;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+}
+
+.card-temporada.selected {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.card-temporada-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temporada-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Reducir gap */
+  min-width: 150px; /* Reducir ancho mínimo */
+}
+
+.temporada-badge {
+  background: #28a745;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.temporada-info-row {
+  display: flex;
+  gap: 1rem; /* Reducir gap */
+  flex: 1;
+}
+
+.info-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem; /* Reducir padding */
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.8rem; /* Reducir tamaño de fuente */
+}
+
+.info-value {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.info-dates {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  font-size: 0.8rem; /* Reducir tamaño de fuente */
+  white-space: nowrap;
+}
+
+.date-label {
+  color: #495057;
+}
+
+.date-separator {
+  color: #dee2e6;
+}
+
+.card-temporada-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  padding: 0.4rem; /* Reducir padding */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-action:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-modificar:hover {
+  color: #007bff;
+}
+
+.btn-eliminar:hover {
+  color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .card-temporada {
+    padding: 0.5rem 0.75rem; /* Más compacto en móvil */
+    min-height: 120px;
+  }
+  
+  .card-temporada-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .temporada-info-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .card-temporada-actions {
+    align-self: flex-end;
+    gap: 0.25rem;
+  }
+}
