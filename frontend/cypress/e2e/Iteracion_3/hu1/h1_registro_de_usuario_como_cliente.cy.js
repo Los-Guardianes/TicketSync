@@ -3,7 +3,7 @@
 describe('HU1 - Registro de Cliente', () => {
   
   beforeEach(() => {
-    cy.visit('http://localhost:5173/home');
+    cy.visit('https://tuticket.space/home');
   });
 
   it('Prueba 1: Debe navegar correctamente al formulario de registro de cliente', () => {
@@ -11,7 +11,7 @@ describe('HU1 - Registro de Cliente', () => {
     cy.contains('Registrarse').click();
     
     // Verificar que estamos en la pantalla de opciones de registro
-    cy.url().should('eq', 'http://localhost:5173/register');
+    cy.url().should('eq', 'https://tuticket.space/register');
     cy.contains('h2', 'Registrate').should('be.visible');
     
     // Verificar que aparecen los 3 botones
@@ -23,7 +23,7 @@ describe('HU1 - Registro de Cliente', () => {
     cy.contains('button', 'Registrarse como cliente').click();
     
     // Verificar que aparece el formulario de registro de cliente
-    cy.url().should('eq', 'http://localhost:5173/register-client');
+    cy.url().should('eq', 'https://tuticket.space/register-client');
     cy.contains('h2', 'Bienvenidos a tu ticket').should('be.visible');
     
     // Verificar que el formulario está presente
@@ -33,7 +33,7 @@ describe('HU1 - Registro de Cliente', () => {
 
   it('Prueba 2: Debe registrar exitosamente un nuevo cliente con datos válidos', () => {
     // Navegar directamente al formulario de registro de cliente
-    cy.visit('http://localhost:5173/register-client');
+    cy.visit('https://tuticket.space/register-client');
     
     // Generar un correo único para evitar conflictos en múltiples ejecuciones
     const timestamp = Date.now();
@@ -61,12 +61,12 @@ describe('HU1 - Registro de Cliente', () => {
     
     // Verificar que redirige a la pantalla de inicio
     // Nota: Puede tardar un poco por la petición al backend
-    cy.url().should('eq', 'http://localhost:5173/home', { timeout: 10000 });
+    cy.url().should('eq', 'https://tuticket.space/home', { timeout: 10000 });
   });
 
   it('Prueba 3: Debe mostrar error al intentar registrar un correo duplicado', () => {
     // Navegar directamente al formulario de registro de cliente
-    cy.visit('http://localhost:5173/register-client');
+    cy.visit('https://tuticket.space/register-client');
     
     // Llenar el formulario con un correo que ya existe (mario1@mail.com)
     cy.get('#inpNombre').type('MANO');
