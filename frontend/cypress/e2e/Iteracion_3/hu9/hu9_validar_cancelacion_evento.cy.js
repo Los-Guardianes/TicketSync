@@ -5,7 +5,7 @@ describe('HUXX - Cancelar evento como organizador', () => {
   it('Debe permitir iniciar sesión, ingresar a un evento y cancelarlo correctamente', () => {
     
     // 1. Ir a home
-    cy.visit('http://localhost:5173/home');
+    cy.visit('https://tuticket.space/home');
 
     // 2. Ir a Login
     cy.contains('Login').click();
