@@ -1,7 +1,7 @@
 // cypress/e2e/HU2-ticket-purchase-and-pay.cy.js
 
 describe('HU2 - Compra de tickets y pasarela (integración con backend)', () => {
-  const base = 'http://localhost:5173';
+  const base = 'https://tuticket.space';
   const email = 'mario1@mail.com';
   const pass = 'hash11';
 
