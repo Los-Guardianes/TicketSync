@@ -1,424 +1,362 @@
-import React, { useState, useEffect } from "react";
-import { X, Plus, Trash2 } from 'lucide-react';
-import "./CreateTicket.css";
-
-// Modal Component
-const Modal = ({ isOpen, onClose, children, title }) => {
-    if (!isOpen) return null;
-
-    return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={e => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h3>{title}</h3>
-                    <button className="modal-close" onClick={onClose}>
-                        <X size={24} />
-                    </button>
-                </div>
-                <div className="modal-body">
-                    {children}
-                </div>
-            </div>
-        </div>
-    );
-};
+import React, { useState } from 'react';
 
 export const CreateTicket2 = () => {
-    // Simulando el contexto
-    const [eventData, setEventData] = useState({
-        temporadas: [{ 
-            nombre: "Temporada 1", 
-            tipoDescuento: "porcentaje", 
-            descuento: 0, 
-            fechaInicio: "", 
-            fechaFin: "" 
-        }],
-        tiposDeEntrada: [{ 
-            nombre: "", 
-            moneda: "PEN", 
-            precioBase: 0, 
-            cantidadMax: 10, 
-            descripcion: "", 
-            zonasAsignadas: [] 
-        }],
-        zonas: []
-    });
+  const [formData, setFormData] = useState({
+    eventName: '',
+    category: '',
+    restrictions: '',
+    description: ''
+  });
+  
+  const [functions, setFunctions] = useState([
+    { id: 1, start: '', end: '' }
+  ]);
+  
+  const [imagePreview, setImagePreview] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
 
-    const [temporadaActual, setTemporadaActual] = useState(0);
-    const [entradaActual, setEntradaActual] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newZona, setNewZona] = useState({ nombre: "", numAsientos: 0 });
+  const categories = [
+    { value: '', label: 'Selecciona una categoría' },
+    { value: 'musica', label: '🎵 Música' },
+    { value: 'deporte', label: '⚽ Deportes' },
+    { value: 'arte', label: '🎨 Arte y Cultura' },
+    { value: 'tecnologia', label: '💻 Tecnología' },
+    { value: 'gastronomia', label: '🍽️ Gastronomía' },
+    { value: 'educacion', label: '📚 Educación' },
+    { value: 'negocios', label: '💼 Negocios' },
+    { value: 'otro', label: '🎯 Otro' }
+  ];
 
-    const updateEventData = (updates) => {
-        setEventData(prev => ({ ...prev, ...updates }));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFunctionChange = (id, field, value) => {
+    setFunctions(prev => 
+      prev.map(func => 
+        func.id === id ? { ...func, [field]: value } : func
+      )
+    );
+  };
+
+  const addFunction = () => {
+    const newId = Math.max(...functions.map(f => f.id)) + 1;
+    setFunctions(prev => [...prev, { id: newId, start: '', end: '' }]);
+  };
+
+  const removeFunction = (id) => {
+    if (functions.length > 1) {
+      setFunctions(prev => prev.filter(func => func.id !== id));
+    }
+  };
+
+  const handleImageUpload = (file) => {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleImageUpload(files[0]);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+  };
+
+  const handleCancel = () => {
+    if (window.confirm('¿Estás seguro de que deseas cancelar? Se perderán todos los cambios.')) {
+      setFormData({
+        eventName: '',
+        category: '',
+        restrictions: '',
+        description: ''
+      });
+      setFunctions([{ id: 1, start: '', end: '' }]);
+      setImagePreview(null);
+    }
+  };
+
+  const handleSubmit = () => {
+    const eventData = {
+      ...formData,
+      functions: functions,
+      image: imagePreview
     };
 
-    const handleItemChange = (arrayName, index, field, value) => {
-        const newArray = [...eventData[arrayName]];
-        const isNumericField = ['descuento', 'precioBase', 'cantidadMax', 'numAsientos'].includes(field);
-        const finalValue = isNumericField ? Number(value) : value;
-        newArray[index] = { ...newArray[index], [field]: finalValue };
-        updateEventData({ [arrayName]: newArray });
-    };
+    console.log('Datos del formulario:', eventData);
+    alert('¡Evento creado exitosamente! 🎉\n\nRevisa la consola para ver los datos.');
+  };
 
-    // TEMPORADAS
-    const addTemporada = () => {
-        const nuevasTemporadas = [...eventData.temporadas, { 
-            nombre: `Temporada ${eventData.temporadas.length + 1}`, 
-            tipoDescuento: "porcentaje",
-            descuento: 0, 
-            fechaInicio: "", 
-            fechaFin: "" 
-        }];
-        updateEventData({ temporadas: nuevasTemporadas });
-        setTemporadaActual(nuevasTemporadas.length - 1);
-    };
-
-    const removeCurrentTemporada = () => {
-        if (eventData.temporadas.length <= 1) return;
-        const nuevasTemporadas = eventData.temporadas.filter((_, i) => i !== temporadaActual);
-        updateEventData({ temporadas: nuevasTemporadas });
-        if (temporadaActual >= nuevasTemporadas.length) {
-            setTemporadaActual(nuevasTemporadas.length - 1);
-        }
-    };
-
-    // ZONAS
-    const openModalZona = () => {
-        setNewZona({ nombre: "", numAsientos: 0 });
-        setIsModalOpen(true);
-    };
-
-    const handleAddZona = () => {
-        if (!newZona.nombre || newZona.numAsientos <= 0) {
-            alert("Por favor completa todos los campos de la zona");
-            return;
-        }
-        const nuevasZonas = [...eventData.zonas, { 
-            id: Date.now(), 
-            ...newZona 
-        }];
-        updateEventData({ zonas: nuevasZonas });
-        setIsModalOpen(false);
-        setNewZona({ nombre: "", numAsientos: 0 });
-    };
-
-    const removeZona = (index) => {
-        const nuevasZonas = eventData.zonas.filter((_, i) => i !== index);
-        const nuevosTipos = eventData.tiposDeEntrada.map(tipo => ({
-            ...tipo,
-            zonasAsignadas: tipo.zonasAsignadas.filter(zIndex => zIndex !== index)
-                .map(zIndex => zIndex > index ? zIndex - 1 : zIndex)
-        }));
-        updateEventData({ zonas: nuevasZonas, tiposDeEntrada: nuevosTipos });
-    };
-
-    // TIPOS DE ENTRADA
-    const addEntrada = () => {
-        const nuevosTipos = [...eventData.tiposDeEntrada, { 
-            nombre: "", 
-            moneda: "PEN", 
-            precioBase: 0, 
-            cantidadMax: 10, 
-            descripcion: "",
-            zonasAsignadas: []
-        }];
-        updateEventData({ tiposDeEntrada: nuevosTipos });
-        setEntradaActual(nuevosTipos.length - 1);
-    };
-
-    const removeCurrentEntrada = () => {
-        if (eventData.tiposDeEntrada.length <= 1) return;
-        const nuevosTipos = eventData.tiposDeEntrada.filter((_, i) => i !== entradaActual);
-        updateEventData({ tiposDeEntrada: nuevosTipos });
-        if (entradaActual >= nuevosTipos.length) {
-            setEntradaActual(nuevosTipos.length - 1);
-        }
-    };
-
-    const handleZonaAsignada = (zonaIndex) => {
-        const currentTipo = eventData.tiposDeEntrada[entradaActual];
-        const zonasAsignadas = currentTipo.zonasAsignadas || [];
+  return (
+    <div style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", background: '#fafbfc', minHeight: '100vh', padding: '40px 20px' }}>
+      <div style={{ background: 'white', borderRadius: '2px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.08)', maxWidth: '900px', width: '100%', margin: '0 auto', overflow: 'hidden', border: '1px solid #e8ebed' }}>
         
-        const isSelected = zonasAsignadas.includes(zonaIndex);
-        const newZonasAsignadas = isSelected 
-            ? zonasAsignadas.filter(i => i !== zonaIndex)
-            : [...zonasAsignadas, zonaIndex];
-        
-        handleItemChange('tiposDeEntrada', entradaActual, 'zonasAsignadas', newZonasAsignadas);
-    };
+        {/* Header */}
+        <div style={{ background: 'white', color: '#1a202c', padding: '32px 48px', borderBottom: '1px solid #e8ebed' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '24px', color: '#1a202c', letterSpacing: '-0.5px' }}>Crear Nuevo Evento</h1>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', marginTop: '32px', gap: '12px' }}>
+            <div style={{ position: 'absolute', top: '24px', left: '60px', right: '60px', height: '1px', background: '#e8ebed', zIndex: 1 }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', background: '#2d8a5b', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', width: '0%' }}></div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2, flex: 1 }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#2d8a5b', color: 'white', border: '2px solid #2d8a5b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '15px', marginBottom: '12px', boxShadow: '0 2px 8px rgba(45, 138, 91, 0.2)' }}>1</div>
+              <div style={{ fontSize: '13px', fontWeight: '600', color: '#2d8a5b', textAlign: 'center' }}>Detalles del evento</div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2, flex: 1 }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'white', border: '2px solid #e8ebed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '15px', color: '#a0aec0', marginBottom: '12px' }}>2</div>
+              <div style={{ fontSize: '13px', fontWeight: '500', color: '#718096', textAlign: 'center' }}>Ubicación</div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2, flex: 1 }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'white', border: '2px solid #e8ebed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '15px', color: '#a0aec0', marginBottom: '12px' }}>3</div>
+              <div style={{ fontSize: '13px', fontWeight: '500', color: '#718096', textAlign: 'center' }}>Entradas</div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2, flex: 1 }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'white', border: '2px solid #e8ebed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '15px', color: '#a0aec0', marginBottom: '12px' }}>4</div>
+              <div style={{ fontSize: '13px', fontWeight: '500', color: '#718096', textAlign: 'center' }}>Confirmación</div>
+            </div>
+          </div>
+        </div>
 
-    // NAVEGACIÓN
-    const irTemporadaIzq = () => setTemporadaActual(p => (p === 0 ? eventData.temporadas.length - 1 : p - 1));
-    const irTemporadaDer = () => setTemporadaActual(p => (p === eventData.temporadas.length - 1 ? 0 : p + 1));
-    const irEntradaIzq = () => setEntradaActual(p => (p === 0 ? eventData.tiposDeEntrada.length - 1 : p - 1));
-    const irEntradaDer = () => setEntradaActual(p => (p === eventData.tiposDeEntrada.length - 1 ? 0 : p + 1));
-
-    const handleFinalSubmit = () => {
-        console.log("Datos finales:", eventData);
-        alert("¡Evento guardado exitosamente!");
-    };
-
-    const currentTemporada = eventData.temporadas[temporadaActual];
-    const currentTipoEntrada = eventData.tiposDeEntrada[entradaActual];
-
-    return (
-        <>
-            <div className="crear-ticket-container">
-                <div className="header">
-                    <span className="step">3</span>
-                    <h2>Crear Entradas</h2>
-                </div>
-
-                <div className="campo">
-                    <label htmlFor="moneda">Moneda</label>
-                    <select 
-                        id="moneda" 
-                        value={currentTipoEntrada.moneda} 
-                        onChange={e => handleItemChange('tiposDeEntrada', entradaActual, 'moneda', e.target.value)}
-                    >
-                        <option value="PEN">S (PEN)</option>
-                        <option value="USD">$ (USD)</option>
-                    </select>
-                </div>
-
-                {/* TEMPORADAS */}
-                <div className="funciones-section">
-                    <div className="funciones-header">
-                        <button className="btn p-0 me-2 text-success fw-semibold" onClick={addTemporada}>
-                            + Agregar temporada
-                        </button>
-                        <button className="btn p-0 me-2 text-danger fw-semibold" onClick={removeCurrentTemporada}>
-                            Eliminar
-                        </button>
-                        <button className="season-tab__arrow" onClick={irTemporadaIzq}>&#60;</button>
-                        <span className="fw-bold text-success">
-                            Temporada {temporadaActual + 1} de {eventData.temporadas.length}
-                        </span>
-                        <button className="season-tab__arrow" onClick={irTemporadaDer}>&#62;</button>
-                    </div>
-                    <div className="row g-3 rounded-3 p-3" style={{ background: "#eaf7ef" }}>
-                        <div className="col-12 col-md-3">
-                            <label>Nombre de la temporada</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                placeholder="Escribe la temporada" 
-                                value={currentTemporada.nombre} 
-                                onChange={e => handleItemChange('temporadas', temporadaActual, 'nombre', e.target.value)} 
-                            />
-                        </div>
-                        <div className="col-12 col-md-2">
-                            <label>Tipo de Descuento</label>
-                            <select 
-                                className="form-control" 
-                                value={currentTemporada.tipoDescuento || "porcentaje"} 
-                                onChange={e => handleItemChange('temporadas', temporadaActual, 'tipoDescuento', e.target.value)}
-                            >
-                                <option value="porcentaje">Porcentaje (%)</option>
-                                <option value="monto">Monto Fijo</option>
-                            </select>
-                        </div>
-                        <div className="col-12 col-md-2">
-                            <label>Descuento</label>
-                            <input 
-                                type="number" 
-                                className="form-control" 
-                                value={currentTemporada.descuento || 0} 
-                                onChange={e => handleItemChange('temporadas', temporadaActual, 'descuento', e.target.value)} 
-                                placeholder={currentTemporada.tipoDescuento === "porcentaje" ? "%" : currentTipoEntrada.moneda}
-                            />
-                        </div>
-                        <div className="col-12 col-md-2">
-                            <label>Fecha de Inicio</label>
-                            <input 
-                                type="date" 
-                                className="form-control" 
-                                value={currentTemporada.fechaInicio || ""} 
-                                onChange={e => handleItemChange('temporadas', temporadaActual, 'fechaInicio', e.target.value)} 
-                            />
-                        </div>
-                        <div className="col-12 col-md-3">
-                            <label>Fecha de Fin</label>
-                            <input 
-                                type="date" 
-                                className="form-control" 
-                                value={currentTemporada.fechaFin || ""} 
-                                onChange={e => handleItemChange('temporadas', temporadaActual, 'fechaFin', e.target.value)} 
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* ZONAS */}
-                <div className="zonas-section">
-                    <div className="zonas-header">
-                        <h3 className="text-success">Zonas del Evento</h3>
-                        <button className="btn-add-zona" onClick={openModalZona}>
-                            <Plus size={16} /> Agregar Zona
-                        </button>
-                    </div>
-                    <div className="zonas-grid">
-                        {eventData.zonas && eventData.zonas.length > 0 ? (
-                            eventData.zonas.map((zona, index) => (
-                                <div key={zona.id || index} className="zona-card">
-                                    <div className="zona-card-header">
-                                        <span className="zona-number">Zona {index + 1}</span>
-                                        <button 
-                                            className="btn-icon-delete" 
-                                            onClick={() => removeZona(index)}
-                                            title="Eliminar zona"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                    <div className="zona-card-body">
-                                        <div className="zona-info">
-                                            <span className="zona-label">Nombre:</span>
-                                            <span className="zona-value">{zona.nombre}</span>
-                                        </div>
-                                        <div className="zona-info">
-                                            <span className="zona-label">Asientos:</span>
-                                            <span className="zona-value">{zona.numAsientos}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="empty-state">
-                                <p>No hay zonas creadas. Haz clic en "Agregar Zona" para comenzar.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* TIPOS DE ENTRADA */}
-                <div className="funciones-section">
-                    <div className="funciones-header">
-                        <button className="btn p-0 me-2 text-success fw-semibold" onClick={addEntrada}>
-                            + Agregar tipo de entrada
-                        </button>
-                        <button className="btn p-0 me-2 text-danger fw-semibold" onClick={removeCurrentEntrada}>
-                            Eliminar
-                        </button>
-                        <button className="season-tab__arrow" onClick={irEntradaIzq}>&#60;</button>
-                        <span className="fw-bold text-success">
-                            Tipo {entradaActual + 1} de {eventData.tiposDeEntrada.length}
-                        </span>
-                        <button className="season-tab__arrow" onClick={irEntradaDer}>&#62;</button>
-                    </div>
-                    <div className="row g-3 rounded-3 p-3" style={{ background: "#eaf7ef" }}>
-                        <div className="col-12 col-md-4">
-                            <label>Nombre del Tipo de Entrada</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                placeholder="VIP, Preferencial, Estándar" 
-                                value={currentTipoEntrada.nombre} 
-                                onChange={e => handleItemChange('tiposDeEntrada', entradaActual, 'nombre', e.target.value)} 
-                            />
-                        </div>
-                        <div className="col-12 col-md-4">
-                            <label>Precio Base</label>
-                            <input 
-                                type="number" 
-                                className="form-control" 
-                                value={currentTipoEntrada.precioBase} 
-                                onChange={e => handleItemChange('tiposDeEntrada', entradaActual, 'precioBase', e.target.value)} 
-                            />
-                        </div>
-                        <div className="col-12 col-md-4">
-                            <label>Máx. cantidad por orden</label>
-                            <input 
-                                type="number" 
-                                className="form-control" 
-                                value={currentTipoEntrada.cantidadMax} 
-                                onChange={e => handleItemChange('tiposDeEntrada', entradaActual, 'cantidadMax', e.target.value)} 
-                            />
-                        </div>
-                        <div className="col-12">
-                            <label>Descripción</label>
-                            <textarea 
-                                className="form-control" 
-                                rows="3" 
-                                placeholder="Escribe información adicional..." 
-                                value={currentTipoEntrada.descripcion} 
-                                onChange={e => handleItemChange('tiposDeEntrada', entradaActual, 'descripcion', e.target.value)} 
-                            />
-                        </div>
-                        <div className="col-12">
-                            <label className="fw-semibold mb-2">Zonas asignadas a este tipo de entrada:</label>
-                            {eventData.zonas && eventData.zonas.length > 0 ? (
-                                <div className="zonas-checkbox-grid">
-                                    {eventData.zonas.map((zona, index) => (
-                                        <div key={index} className="form-check zona-checkbox">
-                                            <input 
-                                                className="form-check-input" 
-                                                type="checkbox" 
-                                                id={`zona-${entradaActual}-${index}`}
-                                                checked={(currentTipoEntrada.zonasAsignadas || []).includes(index)}
-                                                onChange={() => handleZonaAsignada(index)}
-                                            />
-                                            <label className="form-check-label" htmlFor={`zona-${entradaActual}-${index}`}>
-                                                {zona.nombre || `Zona ${index + 1}`} ({zona.numAsientos} asientos)
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-muted">No hay zonas disponibles. Crea zonas primero.</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="form-actions">
-                    <button type="button" className="cancel">
-                        Regresar
-                    </button>
-                    <button type="button" className="finish" onClick={handleFinalSubmit}>
-                        Finalizar y Guardar Evento
-                    </button>
-                </div>
+        {/* Form Content */}
+        <div style={{ padding: '48px' }}>
+          
+          {/* Información Básica */}
+          <div style={{ marginBottom: '40px' }}>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Información Básica</div>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+                Nombre del evento <span style={{ color: '#c53030' }}>*</span>
+              </label>
+              <input 
+                type="text" 
+                name="eventName"
+                value={formData.eventName}
+                onChange={handleInputChange}
+                placeholder="Ej: Concierto de Rock 2024"
+                style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e0', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', color: '#2d3748', background: 'white' }}
+              />
+              <div style={{ fontSize: '13px', color: '#718096', marginTop: '6px' }}>Ingresa un nombre descriptivo para tu evento</div>
             </div>
 
-            {/* MODAL PARA AGREGAR ZONA */}
-            <Modal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)}
-                title="Agregar Nueva Zona"
-            >
-                <div className="modal-form">
-                    <div className="modal-field">
-                        <label>Nombre de la Zona</label>
-                        <input 
-                            type="text" 
-                            className="form-control" 
-                            placeholder="Ej: VIP, Platea, General"
-                            value={newZona.nombre}
-                            onChange={e => setNewZona({...newZona, nombre: e.target.value})}
-                        />
+            <div>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+                Categoría <span style={{ color: '#c53030' }}>*</span>
+              </label>
+              <select 
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e0', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', color: '#2d3748', background: 'white' }}
+              >
+                {categories.map(cat => (
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Funciones */}
+          <div style={{ marginBottom: '40px' }}>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Fechas y Horarios</div>
+            
+            <div style={{ background: '#fafbfc', border: '1px solid #e8ebed', borderRadius: '4px', padding: '24px', marginTop: '16px' }}>
+              {functions.map((func, index) => (
+                <div key={func.id} style={{ background: 'white', border: '1px solid #e8ebed', borderRadius: '4px', padding: '20px', marginBottom: index < functions.length - 1 ? '16px' : '0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <div style={{ background: '#2d8a5b', color: 'white', width: '32px', height: '32px', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '600' }}>
+                      {index + 1}
                     </div>
-                    <div className="modal-field">
-                        <label>Cantidad de Asientos</label>
-                        <input 
-                            type="number" 
-                            className="form-control" 
-                            placeholder="0"
-                            value={newZona.numAsientos}
-                            onChange={e => setNewZona({...newZona, numAsientos: Number(e.target.value)})}
-                        />
+                    {functions.length > 1 && (
+                      <button 
+                        onClick={() => removeFunction(func.id)}
+                        style={{ background: 'transparent', color: '#c53030', border: '1px solid #e8ebed', padding: '6px 14px', borderRadius: '4px', fontSize: '13px', cursor: 'pointer', fontWeight: '500' }}
+                      >
+                        Eliminar
+                      </button>
+                    )}
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+                        Fecha y hora de inicio <span style={{ color: '#c53030' }}>*</span>
+                      </label>
+                      <input 
+                        type="datetime-local" 
+                        value={func.start}
+                        onChange={(e) => handleFunctionChange(func.id, 'start', e.target.value)}
+                        style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e0', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', color: '#2d3748', background: 'white' }}
+                      />
                     </div>
-                    <div className="modal-actions">
-                        <button className="btn-cancel" onClick={() => setIsModalOpen(false)}>
-                            Cancelar
-                        </button>
-                        <button className="btn-confirm" onClick={handleAddZona}>
-                            Agregar Zona
-                        </button>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+                        Fecha y hora de fin <span style={{ color: '#c53030' }}>*</span>
+                      </label>
+                      <input 
+                        type="datetime-local" 
+                        value={func.end}
+                        onChange={(e) => handleFunctionChange(func.id, 'end', e.target.value)}
+                        style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e0', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', color: '#2d3748', background: 'white' }}
+                      />
                     </div>
+                  </div>
                 </div>
-            </Modal>
-        </>
-    );
+              ))}
+            </div>
+            <button 
+              onClick={addFunction}
+              style={{ background: 'white', color: '#2d8a5b', border: '1px dashed #cbd5e0', padding: '11px 20px', borderRadius: '4px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', width: '100%', marginTop: '16px' }}
+            >
+              + Agregar otra función
+            </button>
+            <div style={{ fontSize: '13px', color: '#718096', marginTop: '8px' }}>
+              Si tu evento tiene múltiples fechas, puedes agregar más funciones
+            </div>
+          </div>
+
+          {/* Imagen */}
+          <div style={{ marginBottom: '40px' }}>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Imagen del Evento</div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+              Imagen principal (836px × 522px recomendado)
+            </label>
+            
+            {!imagePreview ? (
+              <div 
+                onClick={() => document.getElementById('imageInput').click()}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                style={{ 
+                  border: dragOver ? '2px solid #2d8a5b' : '2px dashed #cbd5e0', 
+                  borderRadius: '4px', 
+                  padding: '48px 32px', 
+                  textAlign: 'center', 
+                  cursor: 'pointer', 
+                  background: dragOver ? '#f0fdf4' : '#fafbfc' 
+                }}
+              >
+                <div style={{ fontSize: '40px', color: '#cbd5e0', marginBottom: '16px' }}>🖼️</div>
+                <div style={{ color: '#2d3748', fontWeight: '500', marginBottom: '4px', fontSize: '14px' }}>Haz clic o arrastra una imagen aquí</div>
+                <div style={{ color: '#718096', fontSize: '13px' }}>PNG, JPG o GIF (máx. 5MB)</div>
+              </div>
+            ) : (
+              <div style={{ position: 'relative', marginTop: '16px' }}>
+                <img src={imagePreview} alt="Vista previa" style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }} />
+                
+                <button 
+                  onClick={removeImage}
+                  style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0, 0, 0, 0.7)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}
+                >
+                  Eliminar imagen
+                </button>
+              </div>
+            )}
+            
+            <input 
+              type="file" 
+              id="imageInput" 
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                if (e.target.files.length > 0) {
+                  handleImageUpload(e.target.files[0]);
+                }
+              }}
+            />
+          </div>
+
+          {/* Restricciones */}
+          <div style={{ marginBottom: '40px' }}>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Restricciones</div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+              Restricciones de acceso
+            </label>
+            <input 
+              type="text" 
+              name="restrictions"
+              value={formData.restrictions}
+              onChange={handleInputChange}
+              placeholder="Ej: Mayores de 18 años, Entrada con invitación"
+              style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e0', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', color: '#2d3748', background: 'white' }}
+            />
+            <div style={{ fontSize: '13px', color: '#718096', marginTop: '6px' }}>
+              Especifica si hay alguna restricción de edad, acceso o requisitos especiales
+            </div>
+          </div>
+
+          {/* Descripción */}
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Descripción</div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#2d3748', marginBottom: '8px' }}>
+              Descripción del evento <span style={{ color: '#c53030' }}>*</span>
+            </label>
+            <textarea 
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Escribe una descripción atractiva de tu evento. Incluye detalles importantes como el lugar, actividades, panelistas, links relacionados, etc."
+              style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e0', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', color: '#2d3748', background: 'white', resize: 'vertical', minHeight: '100px' }}
+            />
+            <div style={{ fontSize: '13px', color: '#718096', marginTop: '6px' }}>
+              Brinda información completa sobre tu evento para atraer más asistentes
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'space-between', padding: '30px 40px', background: '#f7fafc', borderTop: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button 
+              disabled
+              style={{ padding: '14px 32px', borderRadius: '10px', fontSize: '15px', fontWeight: '600', cursor: 'not-allowed', background: 'white', color: '#4a5568', border: '2px solid #e2e8f0', opacity: '0.5' }}
+            >
+              ← Anterior
+            </button>
+            <button 
+              onClick={handleCancel}
+              style={{ padding: '14px 32px', borderRadius: '10px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', background: 'white', color: '#4a5568', border: '2px solid #e2e8f0' }}
+            >
+              Cancelar
+            </button>
+          </div>
+          <button 
+            onClick={handleSubmit}
+            style={{ padding: '14px 32px', borderRadius: '10px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', background: '#2d8a5b', color: 'white', border: 'none', boxShadow: '0 4px 12px rgba(45, 138, 91, 0.3)' }}
+          >
+            Siguiente →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
