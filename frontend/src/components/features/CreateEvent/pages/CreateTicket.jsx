@@ -9,6 +9,8 @@ import { useEntradas } from "../services/useEntradas";
 import { useEvento } from "../services/useEvento";
 
 // Components
+import { HeaderEvent } from "./Componentes/HeaderEvent";
+
 import { ConfigGeneral } from "../components/CreatTicketComponents/ConfigGeneral/ConfigGeneral";
 import { TemporadasSection } from "../components/CreatTicketComponents/TemporadasSection/TemporadasSection";
 import { ZonasSection } from "../components/CreatTicketComponents/ZonasSection/ZonasSection";
