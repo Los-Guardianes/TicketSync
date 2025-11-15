@@ -4,44 +4,39 @@ import { OrganizerEventCard } from '../components/OrganizerEventCard';
 import { getEventosByOrganizer } from '../../../../globalServices/EventoService';
 import { useAuth } from '../../../../context/AuthContext';
 import { BarraLateral } from '../../MisTickets/components/BarraLateral';
+import { applyFiltersToEvents } from '../components/ApplyFilters';
+import { FiltersSection } from '../components/Filters';
 
 // Configura cuántas cards visibles por sección antes de mostrar "Ver más"/paginación
 const PAGE_SIZE = 6;
 
-// Transforma la respuesta del backend (eventos con funciones) en tarjetas de funciones individuales
-const buildFunctionCards = (eventos) => {
-  const upcoming = [];
-  const past = [];
-  const today = new Date();
-
-  eventos.forEach(ev => {
-    (ev.funciones || []).forEach(fn => {
-      const fecha = fn.fechaInicio ? new Date(fn.fechaInicio) : null;
-      if (!fecha) return;
-
-      const card = {
-        idEvento: ev.idEvento,
-        idFuncion: fn.idFuncion,
-        titulo: ev.nombre,
-        direccion: ev.direccion,
-        imagen: ev.urlImagen,
-        fecha: fn.fechaInicio
-      };
-
-      if (fecha < today) {
-        past.push(card);
-      } else {
-        upcoming.push(card);
-      }
-    });
+const buildEventCards = (eventos) => {
+  // Si viene null/undefined/cualquier cosa rara, lo convertimos en []
+  if (!Array.isArray(eventos)) {
+    return { upcoming: [], past: [] };
+  }
+  // console.log(eventos);
+  const actuales = [];
+  const pasados = [];
+  eventos.forEach((ev) => {
+    const card = {
+      idEvento: ev.idEvento,
+      titulo: ev.nombre,
+      direccion: ev.direccion,
+      imagen: ev.urlImagen,
+      fecha: ev.fechaReferencia,
+      categoria: ev.categoriaEvento,
+      dpto: ev.ciudad,
+    };
+    if (ev?.esPasado) {
+      pasados.push(card);
+    } else {
+      actuales.push(card);
+    }
   });
-
-  // Ordena: próximos ascendente, pasados descendente
-  upcoming.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-  past.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
-  return { upcoming, past };
+  return { actuales, pasados };
 };
+
 
 // Hook reutilizable de paginación
 const usePagination = (items, pageSize, showAll) => {
@@ -62,12 +57,14 @@ const usePagination = (items, pageSize, showAll) => {
 export const MisEventos = () => {
   const { user } = useAuth();
 
+  const [filters, setFilters] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [eventos, setEventos] = useState([]);
-
-  const [showAllUpcoming, setShowAllUpcoming] = useState(false);
-  const [showAllPast, setShowAllPast] = useState(false);
+  
+  const [showAllActuales, setShowAllActuales] = useState(false);
+  const [showAllPasados, setShowAllPasados] = useState(false);
 
   // Cargamos eventos del organizador
   useEffect(() => {
@@ -75,7 +72,12 @@ export const MisEventos = () => {
       try {
         if (!user?.idUsuario) return; // protección: no intentes llamar aún
         const data = await getEventosByOrganizer(user.idUsuario);
-        setEventos(Array.isArray(data) ? data : []);
+        // setEventos(Array.isArray(data) ? data : []);
+        console.log(data)
+        const eventosArray = Array.isArray(data) ? data : [];
+        // Aplica los filtros si existen
+        const eventosFiltrados = applyFiltersToEvents(eventosArray, filters);
+        setEventos(eventosFiltrados);
       } catch (err) {
         console.error(err);
         setError('No se pudieron cargar tus eventos.');
@@ -85,14 +87,20 @@ export const MisEventos = () => {
     };
 
     load();
-  }, [user?.idUsuario]);
+  }, [user?.idUsuario, filters]);
 
   // Construimos listas de funciones próximas y pasadas
-  const { upcoming, past } = useMemo(() => buildFunctionCards(eventos), [eventos]);
+  // A nivel de eventos
+  const { actuales, pasados } = useMemo(() => buildEventCards(eventos), [eventos]);
+
 
   // Paginación para ambos bloques
-  const upcomingPag = usePagination(upcoming, PAGE_SIZE, showAllUpcoming);
-  const pastPag = usePagination(past, PAGE_SIZE, showAllPast);
+  const actualesPag = usePagination(actuales || [], PAGE_SIZE, showAllActuales);
+  const pasadosPag = usePagination(pasados || [], PAGE_SIZE, showAllPasados);
+
+  const handleApplyFilters = (f) => {
+    setFilters(f);
+  }
 
   // Estados de carga / error
   if (loading) {
@@ -127,20 +135,20 @@ export const MisEventos = () => {
 
       {/* Contenido principal */}
       <main className="flex-grow-1 p-4">
+        <FiltersSection onApply={handleApplyFilters} />
         <h3 className="mb-3">Mis Eventos</h3>
 
         {/* Eventos próximos */}
         <div className="row g-4">
           <div className="col-12 col-lg-6">
-            {upcoming.length === 0 && (
+            {/* {upcoming.length === 0 && ( */}
+            {actuales.length === 0 && (
               <p className="text-muted">No tienes eventos próximos.</p>
             )}
-
-            {upcomingPag.visible.map((it) => (
+            {actualesPag.visible.map((it) => (
               <OrganizerEventCard
-                key={`${it.idEvento}-${it.idFuncion}`}
-                idEvento={it.idEvento}           
-                idFuncion={it.idFuncion}
+                key={`${it.idEvento}`}
+                idEvento={it.idEvento}
                 titulo={it.titulo}
                 fecha={it.fecha}
                 direccion={it.direccion}
@@ -149,53 +157,55 @@ export const MisEventos = () => {
               />
             ))}
           </div>
-
+          
           <div className="col-12 col-lg-6">
             {/* segunda columna opcional */}
           </div>
         </div>
 
         {/* Botón Ver más / Ver menos (próximos) */}
-        {upcoming.length > PAGE_SIZE && (
+        {actuales.length > PAGE_SIZE && (
           <div className="d-flex align-items-center mt-3">
             <button
               className="btn btn-link p-0"
-              onClick={() => setShowAllUpcoming((s) => !s)}
+              onClick={() => setShowAllActuales((s) => !s)}
             >
-              {showAllUpcoming ? 'Ver menos' : 'Ver más'}
+              {showAllActuales ? 'Ver menos' : 'Ver más'}
             </button>
             <span
               className="ms-2 triangle-down"
               style={{
-                transform: showAllUpcoming ? 'rotate(180deg)' : 'none',
+                transform: showAllActuales ? 'rotate(180deg)' : 'none',
               }}
             />
           </div>
         )}
 
         {/* Paginación próximos (solo si no estamos en modo "ver todo") */}
-        {!showAllUpcoming && upcomingPag.showPager && (
+        {!showAllActuales && actualesPag.showPager && (
           <div className="pagination-like d-flex gap-3 justify-content-center my-4">
             <button
               className="btn btn-sm btn-light"
-              disabled={upcomingPag.page === 1}
+              // disabled={upcomingPag.page === 1}
+              disabled={actualesPag.page === 1}
               onClick={() =>
-                upcomingPag.setPage((p) => Math.max(1, p - 1))
+                // upcomingPag.setPage((p) => Math.max(1, p - 1))
+                actualesPag.setPage((p) => Math.max(1, p - 1))
               }
             >
               &lt;
             </button>
 
             {Array.from(
-              { length: upcomingPag.totalPages },
+              { length: actualesPag.totalPages },
               (_, i) => i + 1
             ).map((n) => (
               <button
                 key={n}
                 className={`btn btn-sm ${
-                  upcomingPag.page === n ? 'btn-success' : 'btn-light'
+                  actualesPag.page === n ? 'btn-success' : 'btn-light'
                 }`}
-                onClick={() => upcomingPag.setPage(n)}
+                onClick={() => actualesPag.setPage(n)}
               >
                 {n}
               </button>
@@ -203,10 +213,10 @@ export const MisEventos = () => {
 
             <button
               className="btn btn-sm btn-light"
-              disabled={upcomingPag.page === upcomingPag.totalPages}
+              disabled={actualesPag.page === actualesPag.totalPages}
               onClick={() =>
-                upcomingPag.setPage((p) =>
-                  Math.min(upcomingPag.totalPages, p + 1)
+                actualesPag.setPage((p) =>
+                  Math.min(actualesPag.totalPages, p + 1)
                 )
               }
             >
@@ -220,65 +230,64 @@ export const MisEventos = () => {
 
         <div className="row g-4">
           <div className="col-12 col-lg-6">
-            {past.length === 0 && (
+            {pasados.length === 0 && (
               <p className="text-muted">Sin eventos pasados.</p>
             )}
-
-            {pastPag.visible.map((it) => (
+            {pasadosPag.visible.map((it) => (
               <OrganizerEventCard
-                key={`past-${it.idEvento}-${it.idFuncion}`}
-                id={it.idEvento}
+                key={`${it.idEvento}`}
+                idEvento={it.idEvento}
                 titulo={it.titulo}
                 fecha={it.fecha}
                 direccion={it.direccion}
                 imagen={it.imagen}
-                actionLabel="Ver Detalle"
+                actionLabel="Configurar"
               />
             ))}
           </div>
         </div>
 
         {/* Botón Ver más / Ver menos (pasados) */}
-        {past.length > PAGE_SIZE && (
+        {pasados.length > PAGE_SIZE && (
           <div className="d-flex align-items-center mt-3">
             <button
               className="btn btn-link p-0"
-              onClick={() => setShowAllPast((s) => !s)}
+              onClick={() => setShowAllPasados((s) => !s)}
             >
-              {showAllPast ? 'Ver menos' : 'Ver más'}
+              {showAllPasados ? 'Ver menos' : 'Ver más'}
             </button>
             <span
               className="ms-2 triangle-down"
               style={{
-                transform: showAllPast ? 'rotate(180deg)' : 'none',
+                transform: showAllPasados ? 'rotate(180deg)' : 'none',
               }}
             />
           </div>
         )}
 
         {/* Paginación pasados (solo si no estamos en modo "ver todo") */}
-        {!showAllPast && pastPag.showPager && (
+        {!showAllPasados && pasadosPag.showPager && (
           <div className="pagination-like d-flex gap-3 justify-content-center my-4">
             <button
               className="btn btn-sm btn-light"
-              disabled={pastPag.page === 1}
+              disabled={pasadosPag.page === 1}
               onClick={() =>
-                pastPag.setPage((p) => Math.max(1, p - 1))
+                pasadosPag.setPage((p) => Math.max(1, p - 1))
               }
             >
               &lt;
             </button>
 
             {Array.from(
-              { length: pastPag.totalPages },
+              { length: pasadosPag.totalPages },
               (_, i) => i + 1
             ).map((n) => (
               <button
                 key={n}
                 className={`btn btn-sm ${
-                  pastPag.page === n ? 'btn-success' : 'btn-light'
+                  pasadosPag.page === n ? 'btn-success' : 'btn-light'
                 }`}
-                onClick={() => pastPag.setPage(n)}
+                onClick={() => pasadosPag.setPage(n)}
               >
                 {n}
               </button>
@@ -286,10 +295,10 @@ export const MisEventos = () => {
 
             <button
               className="btn btn-sm btn-light"
-              disabled={pastPag.page === pastPag.totalPages}
+              disabled={pasadosPag.page === pasadosPag.totalPages}
               onClick={() =>
-                pastPag.setPage((p) =>
-                  Math.min(pastPag.totalPages, p + 1)
+                pasadosPag.setPage((p) =>
+                  Math.min(pasadosPag.totalPages, p + 1)
                 )
               }
             >
