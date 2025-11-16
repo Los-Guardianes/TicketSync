@@ -12,13 +12,6 @@ La arquitectura sigue un modelo cliente-servidor:
 * **Frontend (Cliente):** Una aplicación de una sola página (SPA) construida con React.
 * **Backend (Servidor):** Una API RESTful robusta desarrollada con Spring Boot.
 
-## Integrantes (Grupo: Los Guardianes)
-
-* Braulio Antayhua    - `20216512`
-* [Nombre Apellido 2] - `[código-alumno-2]`
-* [Nombre Apellido 3] - `[código-alumno-3]`
-* [Nombre Apellido 4] - `[código-alumno-4]`
-  
 ## Tecnologías Utilizadas
 
 ### Frontend
