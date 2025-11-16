@@ -31,7 +31,7 @@ export const RegisterOptions = () => {
       >
         <div className="text-center mb-3">
           <img
-            src="src/assets/TUTICKET_PNG_SIN_ESPACIOS.png"
+            src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png"
             alt="TuTicket"
             style={{ width: 56, height: "auto", objectFit: "contain" }}
           />
