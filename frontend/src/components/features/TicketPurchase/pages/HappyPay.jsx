@@ -51,7 +51,7 @@ export const HappyPay = () => {
                         className="btn btn-primary" 
                         onClick={handleDescarga}
                     >
-                        Descargar Informe
+                        Descargar Comprobante
                     </button>
                     <button 
                         className="btn btn-secondary" 
