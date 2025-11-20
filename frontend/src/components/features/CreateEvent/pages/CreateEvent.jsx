@@ -1,24 +1,35 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CreateEvent.css";
 import { getCateventos } from '../../../../globalServices/EventoService';
-import { useEventCreation } from "../../../../context/EventCreationContext"; // 1. Importas el hook
+import { useEventCreation } from "../../../../context/EventCreationContext";
+import { HeaderEvent } from "./Componentes/HeaderEvent";
+import { ImageUploader } from "./Componentes/ImageUploader";
+import { FunctionsSection } from "./Componentes/Funciones";
+import { AlertCircle } from 'lucide-react';
 
 export const CreateEvent = () => {
     const navigate = useNavigate();
-    // 2. Usas el contexto como única fuente de verdad para los datos del formulario
     const { eventData, updateEventData } = useEventCreation();
 
-    // 3. Mantienes estados locales SOLO para la UI de este componente
-    const [catEvento, setCatEvento] = useState([]); // Para poblar el <select>
-    const [funcionActual, setFuncionActual] = useState(0); // Para el carrusel de funciones
-    const [dragActive, setDragActive] = useState(false); // Para el drag-and-drop
-    
-    // Referencias para elementos del DOM
+    const [funciones, setFunciones] = useState([
+        { id: 1, inicioD: '', inicioH: '', finD: '', finH: '' }
+    ]);
+
+    // Estados locales para la UI
+    const [catEvento, setCatEvento] = useState([]);
+    const [funcionActual, setFuncionActual] = useState(0);
+    const [dragActive, setDragActive] = useState(false);
+
+    // Estados de validación (similar al primer código)
+    const [errores, setErrores] = useState({});
+    const [mostrarErrores, setMostrarErrores] = useState(false);
+
+    // Referencias
     const dragCounter = useRef(0);
     const inputFileRef = useRef(null);
 
-    // Cargar categorías desde la API al montar el componente
+    // Cargar categorías
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
@@ -31,236 +42,445 @@ export const CreateEvent = () => {
         fetchCategorias();
     }, []);
 
-    // --- MANEJADORES DE ESTADO (Ahora actualizan el contexto) ---
+    // === FUNCIONES DE VALIDACIÓN ===
 
-    // Función genérica para manejar cambios en la mayoría de inputs
+    const validarInformacionBasica = () => {
+        const erroresBasicos = {};
+
+        // Validar nombre
+        if (!eventData.nombre || eventData.nombre.trim() === "") {
+            erroresBasicos.nombre = "El nombre del evento es obligatorio";
+        } else if (eventData.nombre.trim().length < 5) {
+            erroresBasicos.nombre = "El nombre debe tener al menos 5 caracteres";
+        }
+
+        // Validar categoría
+        if (!eventData.idCategoria) {
+            erroresBasicos.idCategoria = "Debes seleccionar una categoría";
+        }
+
+        return erroresBasicos;
+    };
+
+    const validarFunciones = () => {
+        if (!funciones || funciones.length === 0) {
+            return { funciones: "Debes crear al menos una función" };
+        }
+
+        const erroresFunciones = {};
+
+        funciones.forEach((funcion, index) => {
+            // Validar fecha de inicio
+            if (!funcion.inicioD || funcion.inicioD.trim() === "") {
+                erroresFunciones[`funcion-${index}-inicioD`] = "La fecha de inicio es obligatoria";
+            }
+
+            // Validar hora de inicio
+            if (!funcion.inicioH || funcion.inicioH.trim() === "") {
+                erroresFunciones[`funcion-${index}-inicioH`] = "La hora de inicio es obligatoria";
+            }
+
+            // Validar fecha de fin
+            if (!funcion.finD || funcion.finD.trim() === "") {
+                erroresFunciones[`funcion-${index}-finD`] = "La fecha de fin es obligatoria";
+            }
+
+            // Validar hora de fin
+            if (!funcion.finH || funcion.finH.trim() === "") {
+                erroresFunciones[`funcion-${index}-finH`] = "La hora de fin es obligatoria";
+            }
+
+            // Validar que la fecha/hora de fin sea posterior a la de inicio
+            if (funcion.inicioD && funcion.inicioH && funcion.finD && funcion.finH) {
+                const fechaHoraInicio = new Date(`${funcion.inicioD}T${funcion.inicioH}`);
+                const fechaHoraFin = new Date(`${funcion.finD}T${funcion.finH}`);
+
+                if (fechaHoraFin <= fechaHoraInicio) {
+                    erroresFunciones[`funcion-${index}-fechas`] = "La fecha/hora de fin debe ser posterior a la de inicio";
+                }
+            }
+
+            // Validar que la fecha de inicio no sea en el pasado
+            if (funcion.inicioD && funcion.inicioH) {
+                const fechaHoraInicio = new Date(`${funcion.inicioD}T${funcion.inicioH}`);
+                const ahora = new Date();
+
+                if (fechaHoraInicio < ahora) {
+                    erroresFunciones[`funcion-${index}-fechaPasado`] = "La fecha/hora de inicio no puede ser en el pasado";
+                }
+            }
+        });
+
+        return erroresFunciones;
+    };
+
+    const validarImagen = () => {
+        const erroresImagen = {};
+
+        if (!eventData.imagenFile) {
+            erroresImagen.imagen = "Debes cargar una imagen para el evento";
+        } else {
+            // Validar tipo de archivo
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!tiposPermitidos.includes(eventData.imagenFile.type)) {
+                erroresImagen.imagen = "El archivo debe ser una imagen (JPG, PNG o WEBP)";
+            }
+
+            // Validar tamaño (ej: máximo 5MB)
+            const tamañoMaximo = 5 * 1024 * 1024; // 5MB en bytes
+            if (eventData.imagenFile.size > tamañoMaximo) {
+                erroresImagen.imagen = "La imagen no debe superar los 5MB";
+            }
+        }
+
+        return erroresImagen;
+    };
+
+    const validarFormularioCompleto = () => {
+        const erroresValidacion = {
+            ...validarInformacionBasica(),
+            ...validarFunciones(),
+            // ...validarImagen()
+        };
+
+        setErrores(erroresValidacion);
+        return Object.keys(erroresValidacion).length === 0;
+    };
+
+    // === MANEJADORES DE ESTADO ===
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // Si el campo es 'idCategoria', conviértelo a número, si no, déjalo como está.
         const finalValue = name === 'idCategoria' ? Number(value) : value;
         updateEventData({ [name]: finalValue });
+
+        // Limpiar error específico si existe
+        if (errores[name]) {
+            const nuevosErrores = { ...errores };
+            delete nuevosErrores[name];
+            setErrores(nuevosErrores);
+        }
     };
 
-    // Función específica para manejar cambios en el array de funciones
-    const handleFuncionChange = (e, index) => {
-        const { name, value } = e.target;
-        // Creamos una copia del array de funciones del contexto
-        const nuevasFunciones = [...eventData.funciones];
-        // Modificamos el objeto específico
-        nuevasFunciones[index] = { ...nuevasFunciones[index], [name]: value };
-        // Actualizamos el contexto con el nuevo array
-        updateEventData({ funciones: nuevasFunciones });
+    // === LÓGICA DE FUNCIONES ===
+
+    const handleFunctionChange = (id, field, value) => {
+        setFunciones(prev =>
+            prev.map(func =>
+                func.id === id ? { ...func, [field]: value } : func
+            )
+        );
+
+        // Limpiar errores relacionados con esta función
+        const index = funciones.findIndex(f => f.id === id);
+        if (index !== -1) {
+            const errorKey = `funcion-${index}-${field}`;
+            if (errores[errorKey]) {
+                const nuevosErrores = { ...errores };
+                delete nuevosErrores[errorKey];
+                delete nuevosErrores[`funcion-${index}-fechas`];
+                delete nuevosErrores[`funcion-${index}-fechaPasado`];
+                setErrores(nuevosErrores);
+            }
+        }
     };
-    
-    // Función para manejar la selección de la imagen
+
+    const addFunction = () => {
+        const newId = Math.max(...funciones.map(f => f.id)) + 1;
+        setFunciones(prev => [...prev, { id: newId, inicioD: '', inicioH: '', finD: '', finH: '' }]);
+
+        // Limpiar error general de funciones
+        if (errores.funciones) {
+            const nuevosErrores = { ...errores };
+            delete nuevosErrores.funciones;
+            setErrores(nuevosErrores);
+        }
+    };
+
+    const removeFunction = (id) => {
+        if (funciones.length > 1) {
+            setFunciones(prev => prev.filter(func => func.id !== id));
+        } else {
+            alert("Debe haber al menos una función");
+        }
+    };
+
+    // === LÓGICA DE IMAGEN ===
+
     const handleImagenChange = (file) => {
         updateEventData({ imagenFile: file });
-    };
-    
-    // --- LÓGICA DE LA UI (Funciones, Carrusel, Drag & Drop) ---
-    
-    const agregarFuncion = () => {
-        const nuevasFunciones = [...eventData.funciones, { fechaInicio: "", horaInicio: "", fechaFin: "", horaFin: "" }];
-        updateEventData({ funciones: nuevasFunciones });
-        setFuncionActual(nuevasFunciones.length - 1); // Navega a la nueva función
+
+        if (!file && inputFileRef.current) {
+            inputFileRef.current.value = '';
+        }
+
+        // Validar imagen inmediatamente
+        if (file) {
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            const tamañoMaximo = 5 * 1024 * 1024;
+
+            if (!tiposPermitidos.includes(file.type)) {
+                setErrores(prev => ({
+                    ...prev,
+                    imagen: "El archivo debe ser una imagen (JPG, PNG o WEBP)"
+                }));
+                return;
+            }
+
+            if (file.size > tamañoMaximo) {
+                setErrores(prev => ({
+                    ...prev,
+                    imagen: "La imagen no debe superar los 5MB"
+                }));
+                return;
+            }
+
+            // Limpiar error si la imagen es válida
+            if (errores.imagen) {
+                const nuevosErrores = { ...errores };
+                delete nuevosErrores.imagen;
+                setErrores(nuevosErrores);
+            }
+        }
     };
 
-    const eliminarFuncion = () => {
-        if (eventData.funciones.length === 1) return; // No eliminar si solo hay una
-        const nuevasFunciones = eventData.funciones.filter((_, i) => i !== funcionActual);
-        updateEventData({ funciones: nuevasFunciones });
-        // Ajusta el índice actual para no quedar fuera de rango
-        setFuncionActual(prev => Math.min(prev, nuevasFunciones.length - 1));
+    // Drag and Drop handlers
+    const handleDragEnter = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter.current++;
+        setDragActive(true);
     };
 
-    const irFuncionIzquierda = () => {
-        setFuncionActual(prev => (prev === 0 ? eventData.funciones.length - 1 : prev - 1));
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter.current--;
+        if (dragCounter.current === 0) {
+            setDragActive(false);
+        }
     };
 
-    const irFuncionDerecha = () => {
-        setFuncionActual(prev => (prev === eventData.funciones.length - 1 ? 0 : prev + 1));
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
     };
 
-    // Lógica de Drag and Drop (sin cambios)
-    const handleDragEnter = (e) => { e.preventDefault(); e.stopPropagation(); dragCounter.current++; setDragActive(true); };
-    const handleDragLeave = (e) => { e.preventDefault(); e.stopPropagation(); dragCounter.current--; if (dragCounter.current === 0) { setDragActive(false); } };
-    const handleDragOver = (e) => { e.preventDefault(); e.stopPropagation(); };
     const handleDrop = (e) => {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
+        dragCounter.current = 0;
+
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             handleImagenChange(e.dataTransfer.files[0]);
         }
     };
 
+    // === NAVEGACIÓN ===
+
     const handleNext = () => {
-        // Aquí puedes añadir validaciones si lo necesitas
+        setMostrarErrores(true);
+
+        // Sincronizar funciones con eventData antes de validar
+        const funcionesFormateadas = funciones.map(f => ({
+            fechaInicio: f.inicioD,
+            horaInicio: f.inicioH,
+            fechaFin: f.finD,
+            horaFin: f.finH
+        }));
+        updateEventData({ funciones: funcionesFormateadas });
+
+        // Validar formulario
+        if (!validarFormularioCompleto()) {
+            alert("Por favor, completa todos los campos obligatorios antes de continuar");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
         console.log("Datos guardados en el paso 1:", eventData);
         navigate("/ubicacion-evento");
     };
 
     return (
-        <>
-            <div className="crear-evento-container">
-                <div className="header">
-                    <span className="step">1</span>
-                    <h2>Detalles del evento</h2>
+        <div className="crear-evento-container">
+            {/* Header */}
+            <HeaderEvent currentStep={1} />
+
+            {/* MOSTRAR RESUMEN DE ERRORES */}
+            {mostrarErrores && Object.keys(errores).length > 0 && (
+                <div className="alert alert-danger d-flex align-items-start mb-4" role="alert">
+                    <AlertCircle className="me-2 mt-1" size={20} />
+                    <div>
+                        <strong>Hay campos que requieren tu atención:</strong>
+                        <ul className="mb-0 mt-2">
+                            {Object.entries(errores).slice(0, 5).map(([key, mensaje]) => (
+                                <li key={key}>{mensaje}</li>
+                            ))}
+                            {Object.keys(errores).length > 5 && (
+                                <li>... y {Object.keys(errores).length - 5} error(es) más</li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* Form Content */}
+            <form className="evento-form" onSubmit={(e) => e.preventDefault()}>
+                <div className="basic-info-section">
+                    <div className="section-title">Información Básica</div>
+
+                    {/* NOMBRE */}
+                    <div className="campo">
+                        <label htmlFor="nombre">
+                            Nombre del evento <span className="required">*</span>
+                        </label>
+                        <input
+                            id="nombre"
+                            name="nombre"
+                            type="text"
+                            className={errores.nombre ? 'error' : ''}
+                            value={eventData.nombre || ''}
+                            onChange={handleChange}
+                            placeholder="Ej: Concierto de Rock 2024"
+                        />
+                        {errores.nombre && (
+                            <div className="error-message">{errores.nombre}</div>
+                        )}
+                        <div className="campo-helper">
+                            Ingresa un nombre descriptivo para tu evento
+                        </div>
+                    </div>
+
+                    {/* DESCRIPCIÓN */}
+                    <div className="campo">
+                        <label htmlFor="descripcion">
+                            Descripción del evento
+                        </label>
+                        <textarea
+                            id="descripcion"
+                            name="descripcion"
+                            value={eventData.descripcion || ''}
+                            onChange={handleChange}
+                            placeholder="Escribe una descripción atractiva de tu evento. Incluye detalles importantes como el lugar, actividades, panelistas, links relacionados, etc."
+                        />
+                        <div className="form-helper">
+                            Brinda información completa sobre tu evento para atraer más asistentes
+                        </div>
+                    </div>
+
+                    {/* CATEGORIA */}
+                    <div className="campo">
+                        <label htmlFor="idCategoria">
+                            Categoría <span className="required">*</span>
+                        </label>
+                        <select
+                            id="idCategoria"
+                            name="idCategoria"
+                            className={errores.idCategoria ? 'error' : ''}
+                            value={eventData.idCategoria || ""}
+                            onChange={handleChange}
+                        >
+                            <option value="" disabled>Selecciona una categoría</option>
+                            {catEvento.map((categoria) => (
+                                <option key={categoria.idCategoria} value={categoria.idCategoria}>
+                                    {categoria.nombre}
+                                </option>
+                            ))}
+                        </select>
+                        {errores.idCategoria && (
+                            <div className="error-message">{errores.idCategoria}</div>
+                        )}
+                    </div>
                 </div>
 
-                <form className="evento-form" onSubmit={(e) => e.preventDefault()}>
-                    <div className="form-content">
-                        {/* Columna izquierda */}
-                        <div className="form-left">
-                            <div className="campo">
-                                <label htmlFor="nombre">Nombre de evento</label>
-                                <input
-                                    id="nombre"
-                                    name="nombre"
-                                    type="text"
-                                    value={eventData.nombre}
-                                    onChange={handleChange}
-                                    placeholder="Ingrese el nombre del evento"
-                                />
-                            </div>
-
-                            <div className="campo">
-                                <label htmlFor="idCategoria">Categoría</label>
-                                <select
-                                    id="idCategoria"
-                                    name="idCategoria"
-                                    value={eventData.idCategoria || ""}
-                                    onChange={handleChange}
-                                >
-                                    <option value="" disabled>Elige una categoría</option>
-                                    {catEvento.map((categoria) => (
-                                        <option key={categoria.idCategoria} value={categoria.idCategoria}>
-                                            {categoria.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="funciones-section">
-                                <div className="funciones-header">
-                                    <span className="agregar-funcion" onClick={agregarFuncion}>+ Agregar función</span>
-                                    <span className="eliminar-funcion" onClick={eliminarFuncion}>Eliminar función</span>
-                                </div>
-                                <div className="funcion-navegacion">
-                                    <button type="button" className="flecha" onClick={irFuncionIzquierda}>&#60;</button>
-                                    <span className="funcion-label">Función {funcionActual + 1} de {eventData.funciones.length}</span>
-                                    <button type="button" className="flecha" onClick={irFuncionDerecha}>&#62;</button>
-                                </div>
-                                <div className="funcion">
-                                    <div className="fechas">
-                                        <div className="fecha-hora">
-                                            <label>Fecha y hora de inicio</label>
-                                            <input
-                                                type="date"
-                                                name="fechaInicio"
-                                                value={eventData.funciones[funcionActual]?.fechaInicio || ""}
-                                                onChange={(e) => handleFuncionChange(e, funcionActual)}
-                                            />
-                                            <input
-                                                type="time"
-                                                name="horaInicio"
-                                                value={eventData.funciones[funcionActual]?.horaInicio || ""}
-                                                onChange={(e) => handleFuncionChange(e, funcionActual)}
-                                            />
-                                        </div>
-                                        <div className="fecha-hora">
-                                            <label>Fecha y hora de fin</label>
-                                            <input
-                                                type="date"
-                                                name="fechaFin"
-                                                value={eventData.funciones[funcionActual]?.fechaFin || ""}
-                                                onChange={(e) => handleFuncionChange(e, funcionActual)}
-                                            />
-                                            <input
-                                                type="time"
-                                                name="horaFin"
-                                                value={eventData.funciones[funcionActual]?.horaFin || ""}
-                                                onChange={(e) => handleFuncionChange(e, funcionActual)}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="campo">
-                                <label htmlFor="restricciones">Restricciones</label>
-                                <input
-                                    id="restricciones"
-                                    name="restricciones"
-                                    type="text"
-                                    value={eventData.restricciones}
-                                    onChange={handleChange}
-                                    placeholder="Agrega una restricción" />
-                            </div>
-
-                            <div className="campo">
-                                <label htmlFor="descripcion">Descripción</label>
-                                <textarea
-                                    id="descripcion"
-                                    name="descripcion"
-                                    value={eventData.descripcion}
-                                    onChange={handleChange}
-                                    placeholder="Escriba un párrafo corto pero potente que describa tu evento" />
-                            </div>
+                {/* FUNCIONES */}
+                <div className="funciones-wrapper">
+                    {errores.funciones && (
+                        <div className="alert alert-warning mb-3" role="alert">
+                            <AlertCircle size={16} className="me-2" />
+                            {errores.funciones}
                         </div>
+                    )}
+                    <FunctionsSection
+                        funciones={funciones}
+                        removeFunction={removeFunction}
+                        handleFunctionChange={handleFunctionChange}
+                        addFunction={addFunction}
+                        errores={errores}
+                    />
+                </div>
 
-                        {/* Columna derecha */}
-                        <div className="form-right">
-                            <div className="campo">
-                                <label htmlFor="imagen">Imagen (836px x 522px)</label>
-                                <div
-                                    className={`imagen-placeholder${dragActive ? ' drag-active' : ''}`}
-                                    onClick={() => inputFileRef.current?.click()}
-                                    onDragEnter={handleDragEnter} onDragLeave={handleDragLeave}
-                                    onDragOver={handleDragOver} onDrop={handleDrop}
-                                    style={{ cursor: 'pointer', position: 'relative' }}
-                                >
-                                    {eventData.imagenFile ? (
-                                        <div style={{ position: 'relative', width: '100%', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <img
-                                                src={URL.createObjectURL(eventData.imagenFile)}
-                                                alt="Vista previa"
-                                                style={{ maxWidth: '300px', maxHeight: '160px', objectFit: 'contain', borderRadius: '8px', margin: '0 auto' }}
-                                            />
-                                            <button
-                                                type="button" onClick={(e) => { e.stopPropagation(); handleImagenChange(null); }}
-                                                style={{ position: 'absolute', top: 8, right: 8, background: '#fff', color: '#d32f2f', border: '1px solid #d32f2f', borderRadius: '50%', width: '32px', height: '32px', fontWeight: 'bold', fontSize: '1.2rem', cursor: 'pointer', zIndex: 3 }}
-                                                title="Eliminar imagen"
-                                            >×</button>
-                                        </div>
-                                    ) : (
-                                        !dragActive && <span style={{ color: '#219653', fontWeight: 500, fontSize: '1.2rem' }}>Presione o arrastre aquí para subir una imagen</span>
-                                    )}
-                                    <input
-                                        type="file" accept="image/*" ref={inputFileRef} style={{ display: 'none' }}
-                                        onChange={(e) => e.target.files && e.target.files[0] && handleImagenChange(e.target.files[0])}
-                                    />
-                                    {dragActive && <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(33,150,83,0.08)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#219653', fontWeight: 600, fontSize: '1.1rem', zIndex: 2 }}>Suelta la imagen aquí</div>}
-                                </div>
-                            </div>
-                            <div className="campo">
-                                <label htmlFor="informAdic">Información adicional</label>
-                                <textarea
-                                    id="informAdic"
-                                    name="informAdic"
-                                    value={eventData.informAdic}
-                                    onChange={handleChange}
-                                    placeholder="Brinde a los usuarios mas información: Detalles del evento, duración aproximada, panelistas, links relacionados, cronograma de eventos, etc." />
-                            </div>
+                {/* IMAGEN */}
+                <div className="imagen-wrapper">
+                    {errores.imagen && (
+                        <div className="alert alert-warning mb-3" role="alert">
+                            <AlertCircle size={16} className="me-2" />
+                            {errores.imagen}
+                        </div>
+                    )}
+                    <ImageUploader
+                        file={eventData.imagenFile}
+                        dragActive={dragActive}
+                        onInputChange={handleImagenChange}
+                        onRemove={() => {
+                            updateEventData({ imagenFile: null });
+                            if (inputFileRef.current) inputFileRef.current.value = "";
+                        }}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                        inputRef={inputFileRef}
+                    />
+                </div>
+                <div className="basic-info-section">
+
+
+                    <div className="section-title">Información para los asistentes</div>
+
+                    {/* RESTRICCIONES */}
+                    <div className="campo">
+                        <label htmlFor="restricciones">Restricciones de acceso</label>
+                        <input
+                            id="restricciones"
+                            type="text"
+                            name="restricciones"
+                            value={eventData.restricciones || ''}
+                            onChange={handleChange}
+                            placeholder="Ej: Mayores de 18 años, Entrada con invitación"
+                        />
+                        <div className="form-helper">
+                            Especifica si hay alguna restricción de edad, acceso o requisitos especiales
                         </div>
                     </div>
 
-                    <div className="form-actions">
-                        <button type="button" className="cancel" onClick={() => navigate("/home")}>Cancelar</button>
-                        <button type="button" className="next" onClick={handleNext}>Siguiente</button>
+                    {/* INFORMACION ADICIONAL */}
+                    <div className="campo">
+                        <label htmlFor="informAdic">Información adicional</label>
+                        <textarea
+                            id="informAdic"
+                            name="informAdic"
+                            value={eventData.informAdic || ''}
+                            onChange={handleChange}
+                            placeholder="Brinde a los usuarios mas información: Detalles del evento, duración aproximada, panelistas, links relacionados, cronograma de eventos, etc."
+                        />
+                        <div className="form-helper">
+                            Añade detalles complementarios que ayuden al público a prepararse mejor para tu evento.
+                        </div>
                     </div>
-                </form>
-            </div>
-        </>
+                </div>
+
+                {/* CULMINACION DEL FORM */}
+                <div className="form-actions">
+                    <button type="button" className="cancel" onClick={() => navigate("/home")}>
+                        Cancelar
+                    </button>
+                    <button type="button" className="next" onClick={handleNext}>
+                        Siguiente
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 };

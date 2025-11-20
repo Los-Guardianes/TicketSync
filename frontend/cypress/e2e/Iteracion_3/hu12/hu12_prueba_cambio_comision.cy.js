@@ -5,12 +5,12 @@ describe("HU3 - Configuración de Comisión (Admin)", () => {
   it("Debe permitir al administrador modificar la comisión global y regresar al panel admin", () => {
 
     // 1. Ir a home e iniciar login
-    cy.visit("http://localhost:5173/home");
+    cy.visit("https://tuticket.space/home");
 
     cy.contains("Login").click();
 
     // Validar pantalla de login
-    cy.url().should("eq", "http://localhost:5173/login");
+    cy.url().should("eq", "https://tuticket.space/login");
     cy.contains("h2", "Iniciar sesión").should("be.visible");
 
     
@@ -22,7 +22,7 @@ describe("HU3 - Configuración de Comisión (Admin)", () => {
 
 
     // 3. Debe redirigir a la pantalla de admin
-    cy.url().should("eq", "http://localhost:5173/home-admin");  
+    cy.url().should("eq", "https://tuticket.space/home-admin");  
     cy.contains("Ajustes de la plataforma").should("be.visible");
 
     // Verificar que la tarjeta "Configurar Comisión" existe
@@ -40,7 +40,7 @@ describe("HU3 - Configuración de Comisión (Admin)", () => {
 
 
     // 5. Validar llegada a la pantalla real de parámetros
-    cy.url().should("eq", "http://localhost:5173/configparams");
+    cy.url().should("eq", "https://tuticket.space/configparams");
 
     cy.contains("Parámetros de la plataforma").should("be.visible");
     cy.contains("Comisión Global (%)").should("be.visible");
@@ -68,7 +68,7 @@ describe("HU3 - Configuración de Comisión (Admin)", () => {
 
 
     // 8. Después de aceptar el alert, debe volver al panel admin
-    cy.url().should("eq", "http://localhost:5173/home-admin");
+    cy.url().should("eq", "https://tuticket.space/home-admin");
 
     cy.contains("Ajustes de la plataforma").should("be.visible");
   });

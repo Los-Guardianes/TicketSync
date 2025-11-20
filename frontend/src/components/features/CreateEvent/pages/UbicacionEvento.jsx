@@ -4,6 +4,8 @@ import "./UbicacionEvento.css";
 import { useEventCreation } from "../../../../context/EventCreationContext";
 // Asumo que tienes un servicio para la ubicación, ajústalo a tu proyecto real
 import { getDepartamentos, getCiudadesPorDpto } from '../../../../globalServices/UbicacionService';
+import { HeaderEvent } from "./Componentes/HeaderEvent";
+
 
 export const UbicacionEvento = () => {
     const navigate = useNavigate();
@@ -94,11 +96,22 @@ export const UbicacionEvento = () => {
     return (
         <>
             <div className="ubicacion-evento-container">
-                <div className="header">
+                {/* Header */}
+                <HeaderEvent currentStep={2} />
+                
+                {/* <div className="header">
                     <span className="step">2</span>
                     <h2>Ubicación</h2>
-                </div>
+                </div> */}
+
+
                 <form className="ubicacion-form" onSubmit={(e) => e.preventDefault()}>
+                    <div className="basic-info-section">
+                        <div className="section-title">UBICACIÓN</div>
+                        <div className="campo">
+                            
+                        </div>
+                    </div>
                     <div className="form-content">
                         <div className="form-left">
                             <div className="campo">
