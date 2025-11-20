@@ -12,6 +12,8 @@ import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityManager;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -44,6 +46,8 @@ public class OrdenCompraService {
         repo.deleteById(id);
     }
 
+
+    @Transactional
     public OrdenCompra orquestarOrdenCompra(OrdenCompraDTO ordenCompraDTO) {
         Usuario u = em.getReference(Usuario.class, ordenCompraDTO.getIdUsuario());
         Funcion f = em.getReference(Funcion.class, ordenCompraDTO.getIdFuncion());
