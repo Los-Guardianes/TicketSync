@@ -9,18 +9,9 @@ export const ConfigUsers = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
   const [ciudad, setCiudad] = useState([]);
-  const navigate = useNavigate();
-
-  const fetchUsers = async () => {
-    const data = await getUsers();
-    setUsersData(data);
-    console.log(data);
-  };
-  useEffect(() => {
-    fetchUsers();
-  }, [reloadTrigger]);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
   const today = new Date().toISOString().split("T")[0];
-
   const [search, setSearch] = useState("");
   const [rolFilter, setRolFilter] = useState("");
   const [estadoFilter, setEstadoFilter] = useState("");
@@ -28,6 +19,7 @@ export const ConfigUsers = () => {
   const itemsPerPage = 25;
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: '',
     apellido: '',
@@ -39,6 +31,22 @@ export const ConfigUsers = () => {
     ciudad: { "idCiudad": null },
     rol: 'ADMINISTRADOR',
   });
+  const [usuario, setUsuario] = useState({
+    nombre: "",
+    apellido: "",
+    email: "",
+    telefono: "",
+  });
+
+  const fetchUsers = async () => {
+    const data = await getUsers();
+    setUsersData(data);
+    console.log(data);
+  };
+  useEffect(() => {
+    fetchUsers();
+  }, [reloadTrigger]);
+
   useEffect(() => {
       const getCiudad = async () => {
           const data = await getCiudades();
@@ -47,6 +55,18 @@ export const ConfigUsers = () => {
       getCiudad();
   }, []);
 
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      if (!usuarioSeleccionado) return;
+      const data = await getUser(usuarioSeleccionado.idUsuario, usuarioSeleccionado.rol);
+      setUsuario(data);
+    };
+
+    if (showEditUserModal) {
+      fetchUsuario();
+    }
+  }, [showEditUserModal]);
+  
   const handleCrearUsuario = async () => {
     try {
       const error = validar();
@@ -132,20 +152,19 @@ export const ConfigUsers = () => {
         ciudad: usuario.ciudad
       };
 
-      if (rol !== "ORGANIZADOR") {
+      if (rol === "CLIENTE") {
         payload = {
           ...payload,
           dni: usuario.dni,
           fechaNacimiento: usuario.fechaNacimiento
         };
-      } else {
+      } else if (rol == "ORGANIZADOR") {
         payload = {
           ...payload,
           ruc: usuario.ruc,
           razonSocial: usuario.razonSocial
         };
       }
-      console.log(payload);
       await updateUser(payload, id);
       console.log(usuario.idUsuario + " se actualizó");
       setUsersData((prev) =>
@@ -236,7 +255,9 @@ export const ConfigUsers = () => {
                 <td>{user.email}</td>
                 <td>{user.telefono}</td>
                 <td>
-                  <button className="details-button">Ver detalles</button>
+                  <button className="details-button"onClick={() => {
+                    setUsuarioSeleccionado(user); setShowEditUserModal(true);
+                    }}>Ver detalles</button>
                 </td>
               </tr>
             ))}
@@ -276,7 +297,7 @@ export const ConfigUsers = () => {
               />
               <input
                 type="email"
-                placeholder="Correo electrónico"
+                placeholder="Email"
                 value={nuevoUsuario.email}
                 onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
               />
@@ -328,6 +349,56 @@ export const ConfigUsers = () => {
               </button>
               <button className="btn-confirmar" onClick={handleCrearUsuario}>
                 Crear usuario
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showEditUserModal && usuarioSeleccionado && (
+        <div className="add-user-modal-overlay">
+          <div className="add-user-modal">
+            <h4>Editar usuario</h4>
+
+            <div className="add-user-form">
+              <input
+                type="text"
+                placeholder="Nombre"
+                value={usuarioSeleccionado.nombre || ""}
+                readOnly
+              />
+              <input
+                type="text"
+                placeholder="Apellido"
+                value={usuarioSeleccionado.apellido || ""}
+                readOnly
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                value={usuarioSeleccionado.email || ""}
+                onChange={(e) =>
+                  setUsuarioSeleccionado({ ...usuario, email: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Teléfono"
+                value={usuarioSeleccionado.telefono || ""}
+                onChange={(e) =>
+                  setUsuarioSeleccionado({ ...usuario, telefono: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="add-user-modal-actions">
+              <button
+                className="btn-cancelar-outline"
+                onClick={() => setShowEditUserModal(false)}
+              >
+                Cancelar
+              </button>
+              <button className="btn-confirmar">
+                Guardar cambios
               </button>
             </div>
           </div>
