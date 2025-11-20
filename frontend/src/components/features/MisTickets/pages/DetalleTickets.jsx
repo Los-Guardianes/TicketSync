@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./DetalleTickets.css"; // ← renombrado
 import { useAuth } from "../../../../context/AuthContext";
 import { getTicketsByEvent } from "../service/MisTicketsService";
-import { abrirTicket } from "../../../../globalServices/PDFService";
+import { abrirTickets } from "../../../../globalServices/PDFService";
 
 export default function DetalleTickets() {
     const { idEvento } = useParams();
@@ -88,8 +88,17 @@ export default function DetalleTickets() {
     const goBack = () => navigate("/MisTickets");
 
     const verMisQR = async () => {
-        for (const t of vm?.tickets ?? []) {
-            try { await abrirTicket(t.idTicket); } catch (e) { console.error(e); }
+        const ids = vm?.tickets?.map(t => t.idTicket) ?? [];
+
+        if (ids.length === 0) {
+            alert("No hay tickets para procesar.");
+            return;
+        }
+
+        try {
+            await abrirTickets(ids);
+        } catch (e) {
+            alert("Error al abrir tickets:", e);
         }
     };
 
@@ -161,18 +170,23 @@ export default function DetalleTickets() {
                     </div>
                 </Section>
 
-                <Section title="Datos del Pago">
+                {/* <Section title="Datos del Pago">
                     <div className="td-pay-method">
                         <div>Método de pago</div>
                         <div className="fw-semibold">{vm.orden.metodoPago}</div>
                     </div>
-                </Section>
+                </Section> */}
 
                 <div className="td-total">
                     <div>TOTAL</div>
                     <div className="td-total-amount">S/. {vm.total.toFixed(2)}</div>
                 </div>
 
+                <div className="d-flex justify-content-center mt-3">
+                    <button className="btn btn-warning">
+                        Solicitar devolución
+                    </button>
+                </div>
                 <div className="d-flex justify-content-center mt-3">
                     <button className="btn btn-dark" onClick={goBack}>
                         Volver
