@@ -39,6 +39,29 @@ export async function apiDownload(path) {
   return res.blob();
 }
 
+export async function apiDownloadPost(path, body) {
+  const headers = {
+    ...getAuthHeader(),
+    "Content-Type": "application/json",
+  };
+
+  console.log("Headers enviados:", headers);
+  console.log("Body enviado:", body);
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => res.statusText);
+    throw new Error(`${res.status} ${txt}`);
+  }
+
+  return res.blob();
+}
+
 // --- INICIO DE LA NUEVA FUNCIÓN ---
 
 /**

@@ -23,8 +23,8 @@ import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pa
 import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
 import { EditEvent } from "../components/features/ConfigEvento/pages/EditEvent";
 
-import { CreateDiscount } from "../components/features/MisEventosProvisional/pages/CreateDiscount";
-import { DiscountList } from "../components/features/MisEventosProvisional/pages/DiscountList";
+import { CreateDiscount } from "../components/features/Descuentos/pages/CreateDiscount";
+import { DiscountList } from "../components/features/Descuentos/pages/DiscountList";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import { ConfigUsers } from "../components/features/AdminHome/pages/ConfigUsers";
