@@ -59,12 +59,14 @@ export const useEventData = (idevento) => {
     },[idevento])
 
     const getPeriodoActual = (listaPeriodos) => {
-        if (!listaPeriodos || listaPeriodos.length === 0) return null;
-        const hoy = new Date();
+        if (!listaPeriodos || listaPeriodos.length === 0) return null;                  
+        // Obtener la fecha actual como cadena en la zona horaria de Perú
+        const now = new Date();
+        const hoyPeru = new Date(now.toLocaleString("en-US", { timeZone: "America/Lima" }));
         return listaPeriodos.find((p) => {
             const inicio = new Date(p.fechaInicio);
             const fin = new Date(p.fechaFin);
-            return hoy >= inicio && hoy <= fin;
+            return hoyPeru >= inicio && hoyPeru <= fin;
         }) || null;
     }
 

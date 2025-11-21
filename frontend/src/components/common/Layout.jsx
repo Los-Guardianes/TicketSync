@@ -36,7 +36,8 @@ const Layout = () => {
   // Categorías (si ya tienes endpoint propio usa /api/catevento)
   const categoriaFetch = async () => {
     try {
-      const resp = await fetch('https://api.tuticket.space/api/catevento'); // ← ajusta si corresponde
+      //const resp = await fetch('https://api.tuticket.space/api/catevento'); // ← ajusta si corresponde
+      const resp = await fetch('localhost/8080')
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       const data = await resp.json();
       // Normaliza a un arreglo de strings (nombres) o de objetos {id, nombre}
