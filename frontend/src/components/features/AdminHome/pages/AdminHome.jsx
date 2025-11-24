@@ -262,8 +262,14 @@ export const AdminHome = () => {
 
           {/* Botones de Navegación Inferiores */}
           <div className='d-flex justify-content-between mt-5'>
-            <button className='btn btn-link text-secondary px-4'>Regresar</button>
-            <button className='btn btn-primary px-4'>Siguiente</button>
+            {/*<button className='btn btn-link text-secondary px-4'>Regresar</button>*/}
+            <button 
+              className='btn btn-link text-secondary px-4' 
+              onClick={() => navigate('/home')}
+            >
+              Regresar
+            </button>
+            {/*<button className='btn btn-primary px-4'>Siguiente</button>*/}
           </div>
 
         </div>
