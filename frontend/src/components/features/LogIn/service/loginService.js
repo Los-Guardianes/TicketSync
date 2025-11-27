@@ -64,7 +64,7 @@ export const loginService = () => {
         clearMessage();
 
         try {//http://localhost:8080/api/login https://api.tuticket.space/api/login
-            const response = await fetch('http://localhost:8080/api/login', {
+            const response = await fetch('https://api.tuticket.space/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -116,7 +116,7 @@ export const loginService = () => {
         clearMessage();
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/google', {
+            const response = await fetch('https://api.tuticket.space/api/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idToken }),
