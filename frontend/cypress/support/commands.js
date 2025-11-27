@@ -8,7 +8,7 @@ Cypress.Commands.add("loginUI", (email, password) => {
 Cypress.Commands.add("loginAPI", (email, password) => {
   return cy.request({
     method: "POST",
-    url: "https://api.tuticket.space/api/login",
+    url: "http://localhost:8080/api/login",
     body: { email, password },
     failOnStatusCode: false,
   }).then((resp) => {

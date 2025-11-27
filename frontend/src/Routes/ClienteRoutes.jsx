@@ -19,7 +19,7 @@ import { MisTickets } from "../components/features/MisTickets/pages/MisTickets";
 import AdminDashboard from "../components/features/AdminDashboard/AdminDashboard";
 
 
-import { MisEventos as OrgMisEventos } from "../components/features/Organizer/pages/MisEventos";
+import { MisEventos as OrgMisEventos } from "../components/features/MisEventos/pages/MisEventos";
 import { ConfigEvento } from "../components/features/ConfigEvento/pages/ConfigEvento";
 import { EditEvent } from "../components/features/ConfigEvento/pages/EditEvent";
 
