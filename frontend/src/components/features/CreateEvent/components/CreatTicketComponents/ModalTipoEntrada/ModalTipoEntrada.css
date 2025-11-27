@@ -135,29 +135,10 @@
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   transition: background-color 0.2s;
-}
-
-.btn-primary {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #218838;
-}
-
-.btn-secondary {
-  background-color: #e9ecef;
-  color: #495057;
-  border: 1px solid #dee2e6;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #dee2e6;
 }
 
 .btn:disabled {

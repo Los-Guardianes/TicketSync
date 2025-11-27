@@ -1,73 +1,70 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+"use client"
+import React from "react"
+import "./OrganizerEventCard.css"
+import { useNavigate } from "react-router-dom"
 
 export const OrganizerEventCard = ({
-  idEvento,        // <= pásame esto desde MisEventos
-  // idFuncion,       // (si lo necesitas para key)
+  idEvento,
   titulo,
   fecha,
   direccion,
   imagen,
-  activo,
-  actionLabel = 'Configurar',
+  actionLabel = "Configurar",
+  esPasado = false,
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
+  const formatDate = (dateStr) => {
+    try {
+      const date = new Date(dateStr)
+      return date.toLocaleDateString("es-PE", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    } catch {
+      return dateStr
+    }
+  }
 
   const handleClick = () => {
-    if (actionLabel.toLowerCase().includes('config')) {
-      navigate(`/organizer/evento/${idEvento}/config`);
+    if (actionLabel.toLowerCase().includes("config")) {
+      navigate(`/organizer/evento/${idEvento}/config`)
     } else {
-      console.log('Ver detalle', idEvento);
+      console.log("Ver detalle", idEvento)
     }
-  };
+  }
 
   return (
-    <div
-      className="border rounded bg-light p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center"
-      style={{ maxWidth: '650px' }}
-    >
-      <div className="d-flex">
-        {/* Imagen cuadrada */}
-        <div
-          className="border rounded me-3"
-          style={{
-            width: '90px',
-            height: '90px',
-            backgroundColor: '#f5f5f5',
-            backgroundImage: imagen ? `url(${imagen})` : 'none',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          {!imagen && (
-            <span className="small text-muted d-block p-2">
-              {titulo}
-            </span>
-          )}
-        </div>
-
-        {/* Datos del evento */}
-        <div className="d-flex flex-column">
-          <div className="text-muted small">{direccion}</div>
-          <div className="fw-semibold" style={{ lineHeight: 1.2 }}>
-            {titulo}
-          </div>
-          <div className="text-muted small">{fecha}</div>
-          {console.log("El evento es : ", activo)}
-          <div className={activo ? "text-success font-weight-bold medium" : "text-danger font-weight-bold medium"}>
-            {activo ? 'Activo' : 'Inactivo'}
-          </div>
-        </div>
+    <div className={`organizer-event-card ${esPasado ? "organizer-event-card--past" : ""}`}>
+      <div className="organizer-event-card__image-container">
+        <img 
+            src={imagen || "/placeholder_event.png"} 
+            alt={titulo} 
+            className="organizer-event-card__image" 
+        />
+        <div className="organizer-event-card__gradient-overlay"></div>
+        {esPasado && <div className="organizer-event-card__past-badge">Finalizado</div>}
       </div>
 
-      <div className="mt-3 mt-md-0">
-        <button
-          className="btn btn-outline-success btn-sm"
-          onClick={handleClick}
-        >
-          {actionLabel}
-        </button>
+      <div className="organizer-event-card__content">
+        <div className="organizer-event-card__header">
+          <div className="organizer-event-card__title-section">
+            <h3 className="organizer-event-card__title">{titulo}</h3>
+          </div>
+        </div>
+
+        <div className="organizer-event-card__details">
+          {fecha && <div className="organizer-event-card__date">{formatDate(fecha)}</div>}
+          {direccion && <div className="organizer-event-card__location">{direccion}</div>}
+        </div>
+
+        <div className="organizer-event-card__footer">
+          <button className="ticket-card__button btn-primary" onClick={handleClick}>
+            {actionLabel}
+          </button>
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
