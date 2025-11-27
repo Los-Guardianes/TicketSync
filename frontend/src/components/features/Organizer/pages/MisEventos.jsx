@@ -15,7 +15,7 @@ const buildEventCards = (eventos) => {
   if (!Array.isArray(eventos)) {
     return { upcoming: [], past: [] };
   }
-  // console.log(eventos);
+  console.log(eventos);
   const actuales = [];
   const pasados = [];
   eventos.forEach((ev) => {
@@ -26,6 +26,7 @@ const buildEventCards = (eventos) => {
       imagen: ev.urlImagen,
       fecha: ev.fechaReferencia,
       categoria: ev.categoriaEvento,
+      activo: ev.activo,
       dpto: ev.ciudad,
     };
     if (ev?.esPasado) {
@@ -62,7 +63,7 @@ export const MisEventos = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [eventos, setEventos] = useState([]);
-  
+
   const [showAllActuales, setShowAllActuales] = useState(false);
   const [showAllPasados, setShowAllPasados] = useState(false);
 
@@ -73,10 +74,11 @@ export const MisEventos = () => {
         if (!user?.idUsuario) return; // protección: no intentes llamar aún
         const data = await getEventosByOrganizer(user.idUsuario);
         // setEventos(Array.isArray(data) ? data : []);
-        console.log(data)
+        console.log("La data es: ", data)
         const eventosArray = Array.isArray(data) ? data : [];
         // Aplica los filtros si existen
         const eventosFiltrados = applyFiltersToEvents(eventosArray, filters);
+        console.log("Los eventos filtrados son: ", eventosFiltrados);
         setEventos(eventosFiltrados);
       } catch (err) {
         console.error(err);
@@ -146,18 +148,19 @@ export const MisEventos = () => {
               <p className="text-muted">No tienes eventos próximos.</p>
             )}
             {actualesPag.visible.map((it) => (
-              <OrganizerEventCard
+              < OrganizerEventCard
                 key={`${it.idEvento}`}
                 idEvento={it.idEvento}
                 titulo={it.titulo}
                 fecha={it.fecha}
                 direccion={it.direccion}
                 imagen={it.imagen}
+                activo={it.activo}
                 actionLabel="Configurar"
               />
             ))}
           </div>
-          
+
           <div className="col-12 col-lg-6">
             {/* segunda columna opcional */}
           </div>
@@ -202,9 +205,8 @@ export const MisEventos = () => {
             ).map((n) => (
               <button
                 key={n}
-                className={`btn btn-sm ${
-                  actualesPag.page === n ? 'btn-success' : 'btn-light'
-                }`}
+                className={`btn btn-sm ${actualesPag.page === n ? 'btn-success' : 'btn-light'
+                  }`}
                 onClick={() => actualesPag.setPage(n)}
               >
                 {n}
@@ -284,9 +286,8 @@ export const MisEventos = () => {
             ).map((n) => (
               <button
                 key={n}
-                className={`btn btn-sm ${
-                  pasadosPag.page === n ? 'btn-success' : 'btn-light'
-                }`}
+                className={`btn btn-sm ${pasadosPag.page === n ? 'btn-success' : 'btn-light'
+                  }`}
                 onClick={() => pasadosPag.setPage(n)}
               >
                 {n}

@@ -142,17 +142,19 @@ export const useRegister = (rol, onSuccessRedirect = "/home") => {
     };
 
     if (rol === "CLIENTE") {
-      payload = { 
-        ...payload, 
-        dni: form.dni.trim(), 
-        fechaNacimiento: form.fechaNacimiento };
+      payload = {
+        ...payload,
+        dni: form.dni.trim(),
+        fechaNacimiento: form.fechaNacimiento
+      };
     } else if (rol === "ORGANIZADOR") {
-      payload = { 
-        ...payload, 
-        razonSocial: form.razonSocial.trim(), 
-        ruc: form.ruc.trim() };
+      payload = {
+        ...payload,
+        razonSocial: form.razonSocial.trim(),
+        ruc: form.ruc.trim(),
+      };
     }
-    console.log("nuevoUsuario: ",payload)
+    console.log("nuevoUsuario: ", payload)
     return payload;
   };
 

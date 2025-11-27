@@ -8,6 +8,7 @@ export const OrganizerEventCard = ({
   fecha,
   direccion,
   imagen,
+  activo,
   actionLabel = 'Configurar',
 }) => {
   const navigate = useNavigate();
@@ -52,6 +53,10 @@ export const OrganizerEventCard = ({
             {titulo}
           </div>
           <div className="text-muted small">{fecha}</div>
+          {console.log("El evento es : ", activo)}
+          <div className={activo ? "text-success font-weight-bold medium" : "text-danger font-weight-bold medium"}>
+            {activo ? 'Activo' : 'Inactivo'}
+          </div>
         </div>
       </div>
 
