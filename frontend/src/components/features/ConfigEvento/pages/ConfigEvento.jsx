@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { BarraLateral } from '../../MisTickets/components/BarraLateral';
-import { ZonesAccordion, FuncionesAccordion, EntradasAccordion } from '../components/Acordeon';
+import { ZonesAccordion, FuncionesAccordion, EntradasAccordion, PeriodosAccordion } from '../components/Acordeon';
 
 import {
   getEventosById,
@@ -10,6 +10,7 @@ import {
   getZonasByEvento,
   getFuncionesByEvento,
   getEntradasByEvento,
+  getPeriodosByEvento,
 } from '../../../../globalServices/EventoService';
 
 import './ConfigEvento.css';
@@ -26,6 +27,7 @@ export const ConfigEvento = () => {
   const [zonas, setZonas] = useState([]);
   const [funciones, setFunciones] = useState([]);
   const [entradas, setEntradas] = useState([]);
+  const [periodos, setPeriodos] = useState([]);
 
   // modal de cancelar evento
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -73,6 +75,9 @@ export const ConfigEvento = () => {
         setFunciones(funcionesData);
         const entradasData = await getEntradasByEvento(idEvento);
         setEntradas(entradasData);
+        const periodosData = await getPeriodosByEvento(idEvento);
+        setPeriodos(periodosData);
+
       } catch (err) {
         console.error('Error cargando el evento', err);
         setCargaError(true);
@@ -153,15 +158,15 @@ export const ConfigEvento = () => {
             <div className="config-left">
               <h5 className="config-event-name">{tituloEvento}</h5>
 
-              <div
-                className="config-event-cover"
-                style={
-                  imagenEvento
-                    ? { backgroundImage: `url(${imagenEvento})` }
-                    : undefined
-                }
-              />
-              
+                <div
+                  className="config-event-cover"
+                  style={
+                    imagenEvento
+                      ? { backgroundImage: `url(${imagenEvento})` }
+                      : undefined
+                  }
+                />
+                
               {/* <ConfigEventoDatos 
                 isActive,
               onToggle,
@@ -190,15 +195,25 @@ export const ConfigEvento = () => {
                   viewTickets={viewTickets}
                   funciones={funciones}
                 />
+                <EntradasAccordion
+                  isActive={isActive('entradas')}
+                  onToggle={toggleAccordion}
+                  editItem={editItem}
+                  deleteItem={deleteItem}
+                  addItem={addItem}
+                  entradas={entradas}
+                />
+                <PeriodosAccordion
+                  isActive={isActive('periodos')}
+                  onToggle={toggleAccordion}
+                  editItem={editItem}
+                  deleteItem={deleteItem}
+                  addItem={addItem}
+                  periodos={periodos}
+                />
+
               </div>
-              <EntradasAccordion
-                isActive={isActive('entradas')}
-                onToggle={toggleAccordion}
-                editItem={editItem}
-                deleteItem={deleteItem}
-                addItem={addItem}
-                entradas={entradas}
-              s/>
+              
               {evento.activo === false && (
                 <p className="evento-cancelado">Este evento está cancelado.</p>
               )}
