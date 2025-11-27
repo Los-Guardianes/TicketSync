@@ -75,8 +75,8 @@ export const ConfigParams = () => {
 
   return (
     <div style={wrapperStyle}>
-      <div className="back-button-wrapper">
-        <button className="back-button" onClick={() => navigate("/home-admin")}>
+      <div className="d-flex justify-content-start mt-3">
+        <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
           ← Volver
         </button>
       </div>
