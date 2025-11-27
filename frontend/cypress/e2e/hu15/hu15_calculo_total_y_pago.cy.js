@@ -84,7 +84,7 @@ describe('HU15 - Registro de datos de tickets comprados', () => {
 
     // CONTINUAR
     cy.contains('button', 'Continuar').click();
-    cy.url({ timeout: 10000 }).should('eq', 'http://localhost:5173/ticket-pay');
+    cy.url({ timeout: 10000 }).should('eq', 'https://api.tuticket.space/ticket-pay');
 
     cy.log('✅ Prueba completada exitosamente');
   });
