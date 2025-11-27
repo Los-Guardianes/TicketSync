@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Date;
 import java.util.Random;
@@ -78,7 +80,7 @@ public class PDFService {
         document.add(new Paragraph("Precio total: S/ " + total));
 
         // Fecha al final, alineada a la derecha
-        String fecha = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        String fecha = new SimpleDateFormat("dd/MM/yyyy").format(LocalDate.now(ZoneId.of("America/Lima")));
         Paragraph fechaParrafo = new Paragraph("Fecha: " + fecha);
         fechaParrafo.setAlignment(Element.ALIGN_RIGHT);
         document.add(new Paragraph(" "));
