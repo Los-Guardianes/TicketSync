@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { BarraLateral } from '../../MisTickets/components/BarraLateral';
 import { ZonesAccordion, FuncionesAccordion, EntradasAccordion } from '../components/Acordeon';
 
 import {
@@ -109,8 +107,6 @@ export const ConfigEvento = () => {
   if (loading) {
     return (
       <div className="config-page">
-      
-        <BarraLateral />
         <main className="flex-grow-1 p-4">
           <div className="config-card">
             <h3 className="config-card-title">Configuración de evento</h3>
@@ -124,7 +120,6 @@ export const ConfigEvento = () => {
   if (cargaError || !evento) {
     return (
       <div className="d-flex">
-        <BarraLateral />
         <main className="flex-grow-1 p-4">
           <div className="config-card">
             <h3 className="config-card-title">Configuración de evento</h3>
@@ -144,7 +139,6 @@ export const ConfigEvento = () => {
 
   return (
     <div className="d-flex">
-      <BarraLateral />
 
       <main className="flex-grow-1 p-4">
         <div className="config-card">

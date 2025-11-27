@@ -137,8 +137,6 @@ export default function DetalleTickets() {
                     <button className="btn btn-success btn-sm td-qr" onClick={verMisQR}>Ver mis QR</button>
                 </div>
 
-                <hr className="my-2" />
-
                 <Section title="Detalle Transacción">
                     <TwoCol
                         leftLabel="Fecha de Compra"
@@ -200,7 +198,6 @@ const Section = ({ title, children }) => (
     <div className="td-section">
         <div className="td-section-header">
             <span className="td-section-title">{title}</span>
-            <span className="td-caret">▾</span>
         </div>
         <div className="td-section-body">{children}</div>
     </div>

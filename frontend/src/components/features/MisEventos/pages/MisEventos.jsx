@@ -3,7 +3,6 @@ import './MisEventos.css';
 import { OrganizerEventCard } from '../components/OrganizerEventCard';
 import { getEventosByOrganizer } from '../../../../globalServices/EventoService';
 import { useAuth } from '../../../../context/AuthContext';
-import { BarraLateral } from '../../MisTickets/components/BarraLateral';
 import { applyFiltersToEvents } from '../components/ApplyFilters';
 import { FiltersSection } from '../components/Filters';
 
@@ -106,7 +105,6 @@ export const MisEventos = () => {
   if (loading) {
     return (
       <div className="d-flex">
-        <BarraLateral />
         <main className="flex-grow-1 p-4">
           <h3 className="mb-3">Mis Eventos</h3>
           <p className="text-muted">Cargando...</p>
@@ -118,7 +116,6 @@ export const MisEventos = () => {
   if (error) {
     return (
       <div className="d-flex">
-        <BarraLateral />
         <main className="flex-grow-1 p-4">
           <h3 className="mb-3">Mis Eventos</h3>
           <p className="text-danger">{error}</p>
@@ -131,7 +128,6 @@ export const MisEventos = () => {
   return (
     <div className="d-flex">
       {/* Barra lateral reutilizable */}
-      <BarraLateral />
 
       {/* Contenido principal */}
       <main className="flex-grow-1 p-4">
