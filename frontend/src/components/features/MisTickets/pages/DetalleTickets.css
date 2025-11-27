@@ -14,10 +14,16 @@
   border: 1px solid #e3e6ea;
 }
 .td-header{
-  display:flex; gap:16px; align-items:center;
+  display:flex; gap:16px; align-items:center; flex-direction: column;
 }
 .td-cover{
   width:110px; height:110px; object-fit:cover; border-radius:8px;
+}
+.td-header-details{
+  display:flex; 
+  flex-direction:row; 
+  gap:4px;
+  flex:1;
 }
 .td-header-info{ flex:1; }
 .td-title{ font-weight:700; font-size:18px; line-height:1.2; }
@@ -45,3 +51,34 @@
   font-weight:700;
 }
 .td-total-amount{ color:#1a8f5b; font-size:18px; }
+
+/* ... tus estilos anteriores ... */
+
+.td-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #6b7077; /* Un gris suave para diferenciarlo de los items */
+  padding: 2px 0;
+}
+
+.td-discount {
+  color: #dc3545; /* Color rojo para indicar resta */
+  font-weight: 500;
+}
+
+/* Ajuste opcional para el borde superior del resumen */
+.border-top {
+  border-top: 1px solid #f0f2f4;
+}
+
+/* El td-total ya lo tenías, pero asegúrate que tenga margen arriba */
+.td-total {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  margin-top: 8px; 
+  padding-top: 10px; 
+  border-top: 2px solid #e9ecef; /* Un borde un poco más grueso para el total final */
+  font-weight: 700;
+}

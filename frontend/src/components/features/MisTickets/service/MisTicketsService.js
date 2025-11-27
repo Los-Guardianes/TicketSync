@@ -9,6 +9,8 @@ export const getTicketsByEvent = async (userId, idEvento) => {
 };
 */
 
-export const getTicketsByEvent = (userId, idEvento) =>
-  apiFetch(`/api/miticket/usuario/${userId}/evento/${idEvento}`);
+export const getOrdenByEvent = (userId, idEvento) =>
+   apiFetch(`/api/orden/usuario/${userId}/evento/${idEvento}`);
 
+export const getTicketByFuncionUser = (userId, idFuncion) =>
+  apiFetch(`/api/miticket/usuario/${userId}/funcion/${idFuncion}`);

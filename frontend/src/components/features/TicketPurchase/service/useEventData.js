@@ -6,6 +6,7 @@ import { Tarifa } from '../models/Tarifa';
 import { Zona } from '../models/Zona';
 import { TipoEntrada } from '../models/TipoEntrada';
 
+
 export const useEventData = (idevento) => {
 
     const [periodoActual, setPeriodoActual] = useState(null);
@@ -42,9 +43,13 @@ export const useEventData = (idevento) => {
         if(!selectedFuncion)return;
         const zxf = zonaxfuncion.find(zf => zf.idZona === zona.idZona && zf.idFuncion ===  selectedFuncion?.idFuncion)
         const entradasDisponibles = zona.aforo - zxf.comprasActuales;
-        const maxComprasEvento = evento?.maxComprasTickets
+        const maxComprasEvento = getMaxCantidadTicketsOrden();
         const maxCantidad = maxComprasEvento >= (entradasDisponibles >= 0 ? entradasDisponibles : 0) ? entradasDisponibles : maxComprasEvento //devuelve el menor
         return maxCantidad
+    }
+    
+    const getMaxCantidadTicketsOrden = () => {
+        return evento?.maxComprasTickets || 0;
     }
 
     useEffect(()=>{
@@ -120,6 +125,7 @@ export const useEventData = (idevento) => {
         selectedFuncion,
         setSelectedFuncion,
         getMaxCantidadTickets,
+        getMaxCantidadTicketsOrden,
         seleccionarFuncion
     };
 }

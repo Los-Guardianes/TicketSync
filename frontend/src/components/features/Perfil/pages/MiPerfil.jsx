@@ -69,7 +69,7 @@ export const MiPerfil = () => {
             setPwdLoading(true);
 
             const response = await fetch(
-                "https://api.tuticket.space/api/usuario/cambiar-password",
+                "http://localhost:8080/usuario/cambiar-password",
                 {
                     method: "POST",
                     headers: {

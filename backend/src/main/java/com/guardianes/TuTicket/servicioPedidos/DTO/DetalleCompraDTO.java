@@ -15,10 +15,19 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 public class DetalleCompraDTO {
+    private Integer idDetalleCompra;
     private Integer cantidad;
     private BigDecimal precioDetalle;
     private Integer idTarifa;
     private Integer idPeriodo;
+
+    public DetalleCompraDTO(DetalleCompra detalleCompra) {
+        this.idDetalleCompra = detalleCompra.getIdDetalleCompra();
+        this.cantidad = detalleCompra.getCantidad();
+        this.precioDetalle = detalleCompra.getPrecioDetalle();
+        this.idTarifa = detalleCompra.getTarifa().getIdTarifa();
+        this.idPeriodo = detalleCompra.getPeriodo().getIdPeriodo();
+    }
 
     public DetalleCompra toModel(OrdenCompra ordenCompra, Tarifa t, Periodo p) {
         return new DetalleCompra(
