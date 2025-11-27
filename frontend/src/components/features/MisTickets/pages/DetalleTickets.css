@@ -26,6 +26,7 @@
 }
 .td-header{
   display:flex; gap:16px; align-items:center; flex-direction: column;
+}
 
 @media (max-width: 576px) {
   .ticket-detail-card {
