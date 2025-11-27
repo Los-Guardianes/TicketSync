@@ -178,7 +178,6 @@ const Section = ({ title, children }) => (
     <div className="td-section">
         <div className="td-section-header">
             <span className="td-section-title">{title}</span>
-            <span className="td-caret">▾</span>
         </div>
         <div className="td-section-body">{children}</div>
     </div>

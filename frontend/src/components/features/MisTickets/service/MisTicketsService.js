@@ -1,4 +1,5 @@
 import { apiFetch } from '../../../../globalServices/API';
+import { useState, useEffect } from 'react';
 
 export const getTickets = (idUser) => apiFetch(`/api/ticket/user/${idUser}`);
 
