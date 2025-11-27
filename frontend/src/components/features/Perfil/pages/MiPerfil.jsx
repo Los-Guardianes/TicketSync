@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import "./MiPerfil.css";
 import { useAuth } from "../../../../context/AuthContext";
-import { BarraLateral } from "../../MisTickets/components/BarraLateral";
 
 export const MiPerfil = () => {
     const { user, token } = useAuth();
@@ -125,8 +124,6 @@ export const MiPerfil = () => {
 
     return (
         <div className="perfil-page">
-            {/* Barra lateral fija a la izquierda */}
-            <BarraLateral />
 
             {/* Contenido principal del perfil */}
             <div className="perfil-wrapper">

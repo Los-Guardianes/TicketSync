@@ -11,6 +11,12 @@ export const getEventos = (limit, offset) => {
 };
 export const getEventosById = (id) => apiFetch(`/api/evento/${id}`);
 
+export const getZonasByEvento = (id) => apiFetch(`/api/zona/evento/${id}`);
+
+export const getFuncionesByEvento = (id) => apiFetch(`/api/funcion/evento/${id}`);
+
+export const getEntradasByEvento = (id) => apiFetch(`/api/tipoentrada/evento/${id}`);
+
 export const getCateventos = () => apiFetch('/api/catevento');
 
 export const postEventoCompleto = (evento) =>

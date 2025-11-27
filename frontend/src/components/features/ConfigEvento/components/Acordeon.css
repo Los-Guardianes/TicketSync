@@ -1,0 +1,293 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #f5f5f5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #00a86b;
+  margin-bottom: 30px;
+}
+
+.event-header {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.event-image-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.event-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.event-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.event-location {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.action-button:hover {
+  background-color: #e8f5f1;
+  border-color: #00a86b;
+  color: #00a86b;
+}
+
+.action-button::after {
+  content: '›';
+  font-size: 24px;
+  color: #999;
+}
+
+.action-button:hover::after {
+  color: #00a86b;
+}
+
+/* Pestañas Desplegables */
+.tabs-section {
+  margin-top: 30px;
+  border-top: 2px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+.accordion {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.accordion-header:hover {
+  background-color: #e8f5f1;
+}
+
+.accordion-header.active {
+  background-color: #00a86b;
+  color: white;
+}
+
+.accordion-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.accordion-icon {
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+
+.accordion-header.active .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background-color: white;
+}
+
+.accordion-content.active {
+  max-height: 1000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.accordion-body {
+  padding: 20px;
+}
+
+/* Estilos para las listas */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-card {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px 16px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.item-card:hover {
+  border-color: #00a86b;
+  box-shadow: 0 2px 8px rgba(0, 168, 107, 0.1);
+}
+
+.compact-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.compact-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.compact-name-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.item-details {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.item-btn {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s;
+  color: #666;
+}
+
+.item-btn:hover {
+  background-color: #00a86b;
+  border-color: #00a86b;
+  color: white;
+}
+
+.add-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #00a86b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #008c5a;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-style: italic;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+@media (max-width: 768px) {
+  .event-header {
+    grid-template-columns: 1fr;
+  }
+
+  .event-image {
+    height: 200px;
+  }
+}

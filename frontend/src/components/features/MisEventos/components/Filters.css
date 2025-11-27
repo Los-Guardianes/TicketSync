@@ -1,0 +1,113 @@
+.filters-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filters-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    color: #00a86b;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+}
+
+.clear-filters {
+    background: none;
+    border: none;
+    color: #00a86b;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.filter-input,
+.filter-select {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.filter-select {
+    cursor: pointer;
+}
+
+.apply-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #00a86b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.filter-tag {
+    background-color: #e8f5f1;
+    color: #00a86b;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-tag-close {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}

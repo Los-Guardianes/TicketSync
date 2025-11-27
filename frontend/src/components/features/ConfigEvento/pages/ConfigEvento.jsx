@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { BarraLateral } from '../../MisTickets/components/BarraLateral';
+import { ZonesAccordion, FuncionesAccordion, EntradasAccordion } from '../components/Acordeon';
 
 import {
   getEventosById,
   cancelarEvento,
+  getZonasByEvento,
+  getFuncionesByEvento,
+  getEntradasByEvento,
 } from '../../../../globalServices/EventoService';
 
 import './ConfigEvento.css';
 import { ConfigEventoActions } from '../components/ConfigEventoActions';
+import { ConfigEventoDatos } from '../components/ConfigEventoDatos';
 
 export const ConfigEvento = () => {
   const { idEvento } = useParams(); // /organizer/evento/:idEvento/config
@@ -18,9 +21,43 @@ export const ConfigEvento = () => {
   const [loading, setLoading] = useState(true);
   const [cargaError, setCargaError] = useState(false);
 
+  const [zonas, setZonas] = useState([]);
+  const [funciones, setFunciones] = useState([]);
+  const [entradas, setEntradas] = useState([]);
+
   // modal de cancelar evento
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
+
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const isActive = (key) => activeAccordion === key;
+  
+  const toggleAccordion = (key) => {
+    setActiveAccordion((prev) => (prev === key ? null : key));
+  };
+
+  const editItem = (type, id) => {
+    // console.log(`Editar ${type} #${id}`);
+    alert(`Editando ${type} #${id}`);
+  };
+
+  const deleteItem = (type, id) => {
+    if (window.confirm(`¿Estás seguro de eliminar este ${type}?`)) {
+      // console.log(`Eliminar ${type} #${id}`);
+      alert(`${type} #${id} eliminado`);
+    }
+  };
+
+  const addItem = (type) => {
+    // console.log(`Agregar nuevo ${type}`);
+    alert(`Abriendo formulario para agregar ${type}`);
+  };
+
+  const viewTickets = (funcionId) => {
+    // console.log(`Ver tickets de función #${funcionId}`);
+    alert(`Mostrando tickets de la función #${funcionId}`);
+  };
+
 
   // cargar evento desde backend
   useEffect(() => {
@@ -28,6 +65,12 @@ export const ConfigEvento = () => {
       try {
         const data = await getEventosById(idEvento);
         setEvento(data);
+        const zonaData = await getZonasByEvento(idEvento);
+        setZonas(zonaData);
+        const funcionesData = await getFuncionesByEvento(idEvento);
+        setFunciones(funcionesData);
+        const entradasData = await getEntradasByEvento(idEvento);
+        setEntradas(entradasData);
       } catch (err) {
         console.error('Error cargando el evento', err);
         setCargaError(true);
@@ -64,8 +107,6 @@ export const ConfigEvento = () => {
   if (loading) {
     return (
       <div className="config-page">
-      
-        <BarraLateral />
         <main className="flex-grow-1 p-4">
           <div className="config-card">
             <h3 className="config-card-title">Configuración de evento</h3>
@@ -79,7 +120,6 @@ export const ConfigEvento = () => {
   if (cargaError || !evento) {
     return (
       <div className="d-flex">
-        <BarraLateral />
         <main className="flex-grow-1 p-4">
           <div className="config-card">
             <h3 className="config-card-title">Configuración de evento</h3>
@@ -99,7 +139,6 @@ export const ConfigEvento = () => {
 
   return (
     <div className="d-flex">
-      <BarraLateral />
 
       <main className="flex-grow-1 p-4">
         <div className="config-card">
@@ -116,12 +155,48 @@ export const ConfigEvento = () => {
                     : undefined
                 }
               />
-
+              
+              {/* <ConfigEventoDatos 
+                isActive,
+              onToggle,
+              editItem,
+              deleteItem,
+              addItem,
+              viewTickets,
+              /> */}
+              
               <p className="config-event-location">{direccion}</p>
-
+              <div className="tabs-section">
+                <ZonesAccordion
+                  isActive={isActive('zonas')}
+                  onToggle={toggleAccordion}
+                  editItem={editItem}
+                  deleteItem={deleteItem}
+                  addItem={addItem}
+                  zonas={zonas}
+                />
+                <FuncionesAccordion
+                  isActive={isActive('funciones')}
+                  onToggle={toggleAccordion}
+                  editItem={editItem}
+                  deleteItem={deleteItem}
+                  addItem={addItem}
+                  viewTickets={viewTickets}
+                  funciones={funciones}
+                />
+              </div>
+              <EntradasAccordion
+                isActive={isActive('entradas')}
+                onToggle={toggleAccordion}
+                editItem={editItem}
+                deleteItem={deleteItem}
+                addItem={addItem}
+                entradas={entradas}
+              s/>
               {evento.activo === false && (
                 <p className="evento-cancelado">Este evento está cancelado.</p>
               )}
+
             </div>
 
             <div className="config-right">
