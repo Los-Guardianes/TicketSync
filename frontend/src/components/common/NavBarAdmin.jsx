@@ -15,7 +15,6 @@ export const NavBarAdmin = () => {
 
     return (
         <nav className="navbar navbar-expand navbar-light bg-light border-bottom border-success px-3">
-            
                 <img
                     src="/tuticket_logo_name.png"
                     alt="tuticketLogo"
@@ -25,11 +24,11 @@ export const NavBarAdmin = () => {
                 <>
                     <li className="nav-item">
                         <NavLink to="/perfil" className={({isActive}) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
-                            <span className="nav-link">👤 ¡Hola, {user.nombre}!</span>
+                            <span className="nav-link">¡Hola, {user.nombre}!</span>
                         </NavLink>
                     </li>
                     <li className="nav-item ms-2">
-                        <button className="btn btn-danger" onClick={cerrarSession}>
+                        <button className="btn btn-secondary" onClick={cerrarSession}>
                             Cerrar Sesión
                         </button>
                     </li>

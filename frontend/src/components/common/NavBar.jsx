@@ -110,17 +110,17 @@ export const NavBar = ({
         {/* Botón condicional para organizador */}
         {esOrganizador && (
           <li className="nav-item ms-2">
-            <NavLink className="btn btn-warning" to="/create-event">
+            <NavLink className="btn btn-primary" to="/create-event">
               Crear Evento
             </NavLink>
           </li>
         )}
-
+    
         {/* Botones de usuario */}
         {!user ? (
           <>
             <li className="nav-item ms-2">
-              <NavLink className="btn btn-light" to="/register">
+              <NavLink className="btn btn-secondary" to="/register">
                 Registrarse
               </NavLink>
             </li>
@@ -139,11 +139,11 @@ export const NavBar = ({
             </li>
             <li className="nav-item">
               <NavLink to="/perfil" className={({isActive}) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
-                <span className="nav-link">👤 ¡Hola, {user.nombre}!</span>
+                <span className="nav-link">¡Hola, {user.nombre}!</span>
               </NavLink>
             </li>
             <li className="nav-item ms-2">
-              <button className="btn btn-danger" onClick={logout}>
+              <button className="btn btn-secondary" onClick={logout}>
                 Cerrar Sesión
               </button>
             </li>

@@ -50,7 +50,7 @@ describe('HU14 - Redirección a página de compra de tickets', () => {
       });
 
     // Verificar que se redirige a la página de compra de tickets con el ID correcto
-    cy.url({ timeout: 10000 }).should('eq', 'http://localhost:5173/ticket-purchase/3');
+    cy.url({ timeout: 10000 }).should('eq', 'https://api.tuticket.space/ticket-purchase/3');
 
     // Verificación adicional: que la página de compra cargó correctamente
     cy.contains('Comprar', { timeout: 10000 }).should('exist');
