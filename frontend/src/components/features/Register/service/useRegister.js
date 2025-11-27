@@ -28,7 +28,7 @@ export const useRegister = (rol, onSuccessRedirect = "/home") => {
   // Campos según rol
   const roleSpecificData = {
     CLIENTE: { dni: "", fechaNacimiento: "" },
-    ORGANIZADOR: { razonSocial: "", ruc: "" },
+    ORGANIZADOR: { razonSocial: "", ruc: "", verificado: false},
   };
 
   const [formUsuario, setFormUsuario] = useState({

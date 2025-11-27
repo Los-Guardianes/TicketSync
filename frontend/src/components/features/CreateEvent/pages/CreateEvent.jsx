@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../../../context/AuthContext';
 import "./CreateEvent.css";
 import { getCateventos } from '../../../../globalServices/EventoService';
 import { useEventCreation } from "../../../../context/EventCreationContext";
@@ -11,6 +12,18 @@ import { AlertCircle } from 'lucide-react';
 export const CreateEvent = () => {
     const navigate = useNavigate();
     const { eventData, updateEventData } = useEventCreation();
+    const { user } = useAuth();
+    console.log("Usuario actual:", user);
+    //arreglar para que la verificación sí funcione
+    if (user.verificado === false) {
+        return (
+            <div style={{ padding: 16 }}>
+                <h2>Verificación de Organizador Pendiente</h2>
+                <p>Tu cuenta de organizador aún no ha sido verificada. Por favor, espera a que un administrador revise y apruebe tu solicitud.</p>
+                <p>Una vez que tu cuenta sea verificada, podrás crear eventos en la plataforma.</p>
+            </div>
+        );
+    }
 
     const [funciones, setFunciones] = useState([
         { id: 1, inicioD: '', inicioH: '', finD: '', finH: '' }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getUsers, getUser, updateUser, postAdmin } from '../service/UserConfigService';
 import { getCiudades } from '../../../../globalServices/UbicacionService';
 import { useNavigate } from 'react-router-dom';
+import { UserTable } from '../components/UserTable';
 import "./ConfigUsers.css";
 
 export const ConfigUsers = () => {
@@ -11,14 +12,14 @@ export const ConfigUsers = () => {
   const [ciudad, setCiudad] = useState([]);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
-  const today = new Date().toISOString().split("T")[0];
   const [search, setSearch] = useState("");
   const [rolFilter, setRolFilter] = useState("");
-  const [estadoFilter, setEstadoFilter] = useState(true);
+  const [estadoFilter, setEstadoFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 25;
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [sortOrder, setSortOrder] = useState(""); // "", "asc", "desc"
   const navigate = useNavigate();
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: '',
@@ -142,7 +143,15 @@ export const ConfigUsers = () => {
           u.email.toLowerCase().includes(search.toLowerCase())
         : true)
     );
-  });
+  })
+  .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.nombre.localeCompare(b.nombre);
+      } else if (sortOrder === "desc") {
+        return b.nombre.localeCompare(a.nombre);
+      }
+      return 0;
+    });
 
   const construirPayloadUsuario = (usuario, cambios = {}) => {
     let payload = {
@@ -171,7 +180,6 @@ export const ConfigUsers = () => {
         razonSocial: usuario.razonSocial,
       };
     }
-
     return payload;
   };
 
@@ -181,10 +189,10 @@ export const ConfigUsers = () => {
     try {
       const usuario = await getUser(id, rol);
       const payload = construirPayloadUsuario(usuario, { activo: nuevoEstado });
-
+      console.log("Payload: " + payload);
       await updateUser(payload, id);
       console.log(usuario.idUsuario + " se actualizó");
-
+      alert("Usuario actualizado correctamente.");
       setReloadTrigger((prev) => prev + 1);
     } catch (error) {
       alert("Error al cambiar estado");
@@ -216,6 +224,11 @@ export const ConfigUsers = () => {
     }
   };
 
+  const handleEdit = (user) => {
+    setUsuarioSeleccionado(user); 
+    setShowEditUserModal(true);
+  }
+
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * itemsPerPage,
@@ -223,6 +236,7 @@ export const ConfigUsers = () => {
   );
 
   return (
+    <>
     <div className="config-users-wrapper">
       <div className="config-users-container">
         <div className="d-flex justify-content-start mt-3">
@@ -233,6 +247,14 @@ export const ConfigUsers = () => {
         {/* Filtros */}
         <div className="filters">
           <div className="filters-left">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="">Ordenar</option>
+              <option value="asc">Nombre A-Z</option>
+              <option value="desc">Nombre Z-A</option>
+            </select>
             <select
               value={rolFilter}
               onChange={(e) => setRolFilter(e.target.value)}
@@ -259,47 +281,17 @@ export const ConfigUsers = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-
           <button className="add-user-button" onClick={() => setShowAddUserModal(true)}>
             AGREGAR USUARIO
           </button>
         </div>
 
         {/* Tabla */}
-        <table className="user-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Rol</th>
-              <th>Estado</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedUsers.map((user) => (
-              <tr key={user.idUsuario}>
-                <td>{user.nombre + ' ' + user.apellido}</td>
-                <td>{user.rol}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={user.activo}
-                    onChange={() => toggleActivo(user.idUsuario, user.rol, user.activo)}
-                  />
-                </td>
-                <td>{user.email}</td>
-                <td>{user.telefono}</td>
-                <td>
-                  <button className="details-button"onClick={() => {
-                    setUsuarioSeleccionado(user); setShowEditUserModal(true);
-                    }}>Ver detalles</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <UserTable
+          users={paginatedUsers}
+          onToggleActivo={toggleActivo}
+          onEditUser={handleEdit}
+        />
 
         {/* Paginación */}
         <div className="pagination">
@@ -314,7 +306,8 @@ export const ConfigUsers = () => {
           ))}
         </div>
       </div>
-      {showAddUserModal && (
+    </div>
+    {showAddUserModal && (
         <div className="add-user-modal-overlay">
           <div className="add-user-modal">
             <h4>Agregar nuevo usuario (administrador)</h4>
@@ -463,6 +456,5 @@ export const ConfigUsers = () => {
           </div>
         </div>
       )}
-    </div>
-  );
+  </>);
 };
