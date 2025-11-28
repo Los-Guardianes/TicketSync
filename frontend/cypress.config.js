@@ -1,9 +1,10 @@
 import { defineConfig } from "cypress";
+import {BASE_URL} from "./globalServices/API";
 
 export default defineConfig({
   projectId: '2cwwvq',
   e2e: {
-    baseUrl: "https://api.tuticket.space",
+    baseUrl: BASE_URL,
     viewportWidth: 1366,
     viewportHeight: 768,
     setupNodeEvents(on, config) {

@@ -1,4 +1,5 @@
 "use client"
+import React from "react"
 import "./OrganizerEventCard.css"
 import { useNavigate } from "react-router-dom"
 
@@ -37,7 +38,11 @@ export const OrganizerEventCard = ({
   return (
     <div className={`organizer-event-card ${esPasado ? "organizer-event-card--past" : ""}`}>
       <div className="organizer-event-card__image-container">
-        <img src={imagen || "/placeholder_event.png"} alt={titulo} className="organizer-event-card__image" />
+        <img 
+            src={imagen || "/placeholder_event.png"} 
+            alt={titulo} 
+            className="organizer-event-card__image" 
+        />
         <div className="organizer-event-card__gradient-overlay"></div>
         {esPasado && <div className="organizer-event-card__past-badge">Finalizado</div>}
       </div>
@@ -51,7 +56,6 @@ export const OrganizerEventCard = ({
 
         <div className="organizer-event-card__details">
           {fecha && <div className="organizer-event-card__date">{formatDate(fecha)}</div>}
-
           {direccion && <div className="organizer-event-card__location">{direccion}</div>}
         </div>
 

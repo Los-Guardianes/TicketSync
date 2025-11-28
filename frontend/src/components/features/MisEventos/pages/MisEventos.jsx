@@ -16,6 +16,7 @@ const buildEventCards = (eventos) => {
   }
   const actuales = []
   const pasados = []
+  
   eventos.forEach((ev) => {
     const card = {
       idEvento: ev.idEvento,
@@ -24,8 +25,10 @@ const buildEventCards = (eventos) => {
       imagen: ev.urlImagen,
       fecha: ev.fechaReferencia,
       categoria: ev.categoriaEvento,
+      activo: ev.activo,
       dpto: ev.ciudad,
     }
+    // Asumimos que el backend envía una bandera o calculamos si es pasado
     if (ev?.esPasado) {
       pasados.push(card)
     } else {
@@ -58,6 +61,7 @@ export const MisEventos = () => {
   const [showAllActuales, setShowAllActuales] = useState(false)
   const [showAllPasados, setShowAllPasados] = useState(false)
 
+  // Carga de datos limpia (versión develop3)
   useEffect(() => {
     const load = async () => {
       try {
@@ -133,6 +137,7 @@ export const MisEventos = () => {
 
         <FiltersSection onApply={handleApplyFilters} />
 
+        {/* SECCIÓN ACTUALES */}
         <div className="eventos-section eventos-section--upcoming">
           <div className="eventos-section__header">
             <div className="eventos-section__title-content">
@@ -203,6 +208,7 @@ export const MisEventos = () => {
           )}
         </div>
 
+        {/* SECCIÓN PASADOS */}
         <div className="eventos-section eventos-section--past">
           <div className="eventos-section__header">
             <div className="eventos-section__title-content">
@@ -230,6 +236,7 @@ export const MisEventos = () => {
                     direccion={it.direccion}
                     imagen={it.imagen}
                     actionLabel="Configurar"
+                    esPasado={true} 
                   />
                 ))}
               </div>

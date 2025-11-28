@@ -17,15 +17,28 @@ export const getFuncionesByEvento = (id) => apiFetch(`/api/funcion/evento/${id}`
 
 export const getEntradasByEvento = (id) => apiFetch(`/api/tipoentrada/evento/${id}`);
 
+export const getPeriodosByEvento = (id) => apiFetch(`/api/periodo/evento/${id}`)
+
 export const getCateventos = () => apiFetch('/api/catevento');
 
 export const postEventoCompleto = (evento) =>
-  apiFetch('/api/evento/completo', { method: 'POST', body: JSON.stringify(evento) });
+	apiFetch('/api/evento/completo', { method: 'POST', body: JSON.stringify(evento) });
 
 export const getEventosByOrganizer = (idUsuario) =>
-  apiFetch(`/api/evento/organizer/${idUsuario}`);
+	apiFetch(`/api/evento/organizer/${idUsuario}`);
 
 export const cancelarEvento = (idEvento) =>
-  apiFetch(`/api/evento/${idEvento}/cancelar`, {
-    method: 'PUT',
-  });
+	apiFetch(`/api/evento/${idEvento}/cancelar`, {
+		method: 'PUT',
+	});
+
+export const updatePeriodo = (idPeriodo, data) =>
+	apiFetch(`/api/periodo/${idPeriodo}`, {
+		method: 'PUT',
+		body: JSON.stringify(data),
+	});
+
+export const deletePeriodo = (idPeriodo) =>
+	apiFetch(`/api/periodo/${idPeriodo}`, {
+		method: 'DELETE',
+	});

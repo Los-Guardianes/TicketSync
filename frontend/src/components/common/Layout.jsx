@@ -4,8 +4,8 @@ import { Header } from '../common/Header/Header';
 import { Footer } from '../common/Footer/Footer';
 import { useState, useEffect } from 'react';
 import { getDepartamentos } from '../../globalServices/UbicacionService';
-
 import { EventCreationProvider } from '../../context/EventCreationContext';
+import { BASE_URL } from '../../globalServices/API';
 
 const Layout = () => {
   const location = useLocation();
@@ -33,11 +33,12 @@ const Layout = () => {
     }
   };
 
-  // Categorías (si ya tienes endpoint propio usa /api/catevento)
+  // Categorías
   const categoriaFetch = async () => {
     try {
-      //const resp = await fetch('https://api.tuticket.space/api/catevento'); // ← ajusta si corresponde
-      const resp = await fetch('localhost/8080')
+      // Uso correcto de BASE_URL importada
+      const resp = await fetch(`${BASE_URL}/api/catevento`);
+      
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       const data = await resp.json();
       // Normaliza a un arreglo de strings (nombres) o de objetos {id, nombre}
@@ -46,7 +47,8 @@ const Layout = () => {
     } catch (e) {
       console.warn('Fallo /api/catevento, derivando desde /api/evento. Motivo:', e);
       try {
-        const r2 = await fetch('https://api.tuticket.space/api/evento');
+        // Fallback usando BASE_URL
+        const r2 = await fetch(`${BASE_URL}/api/evento`);
         const evs = await r2.json();
         const cats = [...new Set((Array.isArray(evs) ? evs : [])
           .map(ev => ev.categoria?.nombre || 'Sin categoría'))];
