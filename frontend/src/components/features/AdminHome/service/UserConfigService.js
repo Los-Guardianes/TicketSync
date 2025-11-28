@@ -3,6 +3,8 @@ import { apiFetch } from '../../../../globalServices/API';
 export const getUsers = () => apiFetch(`/api/usuario`);
 export const postAdmin = (admin) =>
   apiFetch('/api/admin', { method: 'POST', body: JSON.stringify(admin) });
+
+//Obtiene el tipo de usuario específico
 export const getUser = (idUsuario, rol) => {
   switch (rol) {
     case "ADMINISTRADOR":
@@ -18,6 +20,7 @@ export const getUser = (idUsuario, rol) => {
        throw new Error(`Rol desconocido: ${rol}`);
   }
 };
+
 export const updateUser = async (user, id) => {
   const rol = user.rol;
 

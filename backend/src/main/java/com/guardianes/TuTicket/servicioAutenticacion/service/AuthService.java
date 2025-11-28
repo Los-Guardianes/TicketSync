@@ -58,7 +58,8 @@ public class AuthService {
                 usuario.getApellido(),
                 usuario.getTelefono(),
                 ciudad,
-                departamento
+                departamento,
+                usuario.getVerificado()
         );
     }
 }

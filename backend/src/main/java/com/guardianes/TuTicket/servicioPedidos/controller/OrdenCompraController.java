@@ -81,4 +81,9 @@ public class OrdenCompraController {
         OrdenCompra oc = service.orquestarOrdenCompra(orden);
         return ResponseEntity.ok(oc);
     }
+
+    @GetMapping("/orden/usuario/{idUsuario}/evento/{idEvento}")
+    public ResponseEntity<?> getOrdenEventoById(@PathVariable Integer idUsuario, @PathVariable Integer idEvento) {
+        return ResponseEntity.ok(service.getOrdenDTOByUsuarioAndEvento(idUsuario, idEvento));
+    }
 }

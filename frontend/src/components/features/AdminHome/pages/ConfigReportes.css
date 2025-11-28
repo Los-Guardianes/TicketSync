@@ -1,0 +1,73 @@
+
+.admin-home-configreportes-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+
+
+/*
+.admin-home-configreportes-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+*/
+
+/* Agregamos padding-top para bajar el contenido y separarlo del Navbar */
+.admin-home-configreportes-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 50px; /* AJUSTE: Esto baja el título y todo el contenido */
+}
+
+.admin-home-configreportes-header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+.admin-home-configreportes-tittle {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+/*
+.admin-home-configreportes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+*/
+
+/* Cambiamos la estructura de la grilla para tener 2 columnas */
+.admin-home-configreportes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* AJUSTE: Crea dos columnas de igual tamaño */
+  gap: 40px;
+  margin-bottom: 32px;
+  /*justify-items: center; /* Opcional: Centra las cards dentro de su columna */
+}
+.admin-home-configreportes-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.admin-home-configreportes-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.admin-home-configreportes-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin: 20px;
+}

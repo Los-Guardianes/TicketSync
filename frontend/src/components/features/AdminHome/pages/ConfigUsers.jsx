@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { getUsers, getUser, updateUser, postAdmin } from '../service/UserConfigService';
 import { getCiudades } from '../../../../globalServices/UbicacionService';
 import { useNavigate } from 'react-router-dom';
+import { UserTable } from '../components/UserTable';
+import { OrgTable } from "../components/OrgTable";
+import { getByEmail, getByTelefono } from "../../../../globalServices/UsuarioService";
 import "./ConfigUsers.css";
 
 export const ConfigUsers = () => {
@@ -9,25 +12,19 @@ export const ConfigUsers = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [selectedCiudad, setSelectedCiudad] = useState("Seleccionar ciudad");
   const [ciudad, setCiudad] = useState([]);
-  const navigate = useNavigate();
-
-  const fetchUsers = async () => {
-    const data = await getUsers();
-    setUsersData(data);
-    console.log(data);
-  };
-  useEffect(() => {
-    fetchUsers();
-  }, [reloadTrigger]);
-  const today = new Date().toISOString().split("T")[0];
-
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [search, setSearch] = useState("");
+  const [search2, setSearch2] = useState("");
   const [rolFilter, setRolFilter] = useState("");
   const [estadoFilter, setEstadoFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25;
+  const itemsPerPage = 10;
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [sortOrder, setSortOrder] = useState(""); // "", "asc", "desc"
+  const [sortOrder2, setSortOrder2] = useState("");
+  const navigate = useNavigate();
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: '',
     apellido: '',
@@ -39,20 +36,48 @@ export const ConfigUsers = () => {
     ciudad: { "idCiudad": null },
     rol: 'ADMINISTRADOR',
   });
+  const [usuario, setUsuario] = useState({
+    nombre: "",
+    apellido: "",
+    email: "",
+    telefono: "",
+  });
+
+  const fetchUsers = async () => {
+    const data = await getUsers();
+    setUsersData(data);
+    console.log(data);
+  };
   useEffect(() => {
-      const getCiudad = async () => {
-          const data = await getCiudades();
-          setCiudad(data);
-      };
-      getCiudad();
+    fetchUsers();
+  }, [reloadTrigger]);
+
+  useEffect(() => {
+    const getCiudad = async () => {
+      const data = await getCiudades();
+      setCiudad(data);
+    };
+    getCiudad();
   }, []);
+
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      if (!usuarioSeleccionado) return;
+      const data = await getUser(usuarioSeleccionado.idUsuario, usuarioSeleccionado.rol);
+      setUsuario(data);
+    };
+
+    if (showEditUserModal) {
+      fetchUsuario();
+    }
+  }, [showEditUserModal]);
 
   const handleCrearUsuario = async () => {
     try {
       const error = validar();
       if (error) {
-          alert(error);
-          return;
+        alert(error);
+        return;
       }
       const payload = {
         nombre: (nuevoUsuario.nombre || '').replace(/\s+/g, ' ').trim(),
@@ -86,78 +111,177 @@ export const ConfigUsers = () => {
   };
 
   const validar = () => {
-        const emailOk = /^\S+@\S+\.\S+$/.test((nuevoUsuario.email || '').trim());
-        const celOk = /^\d{9}$/.test((nuevoUsuario.telefono || '').trim());
-        const passOk = (nuevoUsuario.hashCtr || '').length >= 8;
-        const passMatch = nuevoUsuario.hashCtr === confirmPassword;
-        const ciudadOk = !!nuevoUsuario.ciudad.idCiudad;
+    const emailOk = /^\S+@\S+\.\S+$/.test((nuevoUsuario.email || '').trim());
+    const celOk = /^\d{9}$/.test((nuevoUsuario.telefono || '').trim());
+    const passOk = (nuevoUsuario.hashCtr || '').length >= 8;
+    const passMatch = nuevoUsuario.hashCtr === confirmPassword;
+    const ciudadOk = !!nuevoUsuario.ciudad.idCiudad;
 
-        if (!(nuevoUsuario.nombre || '').trim()) return 'El nombre es obligatorio.';
-        if (!(nuevoUsuario.apellido || '').trim()) return 'El apellido es obligatorio.';
-        if (!emailOk) return 'Ingresa un correo válido.';
-        if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
-        if (!passMatch) return 'Las contraseñas no coinciden.';
-        if (!celOk) return 'El celular debe tener 9 dígitos.';
-        if (!ciudadOk) return 'Debes seleccionar una ciudad.';
-        return null;
-    };
+    if (!(nuevoUsuario.nombre || '').trim()) return 'El nombre es obligatorio.';
+    if (!(nuevoUsuario.apellido || '').trim()) return 'El apellido es obligatorio.';
+    if (!emailOk) return 'Ingresa un correo válido.';
+    if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
+    if (!passMatch) return 'Las contraseñas no coinciden.';
+    if (!celOk) return 'El celular debe tener 9 dígitos.';
+    if (!ciudadOk) return 'Debes seleccionar una ciudad.';
+    return null;
+  };
+
+  const validar2 = async () => {
+    const emailOk = /^\S+@\S+\.\S+$/.test((usuarioSeleccionado.email || '').trim());
+    const celOk = /^\d{9}$/.test((usuarioSeleccionado.telefono || '').trim());
+
+    if (!emailOk) return 'Ingresa un correo válido.';
+    if (!celOk) return 'El celular debe tener 9 dígitos.';
+    try {
+      const existingUser = await getByEmail((usuarioSeleccionado.email || '').trim().toLowerCase());
+      if (existingUser && existingUser.idUsuario !== usuarioSeleccionado.idUsuario) {
+        console.log(existingUser.idUsuario + " - " + usuarioSeleccionado.idUsuario);
+        return 'El correo ya está en uso por otro usuario.';
+      }
+    }
+    catch (error) {
+      console.log("Error al verificar email existente: ", error);
+    }
+    try {
+      const existingPhoneUser = await getByTelefono((usuarioSeleccionado.telefono || '').trim());
+      if (existingPhoneUser && existingPhoneUser.idUsuario !== usuarioSeleccionado.idUsuario) {
+        return 'El teléfono ya está en uso por otro usuario.';
+      }
+    }
+    catch (error) {
+      console.log("Error al verificar teléfono existente: ", error);
+    }
+    return null;
+  };
 
   const filteredUsers = usersData.filter((u) => {
     return (
       (rolFilter ? u.rol === rolFilter : true) &&
-      (estadoFilter ? u.estado === estadoFilter : true) &&
+      (estadoFilter !== "" ? u.activo === estadoFilter : true) &&
       (search
         ? u.nombre.toLowerCase().includes(search.toLowerCase()) ||
-          u.email.toLowerCase().includes(search.toLowerCase())
+        u.email.toLowerCase().includes(search.toLowerCase())
         : true)
     );
+  })
+  .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.nombre.localeCompare(b.nombre);
+      } else if (sortOrder === "desc") {
+        return b.nombre.localeCompare(a.nombre);
+      }
+      return 0;
+    });
+
+  // Filtro para organizadores pendientes (inactivos)
+  const pendingOrganizers = usersData
+  .filter((u) => {
+    return (
+      u.rol === "ORGANIZADOR" &&
+      !u.verificado &&
+      (search2
+        ? u.nombre.toLowerCase().includes(search2.toLowerCase()) ||
+          u.email.toLowerCase().includes(search2.toLowerCase()) ||
+          u.razonSocial?.toLowerCase().includes(search2.toLowerCase())
+        : true)
+    );
+  })
+  .sort((a, b) => {
+    if (sortOrder2 === "asc") return a.nombre.localeCompare(b.nombre);
+    if (sortOrder2 === "desc") return b.nombre.localeCompare(a.nombre);
+    return 0;
   });
+
+  const construirPayloadUsuario = (usuario, cambios = {}) => {
+    let payload = {
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      email: usuario.email,
+      hashCtr: usuario.hashCtr,
+      verificado: usuario.verificado,
+      telefono: usuario.telefono,
+      rol: usuario.rol,
+      activo: usuario.activo,
+      ciudad: usuario.ciudad,
+      ...cambios,
+    };
+
+    if (usuario.rol === "CLIENTE") {
+      payload = {
+        ...payload,
+        dni: usuario.dni,
+        fechaNacimiento: usuario.fechaNacimiento,
+      };
+    } else if (usuario.rol === "ORGANIZADOR") {
+      payload = {
+        ...payload,
+        ruc: usuario.ruc,
+        razonSocial: usuario.razonSocial,
+      };
+    }
+    return payload;
+  };
 
   const toggleActivo = async (id, rol, estadoActual) => {
     const nuevoEstado = !estadoActual;
 
     try {
       const usuario = await getUser(id, rol);
-      console.log(usuario); 
-      console.log("SE OBTUVO ESE USUARIO");
-      let payload = {
-        nombre: usuario.nombre,
-        apellido: usuario.apellido,
-        email: usuario.email,
-        hashCtr: usuario.hashCtr,
-        verificado: usuario.verificado,
-        telefono: usuario.telefono,
-        rol: usuario.rol,
-        activo: nuevoEstado,
-        ciudad: usuario.ciudad
-      };
-
-      if (rol !== "ORGANIZADOR") {
-        payload = {
-          ...payload,
-          dni: usuario.dni,
-          fechaNacimiento: usuario.fechaNacimiento
-        };
-      } else {
-        payload = {
-          ...payload,
-          ruc: usuario.ruc,
-          razonSocial: usuario.razonSocial
-        };
-      }
-      console.log(payload);
+      const payload = construirPayloadUsuario(usuario, { activo: nuevoEstado });
+      console.log("Payload: " + payload);
       await updateUser(payload, id);
       console.log(usuario.idUsuario + " se actualizó");
-      setUsersData((prev) =>
-        prev.map((u) => (u.id === id ? actualizado : u))
-      );
+      alert("Usuario actualizado correctamente.");
       setReloadTrigger((prev) => prev + 1);
     } catch (error) {
       alert("Error al cambiar estado");
-      console.log(error)
-      setUsersData((prev) =>
-        prev.map((u) => (u.id === id ? actualizado : u))
-      );
+      console.log(error);
+    }
+  };
+
+  const handleActualizarUsuario = async () => {
+    try {
+      const error = await validar2();
+      if (error) {
+        alert(error);
+        return;
+      }
+      const usuario = await getUser(usuarioSeleccionado.idUsuario, usuarioSeleccionado.rol);
+
+      const payload = construirPayloadUsuario(usuario, {
+        email: usuarioSeleccionado.email,
+        telefono: usuarioSeleccionado.telefono,
+      });
+
+      await updateUser(payload, usuarioSeleccionado.idUsuario);
+      alert("Usuario actualizado correctamente.");
+      setShowEditUserModal(false);
+      setReloadTrigger((prev) => prev + 1);
+    } catch (error) {
+      alert("Error al actualizar usuario");
+      console.log(error);
+    }
+  };
+
+  const handleEdit = (user) => {
+    setUsuarioSeleccionado(user); 
+    setShowEditUserModal(true);
+  }
+
+  const handleApprove = async (user) => {
+    const confirm = window.confirm(`¿Aprobar al organizador ${user.nombre} ${user.apellido}?`);
+    if (!confirm) return;
+    try {
+      const usuario = await getUser(user.idUsuario, user.rol);
+      const payload = construirPayloadUsuario(usuario, {verificado: true}); // marcar como aprobado
+      console.log(payload);
+      await updateUser(payload, usuario.idUsuario);
+      alert("Organizador aprobado correctamente.");
+      setReloadTrigger((prev) => prev + 1);
+    } catch (error) {
+      alert("Error al aprobar organizador");
+      console.log(error);
     }
   };
 
@@ -168,16 +292,55 @@ export const ConfigUsers = () => {
   );
 
   return (
+    <>
     <div className="config-users-wrapper">
       <div className="config-users-container">
-        <div className="back-button-wrapper">
-          <button className="back-button" onClick={() => navigate("/home-admin")}>
+        <div className="d-flex justify-content-start mt-3">
+          <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
             ← Volver
           </button>
         </div>
+
         {/* Filtros */}
         <div className="filters">
           <div className="filters-left">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder2(e.target.value)}
+            >
+              <option value="">Ordenar</option>
+              <option value="asc">Nombre A-Z</option>
+              <option value="desc">Nombre Z-A</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={search2}
+              onChange={(e) => setSearch2(e.target.value)}
+            />
+          </div>
+        </div>
+        {/* --- SECCIÓN ORGANIZADORES PENDIENTES --- */}
+        {pendingOrganizers.length > 0 && (
+          <OrgTable
+            users={pendingOrganizers}
+            onApprove={handleApprove}
+          />
+        )}
+
+        <h3 className="mb-3">Gestión de Usuarios</h3>
+
+        {/* Filtros */}
+        <div className="filters">
+          <div className="filters-left">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="">Ordenar</option>
+              <option value="asc">Nombre A-Z</option>
+              <option value="desc">Nombre Z-A</option>
+            </select>
             <select
               value={rolFilter}
               onChange={(e) => setRolFilter(e.target.value)}
@@ -185,15 +348,16 @@ export const ConfigUsers = () => {
               <option value="">Rol</option>
               <option value="CLIENTE">CLIENTE</option>
               <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+              <option value="ORGANIZADOR">ORGANIZADOR</option>
             </select>
 
             <select
               value={estadoFilter}
-              onChange={(e) => setEstadoFilter(e.target.value)}
+              onChange={(e) => setEstadoFilter(e.target.value === "" ? "" : e.target.value === "true")}
             >
               <option value="">Estado</option>
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
+              <option value="true">Activo</option>
+              <option value="false">Inactivo</option>
             </select>
 
             <input
@@ -203,45 +367,17 @@ export const ConfigUsers = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-
           <button className="add-user-button" onClick={() => setShowAddUserModal(true)}>
             AGREGAR USUARIO
           </button>
         </div>
 
         {/* Tabla */}
-        <table className="user-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Rol</th>
-              <th>Estado</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedUsers.map((user) => (
-              <tr key={user.idUsuario}>
-                <td>{user.nombre + ' ' + user.apellido}</td>
-                <td>{user.rol}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={user.activo}
-                    onChange={() => toggleActivo(user.idUsuario, user.rol, user.activo)}
-                  />
-                </td>
-                <td>{user.email}</td>
-                <td>{user.telefono}</td>
-                <td>
-                  <button className="details-button">Ver detalles</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <UserTable
+          users={paginatedUsers}
+          onToggleActivo={toggleActivo}
+          onEditUser={handleEdit}
+        />
 
         {/* Paginación */}
         <div className="pagination">
@@ -256,7 +392,8 @@ export const ConfigUsers = () => {
           ))}
         </div>
       </div>
-      {showAddUserModal && (
+    </div>
+    {showAddUserModal && (
         <div className="add-user-modal-overlay">
           <div className="add-user-modal">
             <h4>Agregar nuevo usuario (administrador)</h4>
@@ -276,7 +413,7 @@ export const ConfigUsers = () => {
               />
               <input
                 type="email"
-                placeholder="Correo electrónico"
+                placeholder="Email"
                 value={nuevoUsuario.email}
                 onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
               />
@@ -299,26 +436,26 @@ export const ConfigUsers = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <div className="dropdown">
-                  <button className="btn btn-light dropdown-toggle " style={{ background: "#ffffffff" }}
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false">
-                      {selectedCiudad}
-                  </button>
-                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      {ciudad.map((itemCiudad) => (
-                          <li key={itemCiudad.idCiudad}>
-                              <a className="dropdown-item" href="#"
-                                  onClick={() => {
-                                      setSelectedCiudad(itemCiudad.nombre);
-                                      setNuevoUsuario({...nuevoUsuario, ciudad: { idCiudad: itemCiudad.idCiudad }});
-                                  }}>
-                                  {itemCiudad.nombre}
-                              </a>
-                          </li>
-                      ))}
-                  </ul>
+                <button className="btn btn-light dropdown-toggle " style={{ background: "#ffffffff" }}
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  {selectedCiudad}
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  {ciudad.map((itemCiudad) => (
+                    <li key={itemCiudad.idCiudad}>
+                      <a className="dropdown-item" href="#"
+                        onClick={() => {
+                          setSelectedCiudad(itemCiudad.nombre);
+                          setNuevoUsuario({ ...nuevoUsuario, ciudad: { idCiudad: itemCiudad.idCiudad } });
+                        }}>
+                        {itemCiudad.nombre}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
@@ -333,6 +470,77 @@ export const ConfigUsers = () => {
           </div>
         </div>
       )}
-    </div>
-  );
+      {showEditUserModal && usuarioSeleccionado && (
+        <div className="add-user-modal-overlay">
+          <div className="add-user-modal">
+            <h4>Editar usuario</h4>
+
+            <div className="add-user-form">
+              <div className="mb-3">
+                <label>
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  placeholder="Nombre"
+                  style={{ color: "#6c757d" }}
+                  value={usuarioSeleccionado.nombre || ""}
+                  readOnly
+                />
+              </div>
+              <div className="mb-3">
+                <label>
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  placeholder="Apellido"
+                  style={{ color: "#6c757d" }}
+                  value={usuarioSeleccionado.apellido || ""}
+                  readOnly
+                />
+              </div>
+              <div className="mb-3">
+                <label>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Correo electrónico"
+                  value={usuarioSeleccionado.email || ""}
+                  onChange={(e) =>
+                    setUsuarioSeleccionado({ ...usuario, email: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <label>
+                  Teléfono
+                </label>
+                <input
+                  type="text"
+                  placeholder="Teléfono"
+                  value={usuarioSeleccionado.telefono || ""}
+                  onChange={(e) =>
+                    setUsuarioSeleccionado({ ...usuario, telefono: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="add-user-modal-actions">
+              <button
+                className="btn-cancelar-outline"
+                onClick={() => setShowEditUserModal(false)}
+              >
+                Cancelar
+              </button>
+              <button className="btn-confirmar" onClick={handleActualizarUsuario}>
+                Guardar cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+  </>);
 };

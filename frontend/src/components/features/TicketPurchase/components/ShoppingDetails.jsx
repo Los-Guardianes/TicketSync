@@ -3,15 +3,12 @@ import { TicketQuantitySelector } from "./TicketQuantitySelector"
 // Importamos el CSS que nos pasaste
 import "./ShoppingDetails.css"
 
-export const ShoppingDetails = ({listaDetalles, updateCantidad, getMaxCantidadTickets, disabled}) => {
+export const ShoppingDetails = ({listaDetalles, updateCantidad, getMaxCantidadTickets, selectedFuncion}) => {
     
-    // 'disabled' es en realidad 'selectedFuncion'. 
-    // Si es nulo (no se ha seleccionado función), mostramos el "empty-state".
-    if (!disabled) {
+
+    if (!selectedFuncion) {
         return (
             <div className="empty-state">
-                {/* Puedes añadir una imagen aquí si quieres */}
-                {/* <img src="/path/to/ticket-icon.svg" alt="" /> */}
                 <p>Selecciona una función para ver las entradas disponibles.</p>
             </div>
         );

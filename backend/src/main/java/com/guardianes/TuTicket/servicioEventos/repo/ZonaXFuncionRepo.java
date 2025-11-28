@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ZonaXFuncionRepo extends JpaRepository<ZonaXFuncion, ZonaXFuncionId> {
@@ -18,4 +19,6 @@ public interface ZonaXFuncionRepo extends JpaRepository<ZonaXFuncion, ZonaXFunci
                     "where f.evento.idEvento = ?1)"
     )
     List<ZonaXFuncion> getZonaXFuncionByIdEvento(@Param("idEvento") Integer idEvento);
+
+    Optional<ZonaXFuncion> findById_IdZonaAndId_IdFuncion(Integer idZona, Integer idFuncion);
 }

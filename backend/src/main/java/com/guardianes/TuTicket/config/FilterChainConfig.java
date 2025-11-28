@@ -66,12 +66,14 @@ public class FilterChainConfig {
                             "/api/tarifa/**",
                             "/api/tipoentrada/**",
                             "/api/periodo/**",
-                            "/api/zonaxfuncion/**"
+                            "/api/zonaxfuncion/**",
+                            "/api/usuario/mail/**",
+                            "/api/usuario/tel/**"
                     ).permitAll()
                 /*===============================================
                         2. Autenticados (roles específicos)
                 ================================================*/
-                    .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole(Rol.CLIENTE.name(), Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.GET, "/api/cliente/{id}").hasAnyRole(Rol.CLIENTE.name(), Rol.ORGANIZADOR.name(), Rol.ADMINISTRADOR.name())
                     .requestMatchers("/api/subirImagens3/**").hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.POST,
                             "/api/evento/**",
@@ -79,9 +81,12 @@ public class FilterChainConfig {
                             "/api/ciudad/**",
                             "/api/dpto/**",
                             "/api/funcion/**",
-                            "/api/catevento/**"
+                            "/api/catevento/**",
+                            "/api/periodo/**"
                     ).hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.PUT, "/api/evento/**")
+                    .requestMatchers(HttpMethod.PUT, "/api/evento/**", "/api/periodo/**")
+                    .hasRole(Rol.ORGANIZADOR.name())
+                    .requestMatchers(HttpMethod.DELETE, "/api/periodo/**")
                     .hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.PUT, "/api/cliente/{id}", "/api/admin/{id}", "/api/organizador/{id}", "/api/params/**")
                     .hasRole(Rol.ADMINISTRADOR.name())
@@ -99,7 +104,12 @@ public class FilterChainConfig {
                             "/api/miticket/**",
                             "/api/ticket/**"
                     ).authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/ticket/evento/**")
+                        .hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers("/api/usuario/**").authenticated()
+                    .requestMatchers(HttpMethod.POST,
+                            "/api/miticket/**"
+                    ).authenticated()
                 /*===============================================
                             4. Administrador
                 ================================================*/

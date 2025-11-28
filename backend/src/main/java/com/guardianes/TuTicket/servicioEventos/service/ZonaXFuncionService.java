@@ -1,9 +1,12 @@
 package com.guardianes.TuTicket.servicioEventos.service;
 
 import com.guardianes.TuTicket.servicioEventos.DTO.EventosPublicosDTO.ZonaXFuncionDTO;
+import com.guardianes.TuTicket.servicioEventos.model.Funcion;
+import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import com.guardianes.TuTicket.servicioEventos.model.ZonaXFuncion;
 import com.guardianes.TuTicket.servicioEventos.model.ZonaXFuncionId;
 import com.guardianes.TuTicket.servicioEventos.repo.ZonaXFuncionRepo;
+import com.guardianes.TuTicket.servicioExepciones.RecursoNoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +39,25 @@ public class ZonaXFuncionService {
     public List<ZonaXFuncionDTO> getZonaXFuncionByEvento(Integer id) {
         List<ZonaXFuncion> zonaxfuncion = repo.getZonaXFuncionByIdEvento(id);
         return zonaxfuncion.stream().map(ZonaXFuncionDTO::new).toList();
+    }
+
+    public Boolean reservarEntradaEnZonaFuncion(Zona zona, Funcion funcion, Integer cantidadRequest){
+        ZonaXFuncion zxf = verificarDisponibilidadZonaFuncion(zona,funcion,cantidadRequest);
+        if(zxf==null)return false;
+        zxf.setComprasActuales(zxf.getComprasActuales()+cantidadRequest);
+        repo.save(zxf);
+        return true;
+    }
+
+    private ZonaXFuncion verificarDisponibilidadZonaFuncion(Zona zona, Funcion funcion, Integer cantidadRequest){
+        ZonaXFuncion zonaXFuncion = repo
+                .findById_IdZonaAndId_IdFuncion(zona.getIdZona(), funcion.getIdFuncion())
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró que una zona: " + zona.getNombre() +
+                        " tenga entradas para la función " + funcion.getFechaInicio()
+                ));
+        if(cantidadRequest + zonaXFuncion.getComprasActuales() > zona.getAforo())return null;
+        System.out.println(zona.getAforo());
+        return zonaXFuncion;
     }
 }

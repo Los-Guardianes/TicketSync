@@ -1,6 +1,9 @@
-//src/services/API.js
-//const BASE_URL = 'http://localhost:8080';
-const BASE_URL = 'https://api.tuticket.space';
+// src/services/API.js
+
+// Descomenta la que necesites usar:
+export const BASE_URL = 'https://api.tuticket.space';
+//export const BASE_URL = 'https://api.tuticket.space';
+
 export const getAuthHeader = () => {
   try {
     const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -39,7 +42,28 @@ export async function apiDownload(path) {
   return res.blob();
 }
 
-// --- INICIO DE LA NUEVA FUNCIÓN ---
+export async function apiDownloadPost(path, body) {
+  const headers = {
+    ...getAuthHeader(),
+    "Content-Type": "application/json",
+  };
+
+  console.log("Headers enviados:", headers);
+  console.log("Body enviado:", body);
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => res.statusText);
+    throw new Error(`${res.status} ${txt}`);
+  }
+
+  return res.blob();
+}
 
 /**
  * Función genérica para peticiones que envían FormData (ej. subida de archivos).

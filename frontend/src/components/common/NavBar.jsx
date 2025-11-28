@@ -1,60 +1,72 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+"use client"
+import { NavLink } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
+import { useNavigate } from "react-router-dom"
+import { VerificationModal } from "./VerificationModal"
+import "./NavBar.css"
+import { useState } from "react"
 
 export const NavBar = ({
-  search, setSearch,
-  ubicacion, setUbicacion,
-  fechaInicio, setFechaInicio,
-  fechaFin, setFechaFin,
-  categoria, setCategoria,
+  search,
+  setSearch,
+  ubicacion,
+  setUbicacion,
+  fechaInicio,
+  setFechaInicio,
+  fechaFin,
+  setFechaFin,
+  categoria,
+  setCategoria,
   ubicacionesDisponibles,
-  categoriasDisponibles
+  categoriasDisponibles,
 }) => {
-  const { user, logout } = useAuth();
-  const esOrganizador = !!user && user.rol === 'ORGANIZADOR';
+  const { user, logout } = useAuth()
+  const esOrganizador = !!user && user.rol === "ORGANIZADOR"
+  const [showVerificationModal, setShowVerificationModal] = useState(false)
+  const navigate = useNavigate()
 
-  const handleSearchSubmit = (e) => e.preventDefault(); // evita submit con Enter
+  const handleSearchSubmit = (e) => e.preventDefault()
 
   return (
-    <nav className='navbar navbar-expand navbar-light bg-light border-bottom border-success px-3'>
+    <nav className="navbar navbar-expand navbar-light bg-light border-bottom border-success px-3">
       {/* Logo */}
-      <NavLink to="/home" className='navbar-brand'>
-        <img
-          src="/tuticket_logo_name.png"
-          alt="tuticketLogo"
-          style={{ width: "7rem" }}
-        />
+      <NavLink to="/home" className="navbar-brand">
+        <img src="/tuticket_logo_name.png" alt="tuticketLogo" style={{ width: "7rem" }} />
       </NavLink>
 
       {/* Barra de búsqueda */}
-      <form className="d-flex mx-auto" style={{ width: "40%" }} onSubmit={handleSearchSubmit} noValidate>
+      <form
+        className="d-flex mx-auto navbar-search-form"
+        style={{ width: "40%" }}
+        onSubmit={handleSearchSubmit}
+        noValidate
+      >
         <input
           className="form-control me-2"
           type="search"
           placeholder="Encuentra eventos..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.preventDefault()
+          }}
         />
       </form>
 
       {/* Filtros */}
-      <ul className="navbar-nav ms-auto d-flex align-items-center">
+      <ul className={`navbar-nav ms-auto d-flex align-items-center`}>
         {/* Ubicación */}
         <li className="nav-item dropdown">
-          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+          <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Ubicación
-          </NavLink>
+          </a>
           <ul className="dropdown-menu p-3">
-            <select
-              className="form-select"
-              value={ubicacion}
-              onChange={(e) => setUbicacion(e.target.value)}
-            >
+            <select className="form-select" value={ubicacion} onChange={(e) => setUbicacion(e.target.value)}>
               <option value="Todas">Todas</option>
-              {ubicacionesDisponibles?.map(ubi => (
-                <option key={ubi.idDpto} value={ubi.nombre}>{ubi.nombre}</option>
+              {ubicacionesDisponibles?.map((ubi) => (
+                <option key={ubi.idDpto} value={ubi.nombre}>
+                  {ubi.nombre}
+                </option>
               ))}
             </select>
           </ul>
@@ -62,17 +74,13 @@ export const NavBar = ({
 
         {/* Categoría */}
         <li className="nav-item dropdown ms-2">
-          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+          <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Categoría
-          </NavLink>
+          </a>
           <ul className="dropdown-menu p-3">
-            <select
-              className="form-select"
-              value={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
-            >
+            <select className="form-select" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
               <option value="Todas">Todas</option>
-              {categoriasDisponibles?.map(cat => (
+              {categoriasDisponibles?.map((cat) => (
                 <option key={String(cat)} value={String(cat)}>
                   {String(cat)}
                 </option>
@@ -83,9 +91,9 @@ export const NavBar = ({
 
         {/* Fecha */}
         <li className="nav-item dropdown ms-2">
-          <NavLink className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown">
+          <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Fecha
-          </NavLink>
+          </a>
           <ul className="dropdown-menu p-3" style={{ minWidth: 260 }}>
             <label className="form-label small">Desde</label>
             <input
@@ -106,44 +114,62 @@ export const NavBar = ({
 
         {/* Botón condicional para organizador */}
         {esOrganizador && (
-          <li className='nav-item ms-2'>
-            <NavLink className='nav-link btn btn-warning' to="/create-event">
+          <li className="nav-item ms-2">
+            {console.log("El usuario es organizador: ", user)}
+            <button
+              className="btn btn-primary"
+              onClick={(e) => {
+                if (user && !user.verificado) {
+                  e.preventDefault();
+                  setShowVerificationModal(true);
+                } else {
+                  navigate("/create-event");
+                }
+              }}
+            >
               Crear Evento
-            </NavLink>
+            </button>
           </li>
         )}
 
         {/* Botones de usuario */}
         {!user ? (
           <>
-            <li className='nav-item ms-2'>
-              <NavLink className='nav-link btn btn-light' to="/register">Registrarse</NavLink>
+            <li className="nav-item ms-2">
+              <NavLink className="btn btn-secondary" to="/register">
+                Registrarse
+              </NavLink>
             </li>
-            <li className='nav-item ms-2'>
-              <NavLink className='nav-link btn btn-success' to="/login">Login</NavLink>
+            <li className="nav-item ms-2">
+              <NavLink className="btn btn-primary" to="/login">
+                Login
+              </NavLink>
             </li>
           </>
         ) : (
           <>
-            <li className='nav-item'>
-              <NavLink
-                className="nav-link"
-                to={esOrganizador ? "/organizer/mis-eventos" : "/MisTickets"}
-              >
+            <li className="nav-item">
+              <NavLink className="nav-link" to={esOrganizador ? "/organizer/mis-eventos" : "/MisTickets"}>
                 {esOrganizador ? "Mis Eventos" : "Mis Tickets"}
               </NavLink>
             </li>
-            <li className='nav-item'>
-              <span className='nav-link'>👤 ¡Hola, {user.nombre}!</span>
+            <li className="nav-item">
+              <NavLink to="/perfil" className={({ isActive }) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
+                <span className="nav-link">¡Hola, {user.nombre}!</span>
+              </NavLink>
             </li>
-            <li className='nav-item ms-2'>
-              <button className='nav-link btn btn-danger text-black' onClick={logout}>
+            <li className="nav-item ms-2">
+              <button className="btn btn-secondary" onClick={logout}>
                 Cerrar Sesión
               </button>
             </li>
           </>
         )}
       </ul>
+      <VerificationModal
+        show={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+      />
     </nav>
-  );
-};
+  )
+}
