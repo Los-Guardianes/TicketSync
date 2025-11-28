@@ -247,9 +247,9 @@ export const ConfigEvento = () => {
   const direccion = evento.direccion ?? 'Dirección no registrada';
 
   return (
-    <div className="d-flex">
+    <div className="flex items-center justify-center h-screen ">
 
-      <main className="flex-grow-1 p-4">
+      <main className="config-container p-4">
         <div className="config-card">
           <h3 className="config-card-title">Configuración de evento</h3>
           <div className="config-layout">

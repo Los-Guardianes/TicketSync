@@ -1,3 +1,8 @@
+.config-container {
+    display: flex;
+    justify-content: center;
+}
+
 /* Tarjeta principal */
 .config-card {
     background: #ffffff;

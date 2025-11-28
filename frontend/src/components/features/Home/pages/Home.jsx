@@ -132,10 +132,9 @@ export const Home = () => {
         )}
       </div>
 
-    <div className="events-container">     
-        <div className="section-header">
-          <h2 className="section-title">Eventos Recomendados</h2>          
-          <div className="title-underline"></div>
+      <div className="events-container">     
+        <div className="mis-tickets-header__content">
+          <h1 className="mis-tickets-header__title">Eventos Recomendados</h1>
         </div>
       </div>
 

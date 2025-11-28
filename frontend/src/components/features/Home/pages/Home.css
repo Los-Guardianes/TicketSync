@@ -5,6 +5,9 @@
   width: 100%;
   padding: 40px 20px;
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .events-grid {
   max-width: 1400px;
@@ -28,74 +31,226 @@
 @media (max-width: 480px) { .events-grid { grid-template-columns: 1fr; } }
 
 
-/* --- ESTILOS DEL CARRUSEL ACTUALIZADOS --- */
-
 .hero-carousel-container {
   width: 100%;
-  height: 450px; 
+  height: 450px;
   position: relative;
-  background-color: #ffffff;
-  padding: 30px 0; /* Un poco más de padding vertical ayuda al efecto de escala */
-  overflow: hidden; /* Evita scrollbars horizontales indeseados */
+  background: linear-gradient(135deg, var(--secondary-color) 0%, #1a1a1a 50%, var(--secondary-color) 100%);
+  padding: 30px 0;
+  overflow: visible;
+  
+  /* EFECTO DE OSCURIDAD EN LATERALES */
+  position: relative;
+}
+
+.hero-carousel-container::before,
+.hero-carousel-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.hero-carousel-container::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+.hero-carousel-container::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(0,0,0,0.6) 0%, transparent 100%);
 }
 
 .heroSwiper {
   width: 100%;
   height: 100%;
-  padding-bottom: 40px;
+  padding-bottom: 50px;
 }
 
-/* --- MAGIA DEL DIFUMINADO (BLUR) --- */
-
-/* 1. Estilo base para TODAS las diapositivas (estado inactivo) */
+/* === BASE STYLES FOR ALL SLIDES === */
 .swiper-slide .hero-slide-image {
   width: 100%;
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
 
-  /* Transición suave para que el cambio de borroso a nítido sea elegante */
-  transition: all 0.5s ease;
+  /* Improved transitions for smoother animations */
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ESTADO POR DEFECTO (INACTIVO): */
-  filter: blur(1px);    /* Difuminado */
-  opacity: 0.85;         /* Un poco transparente */
-  transform: scale(0.9); /* Un poco más pequeño para dar profundidad */
+  /* DEFAULT STATE (INACTIVE): */
+  filter: blur(2px);
+  opacity: 0.75;
+  transform: scale(0.88);
+  
+  /* EFECTO DE LUZ MÁS FUERTE DETRÁS */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* 2. Estilo específico para la diapositiva ACTIVA (CENTRAL) */
-/* Swiper añade automáticamente la clase .swiper-slide-active a la del centro */
+/* Overlay gradient mejorado para efecto más dramático */
+.swiper-slide .hero-slide-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%);
+  opacity: 0.6;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+/* === ACTIVE SLIDE (CENTER) === */
 .swiper-slide-active .hero-slide-image {
-  filter: blur(0);      /* Sin difuminado */
-  opacity: 1;           /* Totalmente visible */
-  transform: scale(1);  /* Tamaño normal (más grande que las otras) */
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2); /* Sombra más fuerte para destacar */
-  z-index: 10;          /* Asegura que esté por encima visualmente */
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1);
+  
+  /* EFECTO DE LUZ MÁS FUERTE - AUMENTADO */
+  box-shadow: 
+    0 25px 80px rgba(46, 160, 98, 0.5),    /* ↑ Más difusión y opacidad */
+    0 20px 50px rgba(0, 0, 0, 0.6),        /* ↑ Sombra más intensa */
+    0 0 120px rgba(46, 160, 98, 0.25);     /* ↑ Glow más grande y visible */
 }
 
+.swiper-slide-active .hero-slide-image::before {
+  opacity: 0.15; /* Más transparente cuando está activa */
+}
+
+/* === PAGINATION DOTS CENTRADOS === */
+.swiper-pagination {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  text-align: center;
+  z-index: 20;
+}
+
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.swiper-pagination-bullet:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.2);
+}
+
+/* Active pagination dot with gradient */
+.swiper-pagination-bullet-active {
+  background: linear-gradient(90deg, var(--primary-color) 0%, #1e7a4f 100%);
+  width: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 12px rgba(46, 160, 98, 0.6);
+}
+
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 1024px) {
   .hero-carousel-container {
     height: 400px;
   }
+  
+  .hero-carousel-container::before,
+  .hero-carousel-container::after {
+    width: 100px; /* Menos oscuridad en tablets */
+  }
+
+  .swiper-slide .hero-slide-image {
+    border-radius: 14px;
+  }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .hero-carousel-container {
     height: 350px;
-    padding: 10px 0;
+    padding: 20px 0;
+    border-radius: 16px;
   }
   
-  /* En móvil el efecto blur puede ser molesto si la pantalla es muy chica,
-     puedes reducirlo o quitarlo si prefieres. Aquí lo hago más sutil: */
-  .swiper-slide .hero-slide-image {
-    filter: blur(3px); 
-    transform: scale(0.95);
+  .hero-carousel-container::before,
+  .hero-carousel-container::after {
+    width: 60px; /* Aún menos oscuridad en móviles */
   }
+
+  .heroSwiper {
+    padding-bottom: 45px;
+  }
+
+  .swiper-slide .hero-slide-image {
+    filter: blur(1px);
+    transform: scale(0.92);
+    border-radius: 12px;
+  }
+
   .swiper-slide-active .hero-slide-image {
     filter: blur(0);
     transform: scale(1);
   }
+
+  .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-carousel-container {
+    height: 280px;
+  }
+  
+  .hero-carousel-container::before,
+  .hero-carousel-container::after {
+    width: 40px; /* Mínima oscuridad en móviles pequeños */
+  }
+
+  .swiper-slide .hero-slide-image {
+    filter: blur(0.5px);
+    transform: scale(0.95);
+  }
+
+  .swiper-pagination {
+    bottom: 12px;
+  }
+
+  .swiper-pagination-bullet {
+    width: 5px;
+    height: 5px;
+    margin: 0 3px;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 16px;
+  }
+}
+
+/* === ANIMATIONS === */
+@keyframes slideEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.swiper-slide-active {
+  animation: slideEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
