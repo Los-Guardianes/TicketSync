@@ -1,7 +1,10 @@
 "use client"
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
+import { useNavigate } from "react-router-dom"
+import { VerificationModal } from "./VerificationModal"
 import "./NavBar.css"
+import { useState } from "react"
 
 export const NavBar = ({
   search,
@@ -19,6 +22,8 @@ export const NavBar = ({
 }) => {
   const { user, logout } = useAuth()
   const esOrganizador = !!user && user.rol === "ORGANIZADOR"
+  const [showVerificationModal, setShowVerificationModal] = useState(false)
+  const navigate = useNavigate()
 
   const handleSearchSubmit = (e) => e.preventDefault()
 
@@ -110,12 +115,23 @@ export const NavBar = ({
         {/* Botón condicional para organizador */}
         {esOrganizador && (
           <li className="nav-item ms-2">
-            <NavLink className="btn btn-primary" to="/create-event">
+            {console.log("El usuario es organizador: ", user)}
+            <button
+              className="btn btn-primary"
+              onClick={(e) => {
+                if (user && !user.verificado) {
+                  e.preventDefault();
+                  setShowVerificationModal(true);
+                } else {
+                  navigate("/create-event");
+                }
+              }}
+            >
               Crear Evento
-            </NavLink>
+            </button>
           </li>
         )}
-    
+
         {/* Botones de usuario */}
         {!user ? (
           <>
@@ -138,7 +154,7 @@ export const NavBar = ({
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/perfil" className={({isActive}) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
+              <NavLink to="/perfil" className={({ isActive }) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
                 <span className="nav-link">¡Hola, {user.nombre}!</span>
               </NavLink>
             </li>
@@ -150,6 +166,10 @@ export const NavBar = ({
           </>
         )}
       </ul>
+      <VerificationModal
+        show={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+      />
     </nav>
   )
 }

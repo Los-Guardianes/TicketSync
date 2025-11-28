@@ -5,6 +5,11 @@ import { jwtDecode } from 'jwt-decode';
 
 export const loginService = () => {
 
+    // SOLO CAMBIAR ESTO PARA DESPLEGAR
+    const baseUrl = 'http://localhost:8080';
+    //const baseUrl = 'https://api.tuticket.space';
+
+
     const { login } = useAuth(); //Obtenemos la función login del contexto
     // --- ESTADOS DEL FORMULARIO ---
     const [formData, setFormData] = useState({
@@ -63,8 +68,8 @@ export const loginService = () => {
         setIsLoading(true);
         clearMessage();
 
-        try {//http://localhost:8080/api/login https://api.tuticket.space/api/login
-            const response = await fetch('http://localhost:8080/api/login', {
+        try {
+            const response = await fetch(`${baseUrl}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -92,7 +97,8 @@ export const loginService = () => {
                 apellido: result.apellido,
                 telefono: result.telefono,        // <-- NUEVO
                 ciudad: result.ciudad,            // <-- NUEVO
-                departamento: result.departamento // <-- NUEVO
+                departamento: result.departamento, // <-- NUEVO
+                verificado: result.verificado     // <-- NUEVO
             };
 
             login(user, result.token, decoded.exp);
@@ -116,7 +122,7 @@ export const loginService = () => {
         clearMessage();
 
         try {
-            const response = await fetch('https://api.tuticket.space/api/auth/google', {
+            const response = await fetch(`${baseUrl}/api/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idToken }),
@@ -140,7 +146,8 @@ export const loginService = () => {
                 apellido: result.apellido,
                 telefono: result.telefono,        // <-- NUEVO
                 ciudad: result.ciudad,            // <-- NUEVO
-                departamento: result.departamento // <-- NUEVO
+                departamento: result.departamento, // <-- NUEVO
+                verificado: result.verificado     // <-- NUEVO
             };
 
             login(user, result.token, decoded.exp);
