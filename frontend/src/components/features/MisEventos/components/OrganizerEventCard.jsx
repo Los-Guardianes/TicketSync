@@ -14,18 +14,19 @@ export const OrganizerEventCard = ({
 }) => {
   const navigate = useNavigate()
 
-  const formatDate = (dateStr) => {
-    try {
-      const date = new Date(dateStr)
-      return date.toLocaleDateString("es-PE", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    } catch {
-      return dateStr
-    }
+const formatDate = (dateStr) => {
+  try {
+    const date = new Date(dateStr + "T00:00:00");
+    return date.toLocaleDateString("es-PE", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  } catch {
+    return dateStr;
   }
+};
+
 
   const handleClick = () => {
     if (actionLabel.toLowerCase().includes("config")) {

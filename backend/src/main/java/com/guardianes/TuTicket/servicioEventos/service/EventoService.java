@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,25 +97,29 @@ public class EventoService {
 
     public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer idUsuario) {
         try{
-            LocalDate hoy = LocalDate.now();
+            LocalDateTime ahoraMismo = LocalDateTime.now(ZoneId.of("America/Lima"));
             List<Evento> eventos = repo.findByOrganizador_IdUsuario(idUsuario);
             return eventos.stream().map(ev -> {
-
                 List<Funcion> funcionesActivas =
                         funcionService.getFuncionByEvento(ev.getIdEvento())
                                 .stream()
                                 .filter(f -> Boolean.TRUE.equals(f.getActivo()))
                                 .toList();
-                boolean anyFutureFunc = funcionesActivas
-                        .stream()
-                        .anyMatch(f -> !f.getFechaInicio().isBefore(hoy));
-                LocalDate fechaRef = funcionesActivas.stream()
-                        .map(Funcion::getFechaInicio)
-                        .filter(d -> anyFutureFunc != d.isBefore(hoy))
-                        .min(anyFutureFunc ? Comparator.naturalOrder() : Comparator.reverseOrder())
-                        .orElse(null);
-                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesActivas.stream().map(FuncionOrganizadorDTO::new).toList();
-                return new EventOrganizadorDTO(ev,fechaRef,!anyFutureFunc,funcionesFiltradas);
+
+                List<Funcion> funcionesOrdenadas = funcionesActivas.stream()
+                        .sorted((f1, f2) -> {
+                            LocalDateTime dt1 = LocalDateTime.of(f1.getFechaInicio(), f1.getHoraInicio());
+                            LocalDateTime dt2 = LocalDateTime.of(f2.getFechaInicio(), f2.getHoraInicio());
+                            return dt1.compareTo(dt2);
+                        })
+                        .toList();
+
+                LocalDateTime fechaRef = LocalDateTime.of(funcionesOrdenadas.getFirst().getFechaInicio(), funcionesOrdenadas.getFirst().getHoraInicio());
+                LocalDateTime fechaReferenciaFin = LocalDateTime.of(funcionesOrdenadas.getLast().getFechaInicio(), funcionesOrdenadas.getLast().getHoraInicio());
+                boolean esPasado = ahoraMismo.isAfter(fechaReferenciaFin);
+
+                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesOrdenadas.stream().map(FuncionOrganizadorDTO::new).toList();
+                return new EventOrganizadorDTO(ev,fechaRef.toLocalDate(), fechaReferenciaFin.toLocalDate(),esPasado,funcionesFiltradas);
             }).collect(Collectors.toList());
         }catch (Exception e){
             throw new GenericException("Error al listar eventos del organizador" + e.getMessage());

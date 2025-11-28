@@ -46,10 +46,10 @@ export const Home = () => {
       const images = eventos
         .map((evento) => evento.urlImagen)
         .filter((url) => url && url.trim() !== "") // Filtra nulos y strings vacíos
-      console.log("Imágenes para el carrusel:", images)
       setHeroImages(images)
     }
   }, [eventos])
+  
   // Valida fecha
   const inRange = (dateStr) => {
     if (!dateStr) return false

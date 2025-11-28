@@ -13,7 +13,6 @@ import { DropdownList } from '../../../common/DropDownList/DropDownList'
 import { useAuth } from "../../../../context/AuthContext";
 
 export const TicketPurchase = () => {
-
     const {id} = useParams();
     const { user } = useAuth(); // Obtener el usuario del contexto
     const { showNotification } = useNotification()
@@ -156,7 +155,7 @@ export const TicketPurchase = () => {
                             >
                             </PurchaseTicket>
                             {
-                                user.rol == 'CLIENTE' && (
+                                (user == null || user.rol == 'CLIENTE') && (
                                 <button 
                                     className='ticket-purchase-button
                                     ticket-purchase-button-primary
