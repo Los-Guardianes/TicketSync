@@ -17,24 +17,7 @@ export const AdminHome = () => {
   const handleNavCardClick = async (title) => {
     switch (title) {
       case "Reportes":
-        console.log("Generando reporte...")
-        setIsLoadingReport(true)
-        try {
-          const { blob, filename } = await getReporte()
-          const url = window.URL.createObjectURL(blob)
-          const link = document.createElement("a")
-          link.href = url
-          link.setAttribute("download", filename)
-          document.body.appendChild(link)
-          link.click()
-          link.parentNode.removeChild(link)
-          window.URL.revokeObjectURL(url)
-        } catch (error) {
-          console.error("Error al descargar el archivo:", error)
-          alert("Error al descargar el reporte. " + error.message)
-        } finally {
-          setIsLoadingReport(false)
-        }
+        navigate("/configreportes");
         break
       case "Gestionar Roles":
         navigate("/configusers")
