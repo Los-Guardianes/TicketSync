@@ -9,7 +9,9 @@ export const  DropdownList = ({firstElement, list, id, value, onChangeOption, ge
             value={value ? value : ""}           
             onChange={(e) => onChangeOption(e.target.value)}     
             >
-            <option value="">{firstElement}</option>
+            {
+                firstElement &&  <option value="">{firstElement}</option>
+            }    
             {list.map((opt) => (
                 <option key={opt[id]} value={opt[id]}>
                     {getNombre(opt)}

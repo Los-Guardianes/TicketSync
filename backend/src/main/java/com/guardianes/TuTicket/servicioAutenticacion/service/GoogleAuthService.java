@@ -80,7 +80,8 @@ public class GoogleAuthService {
                 usuario.getApellido(),
                 usuario.getTelefono(),
                 ciudad,
-                departamento
+                departamento,
+                usuario.getVerificado()
         );
     }
 

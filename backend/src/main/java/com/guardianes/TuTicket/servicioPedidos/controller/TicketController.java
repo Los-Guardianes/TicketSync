@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.guardianes.TuTicket.servicioPedidos.DTO.TicketDTO;
 import java.util.List;
-
+    
 @RestController
 @RequestMapping("/api")
 public class TicketController {
@@ -71,11 +71,11 @@ public class TicketController {
         return ResponseEntity.ok(tickets);
     }
 
-    @GetMapping("/miticket/usuario/{idUsuario}/evento/{idEvento}")
+    @GetMapping("/miticket/usuario/{idUsuario}/funcion/{idFuncion}")
     public ResponseEntity<List<TicketDTO>> getTicketsByUsuarioAndEvento(
             @PathVariable Integer idUsuario,
-            @PathVariable Integer idEvento) {
-        return ResponseEntity.ok(service.getTicketsDTOByUsuarioAndEvento(idUsuario, idEvento));
+            @PathVariable Integer idFuncion) {
+        return ResponseEntity.ok(service.getTicketsDTOByUsuarioAndFuncion(idUsuario, idFuncion));
     }
     //Nuevo
     @GetMapping("/ticket/evento/{idEvento}")

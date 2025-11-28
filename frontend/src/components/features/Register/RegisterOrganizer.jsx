@@ -15,7 +15,7 @@ export const RegisterOrganizer = () => {
   } = useRegister("ORGANIZADOR");
 
   return (
-    <div className="row vh-100 w-100 mx-0" style={{ overflow: "hidden" }}>
+    <div className="row min-vh-100 w-100 mx-0">
       <div className="col-6 px-5 py-4 bg-light shadow rounded">
         <div className="w-100 d-flex justify-content-center">
           <img
@@ -168,7 +168,7 @@ export const RegisterOrganizer = () => {
             </div>
           </div>
 
-          <div className="container w-100 d-flex justify-content-between">
+          <div className="container w-100 d-flex justify-content-between gap-5">
             <NavLink className="btn btn-dark" to={"/"}>Regresar</NavLink>
             <button className="btn btn-success" type="submit" disabled={isLoading}>
               {isLoading ? "Registrando..." : "Registrar"}
@@ -182,7 +182,7 @@ export const RegisterOrganizer = () => {
           className="h-100 w-100"
           src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/wallhaven-4gjdrd.jpg"
           alt="tuticketWallpaper"
-          style={{ maxHeight: "100vh", objectFit: "cover" }}
+          style={{ height: "100%", minHeight: "100vh", objectFit: "cover" }}
         />
       </div>
     </div>

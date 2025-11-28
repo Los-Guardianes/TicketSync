@@ -16,7 +16,7 @@ body {
   --primary-color: #2EA062;
   --primary-color-hover: #1e7a4f;
   --secondary-color: #333333;
-  --secondary-color-hover: #5a6268;
+  --secondary-color-hover: #555555;
   --border-radius: 14px;
   --shadow: 0 4px 20px rgba(0, 0, 0, 1);
   --margin-top-header: 100px;
@@ -37,10 +37,16 @@ body {
     border: none;
     border-radius: 5px;
     padding: 10px;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    font-weight: 600;
 }
 
 .btn-primary:hover {
@@ -60,9 +66,15 @@ body {
     border-radius: 5px;
     padding: 10px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    font-weight: 600;
 }
 
 .btn-secondary:hover {

@@ -1,0 +1,123 @@
+.zonas-section {
+  margin-bottom: 2rem;
+}
+
+.zonas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.zonas-header h3 {
+  margin: 0;
+  color: #28a745;
+}
+
+.btn-add-zona {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-add-zona:hover {
+  background-color: #218838;
+}
+
+.zonas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  max-height: 150px; /* Altura máxima fija */
+  overflow-y: auto; /* Scroll vertical */
+  gap: 0.75rem;
+  padding-right: 0.5rem;
+}
+
+.zonas-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.zonas-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.zonas-grid::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.zonas-grid::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.zona-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.zona-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.zona-number {
+  font-weight: 600;
+  color: #495057;
+}
+
+.btn-icon-delete {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.btn-icon-delete:hover {
+  background-color: #f8d7da;
+}
+
+.zona-card-body {
+  padding: 1rem;
+}
+
+.zona-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.zona-label {
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.zona-value {
+  color: #495057;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+}

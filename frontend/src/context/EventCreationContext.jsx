@@ -19,7 +19,8 @@ const initialState = {
     // Info de CreateTicket.jsx (que veremos después)
     temporadas: [],
     tiposDeEntrada: [],
-    zonas: []
+    zonas: [],
+    tarifas: []
 };
 
 // 2. Creamos el contexto

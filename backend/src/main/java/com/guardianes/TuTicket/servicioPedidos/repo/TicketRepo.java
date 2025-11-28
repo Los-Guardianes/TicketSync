@@ -18,6 +18,11 @@ public interface TicketRepo extends JpaRepository<Ticket, Integer> {
             "WHERE u.idUsuario = :idUsuario")
     List<Ticket> findTicketsByUsuarioId(@Param("idUsuario") Integer idUsuario);
 
+    @Query(
+    "select t from Ticket t, DetalleCompra dc, OrdenCompra oc " +
+            "where t.detalleCompra.idDetalleCompra = dc.idDetalleCompra and dc.ordenCompra.idOrdenCompra = oc.idOrdenCompra " +
+            "    and oc.usuario.idUsuario=?1 and oc.funcion.idFuncion=?2 ")
+    public List<Ticket> findTicketsByUsuarioIdAndFuncion(Integer idUsuario, Integer idFuncion);
 
     @Query("""
         SELECT t

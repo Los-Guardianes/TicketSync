@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class JWTService {
     private String secret;
     @Value("${jwt.expiration}")
     private long expiration;
+
 
 
     public String generateToken(String email, String rol) {
