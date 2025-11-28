@@ -66,7 +66,9 @@ public class FilterChainConfig {
                             "/api/tarifa/**",
                             "/api/tipoentrada/**",
                             "/api/periodo/**",
-                            "/api/zonaxfuncion/**"
+                            "/api/zonaxfuncion/**",
+                            "/api/usuario/mail/**",
+                            "/api/usuario/tel/**"
                     ).permitAll()
                 /*===============================================
                         2. Autenticados (roles específicos)

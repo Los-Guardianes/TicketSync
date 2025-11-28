@@ -3,8 +3,9 @@ import { getUsers, getUser, updateUser, postAdmin } from '../service/UserConfigS
 import { getCiudades } from '../../../../globalServices/UbicacionService';
 import { useNavigate } from 'react-router-dom';
 import { UserTable } from '../components/UserTable';
-import "./ConfigUsers.css";
 import { OrgTable } from "../components/OrgTable";
+import { getByEmail, getByTelefono } from "../../../../globalServices/UsuarioService";
+import "./ConfigUsers.css";
 
 export const ConfigUsers = () => {
   const [usersData, setUsersData] = useState([])
@@ -126,14 +127,31 @@ export const ConfigUsers = () => {
     return null;
   };
 
-  const validar2 = () => {
+  const validar2 = async () => {
     const emailOk = /^\S+@\S+\.\S+$/.test((usuarioSeleccionado.email || '').trim());
     const celOk = /^\d{9}$/.test((usuarioSeleccionado.telefono || '').trim());
 
     if (!emailOk) return 'Ingresa un correo válido.';
     if (!celOk) return 'El celular debe tener 9 dígitos.';
-    //buscar que el correo no esté en uso por otra persona...:
-    //to do
+    try {
+      const existingUser = await getByEmail((usuarioSeleccionado.email || '').trim().toLowerCase());
+      if (existingUser && existingUser.idUsuario !== usuarioSeleccionado.idUsuario) {
+        console.log(existingUser.idUsuario + " - " + usuarioSeleccionado.idUsuario);
+        return 'El correo ya está en uso por otro usuario.';
+      }
+    }
+    catch (error) {
+      console.log("Error al verificar email existente: ", error);
+    }
+    try {
+      const existingPhoneUser = await getByTelefono((usuarioSeleccionado.telefono || '').trim());
+      if (existingPhoneUser && existingPhoneUser.idUsuario !== usuarioSeleccionado.idUsuario) {
+        return 'El teléfono ya está en uso por otro usuario.';
+      }
+    }
+    catch (error) {
+      console.log("Error al verificar teléfono existente: ", error);
+    }
     return null;
   };
 
@@ -224,7 +242,7 @@ export const ConfigUsers = () => {
 
   const handleActualizarUsuario = async () => {
     try {
-      const error = validar2();
+      const error = await validar2();
       if (error) {
         alert(error);
         return;
