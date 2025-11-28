@@ -36,6 +36,7 @@ import { MiPerfil } from "../components/features/Perfil/pages/MiPerfil";
 import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ConfigReportes } from "../components/features/AdminHome/pages/ConfigReportes";
+import { ApproveOrg } from "../components/features/AdminHome/pages/ApproveOrg";
 
 
 export const ClienteRoutes = () => {
@@ -80,6 +81,7 @@ export const ClienteRoutes = () => {
         <Route path="configusers" element={<ConfigUsers />} />
         <Route path="configparams" element={<ConfigParams />} />
         <Route path="configreportes" element={<ConfigReportes/>} />
+        <Route path="approve" element={<ApproveOrg />} />
         <Route
           path="organizer/evento/:idEvento/descuentos/nuevo"
           element={<CreateDiscount />}
