@@ -10,13 +10,17 @@ import { PurchaseTicket } from '../components/PurchaseTicket'
 import { ApplyDiscount } from '../components/ApplyDiscount'
 import { useNotification } from '../../../../context/NotificationContext'
 import { DropdownList } from '../../../common/DropDownList/DropDownList' 
+import { useAuth } from "../../../../context/AuthContext";
+
 export const TicketPurchase = () => {
 
     const {id} = useParams();
-    
+    const { user } = useAuth(); // Obtener el usuario del contexto
     const { showNotification } = useNotification()
     const navigate = useNavigate();
     const location = useLocation(); // 1. OBTÉN LA UBICACIÓN
+
+    console.log("User pe", user); // 2. VERIFICA EL ESTADO
 
     const {
         zonas,
@@ -150,15 +154,19 @@ export const TicketPurchase = () => {
                                 descuentoCodigo={descuentoCodigo}
                                 total={total}
                             >
-                            </PurchaseTicket>                                  
+                            </PurchaseTicket>
+                            {
+                                user.rol == 'CLIENTE' && (
                                 <button 
                                     className='ticket-purchase-button
                                     ticket-purchase-button-primary
                                     ticket-purchase-button-full'
                                     onClick={handleContinueToPay}
                                 >
-                                Continuar al pago
-                            </button>
+                                    Continuar al pago
+                                </button>
+                                )
+                            }                              
                         </section>
                     </aside>
                 </div>

@@ -60,6 +60,24 @@ public class UsuarioController {
         return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
+    @GetMapping("/usuario/mail/{email}")
+    public ResponseEntity<?> getUsuarioByEmail(@PathVariable String email) {
+        Usuario usuario = service.getUsuarioByEmail(email);
+        if (usuario == null) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(usuario, HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/tel/{tel}")
+    public ResponseEntity<?> getUsuarioByTelefono(@PathVariable String tel) {
+        Usuario usuario = service.getUsuarioByTelefono(tel);
+        if (usuario == null) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(usuario, HttpStatus.OK);
+    }
+
     @PutMapping("/usuario/{id}")
     public ResponseEntity<?> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
         Usuario usuario1 = null;

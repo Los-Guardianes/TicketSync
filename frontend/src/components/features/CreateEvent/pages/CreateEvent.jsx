@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../../../context/AuthContext';
 import "./CreateEvent.css";
 import { getCateventos } from '../../../../globalServices/EventoService';
 import { useEventCreation } from "../../../../context/EventCreationContext";
-import { useAuth } from "../../../../context/AuthContext";
 import { HeaderEvent } from "./Componentes/HeaderEvent";
 import { ImageUploader } from "./Componentes/ImageUploader";
 import { FunctionsSection } from "./Componentes/Funciones";

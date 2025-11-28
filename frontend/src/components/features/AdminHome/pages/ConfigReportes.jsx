@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { NavBarAdmin } from "../../../common/NavBarAdmin"
 import { NavCard } from "../components/NavCard/NavCard"
-import { getReporte } from "../service/reporteService"
+import { getReporte, getReporteIngresos } from "../service/reporteService"
 import "./ConfigReportes.css"
 import { useState } from "react"
 export const ConfigReportes = () =>{
@@ -32,6 +32,24 @@ export const ConfigReportes = () =>{
                 }
                 break
             case "Reporte-Ingresos":
+                console.log("Generando reporte...")
+                setIsLoadingReport(true)
+                try {
+                    const { blob, filename } = await getReporteIngresos()
+                    const url = window.URL.createObjectURL(blob)
+                    const link = document.createElement("a")
+                    link.href = url
+                    link.setAttribute("download", filename)
+                    document.body.appendChild(link)
+                    link.click()
+                    link.parentNode.removeChild(link)
+                    window.URL.revokeObjectURL(url)
+                    } catch (error) {
+                    console.error("Error al descargar el archivo:", error)
+                    alert("Error al descargar el reporte. " + error.message)
+                    } finally {
+                    setIsLoadingReport(false)
+                }
                 break
         }
     }
