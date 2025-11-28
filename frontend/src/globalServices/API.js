@@ -1,8 +1,8 @@
 // src/services/API.js
 
 // Descomenta la que necesites usar:
-//export const BASE_URL = 'https://api.tuticket.space';
-export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = 'https://api.tuticket.space';
+//export const BASE_URL = 'http://localhost:8080';
 
 export const getAuthHeader = () => {
   try {
