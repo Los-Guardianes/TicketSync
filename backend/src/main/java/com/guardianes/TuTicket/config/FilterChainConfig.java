@@ -98,8 +98,10 @@ public class FilterChainConfig {
                             "/api/miticket/**",
                             "/api/ticket/**"
                     ).authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/ticket/evento/**")
+                        .hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers("/api/usuario/**").authenticated()
-                /*===============================================
+                /*===============================================   
                             4. Administrador
                 ================================================*/
                     .requestMatchers("/api/cliente/**")

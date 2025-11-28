@@ -23,3 +23,6 @@ export const cancelarEvento = (idEvento) =>
   apiFetch(`/api/evento/${idEvento}/cancelar`, {
     method: 'PUT',
   });
+
+  export const getInscritosByEvento = (idEvento) =>
+  apiFetch(`/api/ticket/evento/${idEvento}`);

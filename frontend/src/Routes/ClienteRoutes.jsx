@@ -30,12 +30,13 @@ import { CreateTicket2 } from "../components/features/CreateEvent/pages/temp2";
 
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
-import {ForgotPassword} from "../components/features/LogIn/pages/ForgotPassword";
-import {ResetPassword} from "../components/features/LogIn/pages/ResetPassword";
+import { ForgotPassword } from "../components/features/LogIn/pages/ForgotPassword";
+import { ResetPassword } from "../components/features/LogIn/pages/ResetPassword";
 import { MiPerfil } from "../components/features/Perfil/pages/MiPerfil";
-import  ImageUploader  from "../components/features/SubirImagenTest/SubirImagen"
+import ImageUploader from "../components/features/SubirImagenTest/SubirImagen"
 import { ProtectedRoute } from "./ProtectedRoute";
 
+import { ListadoInscritos } from "../components/features/ConfigEvento/pages/ListadoInscritos";
 
 export const ClienteRoutes = () => {
   return (
@@ -63,7 +64,7 @@ export const ClienteRoutes = () => {
         <Route path="create-ticket" element={<CreateTicket />} />
         <Route path="temp" element={<CreateTickets1 />} />
         <Route path="temp2" element={<CreateTicket2 />} />
-        <Route path="ticket-purchase/:id" element= { <TicketPurchase /> }/>
+        <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
         <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<ProtectedRoute> <TicketPay /> </ProtectedRoute>} />
         <Route path="happy-pay" element={<HappyPay />} />
@@ -74,7 +75,7 @@ export const ClienteRoutes = () => {
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
 
-
+        
         <Route
           path="organizer/evento/:idEvento/editar-detalles"
           element={<EditEvent />}
@@ -87,10 +88,15 @@ export const ClienteRoutes = () => {
           path="organizer/evento/:idEvento/descuentos"
           element={<DiscountList />}
         />
-
-        <Route path="mis-tickets/evento/:idEvento" element={ <DetalleTickets />} />
-        <Route path="perfil" element={<MiPerfil />} />
         
+        <Route
+          path="organizer/evento/:idEvento/inscritos"
+          element={<ListadoInscritos />}
+        />
+
+        <Route path="mis-tickets/evento/:idEvento" element={<DetalleTickets />} />
+        <Route path="perfil" element={<MiPerfil />} />
+
       </Route>
     </Routes>
   );
