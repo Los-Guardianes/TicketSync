@@ -1,3 +1,5 @@
+import { BASE_URL } from "../../src/globalServices/API";
+
 Cypress.Commands.add("loginUI", (email, password) => {
   cy.visit("/login");
   cy.get('input[name="email"]').clear().type(email);
@@ -8,7 +10,7 @@ Cypress.Commands.add("loginUI", (email, password) => {
 Cypress.Commands.add("loginAPI", (email, password) => {
   return cy.request({
     method: "POST",
-    url: "https://api.tuticket.space/api/login",
+    url: `${BASE_URL}/api/login`,
     body: { email, password },
     failOnStatusCode: false,
   }).then((resp) => {

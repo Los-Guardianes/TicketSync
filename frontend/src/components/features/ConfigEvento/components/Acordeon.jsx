@@ -114,8 +114,8 @@ export const ZonesAccordion = ({
                 • Capacidad: {zona.aforo} asientos<br />
               </>
             }
-            onEdit={() => editItem("zona", zona.id)}
-            onDelete={() => deleteItem("zona", zona.id)}
+            onEdit={() => editItem("zona", zona.idZona)}
+            onDelete={() => deleteItem("zona", zona.idZona)}
           />
         ))}
       </div>
@@ -157,8 +157,8 @@ export const FuncionesAccordion = ({
                 • Hora: {funcion.horaInicio} <br />
               </>
             }
-            onEdit={() => editItem("funcion", funcion.id)}
-            onDelete={() => deleteItem("funcion", funcion.id)}
+            onEdit={() => editItem("funcion", funcion.idFuncion)}
+            onDelete={() => deleteItem("funcion", funcion.idFuncion)}
           />
         ))}
       </div>
@@ -197,8 +197,8 @@ export const EntradasAccordion = ({
                 Descripción: {entrada.descripcion}<br />
               </>
             }
-            onEdit={() => editItem("entrada", entrada.id)}
-            onDelete={() => deleteItem("entrada", entrada.id)}
+            onEdit={() => editItem("entrada", entrada.idTipoEntrada)}
+            onDelete={() => deleteItem("entrada", entrada.idTipoEntrada)}
           />
         ))}
       </div>
@@ -209,3 +209,47 @@ export const EntradasAccordion = ({
     </AccordionSection>
   );
 };
+
+export const PeriodosAccordion = ({
+  isActive,
+  onToggle,
+  editItem,
+  deleteItem,
+  addItem,
+  periodos
+}) => {
+  return (
+    <AccordionSection
+      id="periodos"
+      title="Periodos de venta"
+      badgeText={`${periodos.length} periodos de venta`}
+      iconEmoji=""
+      isActive={isActive}
+      onToggle={onToggle}
+    >
+      <div className="item-list">
+        {periodos.map((periodo) => {
+          const soloNombre = periodo.nombre.split("-")[1]?.trim() || periodo.nombre;
+          return (
+            <ItemCard
+              key={periodo.idPeriodo}
+              name={soloNombre}
+              details={
+                <>
+                  Fecha Inicio: {periodo.fechaInicio}<br />
+                  Fecha Fin: {periodo.fechaFin}<br />
+                </>
+              }
+              onEdit={() => editItem("periodo", periodo.idPeriodo)}
+              onDelete={() => deleteItem("periodo", periodo.idPeriodo)}
+            />
+          )
+        })}
+      </div>
+
+      <button className="add-button" onClick={() => addItem('periodo')}>
+        + Agregar Periodo de Venta
+      </button>
+    </AccordionSection>
+  );
+}

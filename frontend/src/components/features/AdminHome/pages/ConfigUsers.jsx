@@ -16,7 +16,7 @@ export const ConfigUsers = () => {
   const [rolFilter, setRolFilter] = useState("");
   const [estadoFilter, setEstadoFilter] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25;
+  const itemsPerPage = 10;
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
@@ -48,11 +48,11 @@ export const ConfigUsers = () => {
   }, [reloadTrigger]);
 
   useEffect(() => {
-      const getCiudad = async () => {
-          const data = await getCiudades();
-          setCiudad(data);
-      };
-      getCiudad();
+    const getCiudad = async () => {
+      const data = await getCiudades();
+      setCiudad(data);
+    };
+    getCiudad();
   }, []);
 
   useEffect(() => {
@@ -66,13 +66,13 @@ export const ConfigUsers = () => {
       fetchUsuario();
     }
   }, [showEditUserModal]);
-  
+
   const handleCrearUsuario = async () => {
     try {
       const error = validar();
       if (error) {
-          alert(error);
-          return;
+        alert(error);
+        return;
       }
       const payload = {
         nombre: (nuevoUsuario.nombre || '').replace(/\s+/g, ' ').trim(),
@@ -106,32 +106,32 @@ export const ConfigUsers = () => {
   };
 
   const validar = () => {
-        const emailOk = /^\S+@\S+\.\S+$/.test((nuevoUsuario.email || '').trim());
-        const celOk = /^\d{9}$/.test((nuevoUsuario.telefono || '').trim());
-        const passOk = (nuevoUsuario.hashCtr || '').length >= 8;
-        const passMatch = nuevoUsuario.hashCtr === confirmPassword;
-        const ciudadOk = !!nuevoUsuario.ciudad.idCiudad;
+    const emailOk = /^\S+@\S+\.\S+$/.test((nuevoUsuario.email || '').trim());
+    const celOk = /^\d{9}$/.test((nuevoUsuario.telefono || '').trim());
+    const passOk = (nuevoUsuario.hashCtr || '').length >= 8;
+    const passMatch = nuevoUsuario.hashCtr === confirmPassword;
+    const ciudadOk = !!nuevoUsuario.ciudad.idCiudad;
 
-        if (!(nuevoUsuario.nombre || '').trim()) return 'El nombre es obligatorio.';
-        if (!(nuevoUsuario.apellido || '').trim()) return 'El apellido es obligatorio.';
-        if (!emailOk) return 'Ingresa un correo válido.';
-        if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
-        if (!passMatch) return 'Las contraseñas no coinciden.';
-        if (!celOk) return 'El celular debe tener 9 dígitos.';
-        if (!ciudadOk) return 'Debes seleccionar una ciudad.';
-        return null;
-    };
+    if (!(nuevoUsuario.nombre || '').trim()) return 'El nombre es obligatorio.';
+    if (!(nuevoUsuario.apellido || '').trim()) return 'El apellido es obligatorio.';
+    if (!emailOk) return 'Ingresa un correo válido.';
+    if (!passOk) return 'La contraseña debe tener al menos 8 caracteres.';
+    if (!passMatch) return 'Las contraseñas no coinciden.';
+    if (!celOk) return 'El celular debe tener 9 dígitos.';
+    if (!ciudadOk) return 'Debes seleccionar una ciudad.';
+    return null;
+  };
 
-    const validar2 = () => {
-        const emailOk = /^\S+@\S+\.\S+$/.test((usuarioSeleccionado.email || '').trim());
-        const celOk = /^\d{9}$/.test((usuarioSeleccionado.telefono || '').trim());
+  const validar2 = () => {
+    const emailOk = /^\S+@\S+\.\S+$/.test((usuarioSeleccionado.email || '').trim());
+    const celOk = /^\d{9}$/.test((usuarioSeleccionado.telefono || '').trim());
 
-        if (!emailOk) return 'Ingresa un correo válido.';
-        if (!celOk) return 'El celular debe tener 9 dígitos.';
-        //buscar que el correo no esté en uso por otra persona...:
-        //to do
-        return null;
-    };
+    if (!emailOk) return 'Ingresa un correo válido.';
+    if (!celOk) return 'El celular debe tener 9 dígitos.';
+    //buscar que el correo no esté en uso por otra persona...:
+    //to do
+    return null;
+  };
 
   const filteredUsers = usersData.filter((u) => {
     return (
@@ -139,10 +139,15 @@ export const ConfigUsers = () => {
       (estadoFilter !== "" ? u.activo === estadoFilter : true) &&
       (search
         ? u.nombre.toLowerCase().includes(search.toLowerCase()) ||
-          u.email.toLowerCase().includes(search.toLowerCase())
+        u.email.toLowerCase().includes(search.toLowerCase())
         : true)
     );
   });
+
+  // Filtro para organizadores pendientes (inactivos)
+  const pendingOrganizers = usersData.filter(
+    (u) => u.rol === "ORGANIZADOR" && !u.verificado
+  );
 
   const construirPayloadUsuario = (usuario, cambios = {}) => {
     let payload = {
@@ -180,7 +185,7 @@ export const ConfigUsers = () => {
 
     try {
       const usuario = await getUser(id, rol);
-      const payload = construirPayloadUsuario(usuario, { activo: nuevoEstado });
+      const payload = construirPayloadUsuario(usuario, { verificado: nuevoEstado });
 
       await updateUser(payload, id);
       console.log(usuario.idUsuario + " se actualizó");
@@ -196,8 +201,8 @@ export const ConfigUsers = () => {
     try {
       const error = validar2();
       if (error) {
-          alert(error);
-          return;
+        alert(error);
+        return;
       }
       const usuario = await getUser(usuarioSeleccionado.idUsuario, usuarioSeleccionado.rol);
 
@@ -230,6 +235,60 @@ export const ConfigUsers = () => {
             ← Volver
           </button>
         </div>
+
+        {/* --- SECCIÓN ORGANIZADORES PENDIENTES --- */}
+        {pendingOrganizers.length > 0 && (
+          <div className="mb-5">
+            <h3 className="mb-3 text-warning">Solicitudes de Organizadores Pendientes</h3>
+            <table className="user-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingOrganizers.map((user) => (
+                  <tr key={user.idUsuario}>
+                    <td>{user.nombre + " " + user.apellido}</td>
+                    <td>{user.rol}</td>
+                    <td>
+                      <span className="badge bg-warning text-dark">Pendiente</span>
+                    </td>
+                    <td>{user.email}</td>
+                    <td>{user.telefono}</td>
+                    <td>
+                      <div className="d-flex gap-2 align-items-center">
+                        <button
+                          className="details-button"
+                          onClick={() => {
+                            setUsuarioSeleccionado(user);
+                            setShowEditUserModal(true);
+                          }}
+                        >
+                          Ver detalles
+                        </button>
+                        <button
+                          className="btn btn-success btn-sm"
+                          onClick={() => toggleActivo(user.idUsuario, user.rol, user.verificado)}
+                        >
+                          Aprobar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <h3 className="mb-3">Gestión de Usuarios</h3>
+
         {/* Filtros */}
         <div className="filters">
           <div className="filters-left">
@@ -292,9 +351,9 @@ export const ConfigUsers = () => {
                 <td>{user.email}</td>
                 <td>{user.telefono}</td>
                 <td>
-                  <button className="details-button"onClick={() => {
+                  <button className="details-button" onClick={() => {
                     setUsuarioSeleccionado(user); setShowEditUserModal(true);
-                    }}>Ver detalles</button>
+                  }}>Ver detalles</button>
                 </td>
               </tr>
             ))}
@@ -357,26 +416,26 @@ export const ConfigUsers = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <div className="dropdown">
-                  <button className="btn btn-light dropdown-toggle " style={{ background: "#ffffffff" }}
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false">
-                      {selectedCiudad}
-                  </button>
-                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      {ciudad.map((itemCiudad) => (
-                          <li key={itemCiudad.idCiudad}>
-                              <a className="dropdown-item" href="#"
-                                  onClick={() => {
-                                      setSelectedCiudad(itemCiudad.nombre);
-                                      setNuevoUsuario({...nuevoUsuario, ciudad: { idCiudad: itemCiudad.idCiudad }});
-                                  }}>
-                                  {itemCiudad.nombre}
-                              </a>
-                          </li>
-                      ))}
-                  </ul>
+                <button className="btn btn-light dropdown-toggle " style={{ background: "#ffffffff" }}
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  {selectedCiudad}
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  {ciudad.map((itemCiudad) => (
+                    <li key={itemCiudad.idCiudad}>
+                      <a className="dropdown-item" href="#"
+                        onClick={() => {
+                          setSelectedCiudad(itemCiudad.nombre);
+                          setNuevoUsuario({ ...nuevoUsuario, ciudad: { idCiudad: itemCiudad.idCiudad } });
+                        }}>
+                        {itemCiudad.nombre}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 

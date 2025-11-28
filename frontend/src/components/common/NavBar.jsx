@@ -1,7 +1,10 @@
 "use client"
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
+import { useNavigate } from "react-router-dom"
+import { VerificationModal } from "./VerificationModal"
 import "./NavBar.css"
+import { useState } from "react"
 
 export const NavBar = ({
   search,
@@ -19,6 +22,8 @@ export const NavBar = ({
 }) => {
   const { user, logout } = useAuth()
   const esOrganizador = !!user && user.rol === "ORGANIZADOR"
+  const [showVerificationModal, setShowVerificationModal] = useState(false)
+  const navigate = useNavigate()
 
   const handleSearchSubmit = (e) => e.preventDefault()
 
@@ -110,9 +115,20 @@ export const NavBar = ({
         {/* Botón condicional para organizador */}
         {esOrganizador && (
           <li className="nav-item ms-2">
-            <NavLink className="btn btn-warning" to="/create-event">
+            {console.log("El usuario es organizador: ", user)}
+            <button
+              className="btn btn-primary"
+              onClick={(e) => {
+                if (user && !user.verificado) {
+                  e.preventDefault();
+                  setShowVerificationModal(true);
+                } else {
+                  navigate("/create-event");
+                }
+              }}
+            >
               Crear Evento
-            </NavLink>
+            </button>
           </li>
         )}
 
@@ -120,7 +136,7 @@ export const NavBar = ({
         {!user ? (
           <>
             <li className="nav-item ms-2">
-              <NavLink className="btn btn-light" to="/register">
+              <NavLink className="btn btn-secondary" to="/register">
                 Registrarse
               </NavLink>
             </li>
@@ -138,18 +154,22 @@ export const NavBar = ({
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/perfil" className={({isActive}) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
-                <span className="nav-link">👤 ¡Hola, {user.nombre}!</span>
+              <NavLink to="/perfil" className={({ isActive }) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
+                <span className="nav-link">¡Hola, {user.nombre}!</span>
               </NavLink>
             </li>
             <li className="nav-item ms-2">
-              <button className="btn btn-danger" onClick={logout}>
+              <button className="btn btn-secondary" onClick={logout}>
                 Cerrar Sesión
               </button>
             </li>
           </>
         )}
       </ul>
+      <VerificationModal
+        show={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+      />
     </nav>
   )
 }

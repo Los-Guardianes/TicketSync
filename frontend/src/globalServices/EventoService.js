@@ -17,6 +17,8 @@ export const getFuncionesByEvento = (id) => apiFetch(`/api/funcion/evento/${id}`
 
 export const getEntradasByEvento = (id) => apiFetch(`/api/tipoentrada/evento/${id}`);
 
+export const getPeriodosByEvento = (id) => apiFetch(`/api/periodo/evento/${id}`)
+
 export const getCateventos = () => apiFetch('/api/catevento');
 
 export const postEventoCompleto = (evento) =>

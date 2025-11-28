@@ -63,7 +63,12 @@ public class PeriodoController {
 
     @GetMapping("periodo/evento/{id_evento}")
     public ResponseEntity<?> getPeriodosByEvent(@PathVariable Integer id_evento) {
-        return ResponseEntity.ok(service.getPeriodoByEventId(id_evento));
+        try{
+            return ResponseEntity.ok(service.getPeriodoByEventId(id_evento));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
     }
 
 }
