@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { getInscritosByEvento } from "../../../../globalServices/EventoService";
-
+import "./ListadoInscritos.css";
 
 export const ListadoInscritos = () => {
     const { idEvento } = useParams();
@@ -9,76 +9,160 @@ export const ListadoInscritos = () => {
     const [inscritos, setInscritos] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
 
+    const [zonaFilter, setZonaFilter] = React.useState("TODOS");
+    const [funcionFilter, setFuncionFilter] = React.useState("TODOS");
+
+    // PAGINACIÓN
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const pageSize = 10; // puedes cambiarlo a 20, etc.
+
     React.useEffect(() => {
         setLoading(true);
         getInscritosByEvento(idEvento)
             .then((data) => {
-                console.log("INSCRITOS:", data);
                 setInscritos(data);
+                setCurrentPage(0); // Reset paginación al cambiar evento
             })
-            .catch((err) => {
-                console.error("Error cargando inscritos", err);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+            .catch((err) => console.error("Error cargando inscritos", err))
+            .finally(() => setLoading(false));
     }, [idEvento]);
 
+    const zonas = React.useMemo(() => {
+        const s = new Set();
+        inscritos.forEach((i) => {
+            const z = i.detalleCompra?.zona?.nombre;
+            if (z) s.add(z);
+        });
+        return [...s];
+    }, [inscritos]);
+
+    const funciones = React.useMemo(() => {
+        const s = new Set();
+        inscritos.forEach((i) => {
+            const f = i.detalleCompra?.ordenCompra?.funcion?.fechaInicio;
+            if (f) s.add(f);
+        });
+        return [...s];
+    }, [inscritos]);
+
+    const inscritosFiltrados = inscritos.filter((i) => {
+        const zonaOK =
+            zonaFilter === "TODOS" ||
+            i.detalleCompra?.zona?.nombre === zonaFilter;
+
+        const funcionOK =
+            funcionFilter === "TODOS" ||
+            i.detalleCompra?.ordenCompra?.funcion?.fechaInicio === funcionFilter;
+
+        return zonaOK && funcionOK;
+    });
+
+    // --- Paginación ---
+    const totalPages = Math.ceil(inscritosFiltrados.length / pageSize);
+
+    const start = currentPage * pageSize;
+    const end = start + pageSize;
+    const inscritosPaginados = inscritosFiltrados.slice(start, end);
+
+    const goToPage = (page) => {
+        if (page >= 0 && page < totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
     return (
-        <div style={{ padding: "20px" }}>
-            <h1>Listado de Inscritos</h1>
-            <p>ID del evento: {idEvento}</p>
+        <div className="inscritos-container">
+            <h2 className="inscritos-title">Asistentes</h2>
 
-            <div
-                style={{
-                    marginTop: "20px",
-                    padding: "15px",
-                    border: "1px solid #ddd",
-                    borderRadius: "8px",
-                }}
-            >
-                <h2>Asistentes</h2>
+            <div className="filtros-container">
+                <div className="filtro">
+                    <label>Filtrar por Zona:</label>
+                    <select
+                        value={zonaFilter}
+                        onChange={(e) => { setZonaFilter(e.target.value); setCurrentPage(0); }}
+                    >
+                        <option value="TODOS">Todos</option>
+                        {zonas.map((z, i) => (
+                            <option key={i} value={z}>{z}</option>
+                        ))}
+                    </select>
+                </div>
 
-                {loading ? (
-                    <p style={{ color: "#666" }}>Cargando asistentes…</p>
-                ) : inscritos.length === 0 ? (
-                    <p>No hay inscritos para este evento.</p>
-                ) : (
-                    <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "10px" }}>
-                        <thead>
-                            <tr style={{ background: "#f3f3f3" }}>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Nombre</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Tipo Entrada</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Zona</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Fecha Compra</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Fecha Función</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {inscritos.map((item) => (
-                                <tr key={item.idTicket}>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                        {item.cliente?.nombre || "Sin nombre"}
-                                    </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                        {item.detalleCompra?.tipoEntrada?.nombre}
-                                    </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                        {item.detalleCompra?.zona?.nombre}
-                                    </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                        {item.detalleCompra?.ordenCompra?.fechaCompra?.substring(0, 10)}
-                                    </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                        {item.detalleCompra?.ordenCompra?.funcion?.fechaInicio}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                )}
+                <div className="filtro">
+                    <label>Filtrar por Función:</label>
+                    <select
+                        value={funcionFilter}
+                        onChange={(e) => { setFuncionFilter(e.target.value); setCurrentPage(0); }}
+                    >
+                        <option value="TODOS">Todas</option>
+                        {funciones.map((f, i) => (
+                            <option key={i} value={f}>{f}</option>
+                        ))}
+                    </select>
+                </div>
             </div>
+
+            {loading ? (
+                <p className="mensaje-cargando">Cargando asistentes…</p>
+            ) : inscritosFiltrados.length === 0 ? (
+                <p className="mensaje-vacio">No hay inscritos con los filtros actuales.</p>
+            ) : (
+                <>
+                    <div className="tabla-wrapper">
+                        <table className="tabla-inscritos">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo Entrada</th>
+                                    <th>Zona</th>
+                                    <th>Fecha Compra</th>
+                                    <th>Fecha Función</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {inscritosPaginados.map((item, index) => (
+                                    <tr key={item.idTicket} className="fila">
+                                        <td>{item.cliente?.nombre || "Sin nombre"}</td>
+                                        <td>{item.detalleCompra?.tipoEntrada?.nombre}</td>
+                                        <td>{item.detalleCompra?.zona?.nombre}</td>
+                                        <td>{item.detalleCompra?.ordenCompra?.fechaCompra?.substring(0, 10)}</td>
+                                        <td>{item.detalleCompra?.ordenCompra?.funcion?.fechaInicio}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* ==== PAGINACIÓN ==== */}
+                    <div className="paginacion">
+                        <button
+                            className="page-btn"
+                            disabled={currentPage === 0}
+                            onClick={() => goToPage(currentPage - 1)}
+                        >
+                            ← Anterior
+                        </button>
+
+                        {Array.from({ length: totalPages }).map((_, i) => (
+                            <button
+                                key={i}
+                                onClick={() => goToPage(i)}
+                                className={`page-number ${i === currentPage ? "active" : ""}`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            className="page-btn"
+                            disabled={currentPage === totalPages - 1}
+                            onClick={() => goToPage(currentPage + 1)}
+                        >
+                            Siguiente →
+                        </button>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
