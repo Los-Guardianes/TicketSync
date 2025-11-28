@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de autenticación
 import { jwtDecode } from 'jwt-decode';
-
+import { BASE_URL } from '../../../../globalServices/API';
 
 export const loginService = () => {
 
@@ -63,8 +63,8 @@ export const loginService = () => {
         setIsLoading(true);
         clearMessage();
 
-        try {//http://localhost:8080/api/login https://api.tuticket.space/api/login
-            const response = await fetch('https://api.tuticket.space/api/login', {
+        try {
+            const response = await fetch(`${BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -116,7 +116,7 @@ export const loginService = () => {
         clearMessage();
 
         try {
-            const response = await fetch('https://api.tuticket.space/api/auth/google', {
+            const response = await fetch(`${BASE_URL}/api/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idToken }),
