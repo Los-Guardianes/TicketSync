@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "./MiPerfil.css";
 import { useAuth } from "../../../../context/AuthContext";
-
+import { BASE_URL } from '../../../../globalServices/API';
 export const MiPerfil = () => {
     const { user, token } = useAuth();
 
@@ -68,7 +68,7 @@ export const MiPerfil = () => {
             setPwdLoading(true);
             //http://localhost:8080/api/login https://api.tuticket.space/api/login
             const response = await fetch(
-                "http://localhost:8080/api/usuario/cambiar-password",
+                `${BASE_URL}/api/usuario/cambiar-password`,
                 {
                     method: "POST",
                     headers: {

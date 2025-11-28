@@ -20,7 +20,7 @@ public class ReporteOrganizadorService {
     public ByteArrayInputStream generarExcelOrganizadores(List<Organizador> organizadores) throws IOException {
 
         // Nombres de las columnas
-        String[] columnas = {"ID", "RUC", "RazonSocial", "NombreRepresentante", "EmailRepresentante", "Verificado"}; // Ajusta esto a tu modelo
+        String[] columnas = {"ID", "RUC", "RazonSocial", "NombreRepresentante", "ApellidoRepresentante","EmailRepresentante", "Verificado"}; // Ajusta esto a tu modelo
 
         // --- Obtenemos y formateamos la fecha actual ---
         Locale localeEs = new Locale("es", "ES"); // Locale para español
@@ -108,16 +108,18 @@ public class ReporteOrganizadorService {
                 row.createCell(1).setCellValue(org.getRuc()); // Asumiendo que tiene getRuc()
                 row.createCell(2).setCellValue(org.getRazonSocial()); // Asumiendo que tiene getNombre()
                 row.createCell(3).setCellValue(org.getNombre()); // Asumiendo que tiene getNombre()
-                row.createCell(4).setCellValue(org.getEmail()); // Asumiendo que tiene getEmail()
-                row.createCell(5).setCellValue(org.getVerificado() ? "Habilitado" : "Inhabilitado"); // Asumiendo
+                row.createCell(4).setCellValue(org.getApellido()); // Asumiendo que tiene getApellido()
+                row.createCell(5).setCellValue(org.getEmail()); // Asumiendo que tiene getEmail()
+                row.createCell(6).setCellValue(org.getVerificado() ? "Habilitado" : "Inhabilitado"); // Asumiendo
             }
 
             sheet.setColumnWidth(0, 10 * 256); // Columna ID (10 caracteres)
             sheet.setColumnWidth(1, 15 * 256); // Columna RUC (15 caracteres)
             sheet.setColumnWidth(2, 30 * 256); // Columna RazonSocial (30 caracteres)
             sheet.setColumnWidth(3, 30 * 256); // Columna NombreRepresentante (30 caracteres)
-            sheet.setColumnWidth(4, 30 * 256); // Columna EmailRepresentante (30 caracteres)
-            sheet.setColumnWidth(5, 15 * 256); // Columna Verificado (15 caracteres)
+            sheet.setColumnWidth(4, 30 * 256); // Columna ApellidoRepresentante (30 caracteres)
+            sheet.setColumnWidth(5, 30 * 256); // Columna EmailRepresentante (30 caracteres)
+            sheet.setColumnWidth(6, 15 * 256); // Columna Verificado (15 caracteres)
 
             // Escribir el libro en el stream de salida en memoria
             workbook.write(out);
