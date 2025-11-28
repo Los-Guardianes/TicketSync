@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext'; //Importa el hook de autenticación
 import { jwtDecode } from 'jwt-decode';
-
+import { BASE_URL } from '../../../../globalServices/API';
 
 export const loginService = () => {
 
-    // SOLO CAMBIAR ESTO PARA DESPLEGAR
-    const baseUrl = 'http://localhost:8080';
-    //const baseUrl = 'https://api.tuticket.space';
-
+    // NOTA: La URL se gestiona desde el archivo API.js importado arriba
 
     const { login } = useAuth(); //Obtenemos la función login del contexto
+    
     // --- ESTADOS DEL FORMULARIO ---
     const [formData, setFormData] = useState({
         email: '',
@@ -59,9 +57,7 @@ export const loginService = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // --- LÓGICA DE LOGIN CON FETCH (Anteriormente en loginService.js)
-    // Aqui se modifico ya no se pasa TRUE O FALSE, SE PASA EL USUARIO COMPLETO
-    // PARA PODER VALIDAR SU ROL
+    // --- LÓGICA DE LOGIN CON FETCH ---
     const handleLoginSubmit = async () => {
         if (!validateForm()) return null;
 
@@ -69,7 +65,8 @@ export const loginService = () => {
         clearMessage();
 
         try {
-            const response = await fetch(`${baseUrl}/api/login`, {
+            // Uso de BASE_URL global
+            const response = await fetch(`${BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -79,7 +76,6 @@ export const loginService = () => {
             });
 
             const result = await response.json();
-            // TEMP: mirar qué llega del back
             console.log("LOGIN NORMAL RESULT =>", result);
 
             if (!response.ok) {
@@ -95,10 +91,10 @@ export const loginService = () => {
                 rol: result.rol,
                 nombre: result.nombre,
                 apellido: result.apellido,
-                telefono: result.telefono,        // <-- NUEVO
-                ciudad: result.ciudad,            // <-- NUEVO
-                departamento: result.departamento, // <-- NUEVO
-                verificado: result.verificado     // <-- NUEVO
+                telefono: result.telefono,        
+                ciudad: result.ciudad,            
+                departamento: result.departamento, 
+                verificado: result.verificado     
             };
 
             login(user, result.token, decoded.exp);
@@ -122,7 +118,8 @@ export const loginService = () => {
         clearMessage();
 
         try {
-            const response = await fetch(`${baseUrl}/api/auth/google`, {
+            // Uso de BASE_URL global
+            const response = await fetch(`${BASE_URL}/api/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idToken }),
@@ -144,10 +141,10 @@ export const loginService = () => {
                 rol: result.rol,
                 nombre: result.nombre,
                 apellido: result.apellido,
-                telefono: result.telefono,        // <-- NUEVO
-                ciudad: result.ciudad,            // <-- NUEVO
-                departamento: result.departamento, // <-- NUEVO
-                verificado: result.verificado     // <-- NUEVO
+                telefono: result.telefono,
+                ciudad: result.ciudad,
+                departamento: result.departamento,
+                verificado: result.verificado
             };
 
             login(user, result.token, decoded.exp);
@@ -163,15 +160,13 @@ export const loginService = () => {
         }
     };
 
-
-    // --- VALORES Y FUNCIONES RETORNADOS POR EL HOOK ---
     return {
         formData,
         errors,
         isLoading,
         message,
         handleInputChange,
-        handleLoginSubmit, // La nueva función que el componente usará para el submit
-        handleGoogleLogin, // La función para el login con Google
+        handleLoginSubmit,
+        handleGoogleLogin,
     };
 };
