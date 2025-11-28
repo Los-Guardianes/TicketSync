@@ -4,6 +4,7 @@ import { getCiudades } from '../../../../globalServices/UbicacionService';
 import { useNavigate } from 'react-router-dom';
 import { UserTable } from '../components/UserTable';
 import "./ConfigUsers.css";
+import { OrgTable } from "../components/OrgTable";
 
 export const ConfigUsers = () => {
   const [usersData, setUsersData] = useState([])
@@ -13,6 +14,7 @@ export const ConfigUsers = () => {
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [search, setSearch] = useState("");
+  const [search2, setSearch2] = useState("");
   const [rolFilter, setRolFilter] = useState("");
   const [estadoFilter, setEstadoFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,6 +22,7 @@ export const ConfigUsers = () => {
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [sortOrder, setSortOrder] = useState(""); // "", "asc", "desc"
+  const [sortOrder2, setSortOrder2] = useState("");
   const navigate = useNavigate();
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: '',
@@ -154,9 +157,23 @@ export const ConfigUsers = () => {
     });
 
   // Filtro para organizadores pendientes (inactivos)
-  const pendingOrganizers = usersData.filter(
-    (u) => u.rol === "ORGANIZADOR" && !u.verificado
-  );
+  const pendingOrganizers = usersData
+  .filter((u) => {
+    return (
+      u.rol === "ORGANIZADOR" &&
+      !u.verificado &&
+      (search2
+        ? u.nombre.toLowerCase().includes(search2.toLowerCase()) ||
+          u.email.toLowerCase().includes(search2.toLowerCase()) ||
+          u.razonSocial?.toLowerCase().includes(search2.toLowerCase())
+        : true)
+    );
+  })
+  .sort((a, b) => {
+    if (sortOrder2 === "asc") return a.nombre.localeCompare(b.nombre);
+    if (sortOrder2 === "desc") return b.nombre.localeCompare(a.nombre);
+    return 0;
+  });
 
   const construirPayloadUsuario = (usuario, cambios = {}) => {
     let payload = {
@@ -234,6 +251,22 @@ export const ConfigUsers = () => {
     setShowEditUserModal(true);
   }
 
+  const handleApprove = async (user) => {
+    const confirm = window.confirm(`¿Aprobar al organizador ${user.nombre} ${user.apellido}?`);
+    if (!confirm) return;
+    try {
+      const usuario = await getUser(user.idUsuario, user.rol);
+      const payload = construirPayloadUsuario(usuario, {verificado: true}); // marcar como aprobado
+      console.log(payload);
+      await updateUser(payload, usuario.idUsuario);
+      alert("Organizador aprobado correctamente.");
+      setReloadTrigger((prev) => prev + 1);
+    } catch (error) {
+      alert("Error al aprobar organizador");
+      console.log(error);
+    }
+  };
+
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * itemsPerPage,
@@ -250,55 +283,31 @@ export const ConfigUsers = () => {
           </button>
         </div>
 
+        {/* Filtros */}
+        <div className="filters">
+          <div className="filters-left">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder2(e.target.value)}
+            >
+              <option value="">Ordenar</option>
+              <option value="asc">Nombre A-Z</option>
+              <option value="desc">Nombre Z-A</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={search2}
+              onChange={(e) => setSearch2(e.target.value)}
+            />
+          </div>
+        </div>
         {/* --- SECCIÓN ORGANIZADORES PENDIENTES --- */}
         {pendingOrganizers.length > 0 && (
-          <div className="mb-5">
-            <h3 className="mb-3 text-warning">Solicitudes de Organizadores Pendientes</h3>
-            <table className="user-table">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Rol</th>
-                  <th>Estado</th>
-                  <th>Email</th>
-                  <th>Teléfono</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingOrganizers.map((user) => (
-                  <tr key={user.idUsuario}>
-                    <td>{user.nombre + " " + user.apellido}</td>
-                    <td>{user.rol}</td>
-                    <td>
-                      <span className="badge bg-warning text-dark">Pendiente</span>
-                    </td>
-                    <td>{user.email}</td>
-                    <td>{user.telefono}</td>
-                    <td>
-                      <div className="d-flex gap-2 align-items-center">
-                        <button
-                          className="details-button"
-                          onClick={() => {
-                            setUsuarioSeleccionado(user);
-                            setShowEditUserModal(true);
-                          }}
-                        >
-                          Ver detalles
-                        </button>
-                        <button
-                          className="btn btn-success btn-sm"
-                          onClick={() => toggleActivo(user.idUsuario, user.rol, user.verificado)}
-                        >
-                          Aprobar
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <OrgTable
+            users={pendingOrganizers}
+            onApprove={handleApprove}
+          />
         )}
 
         <h3 className="mb-3">Gestión de Usuarios</h3>
