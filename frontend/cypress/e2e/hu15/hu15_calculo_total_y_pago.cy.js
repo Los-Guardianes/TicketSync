@@ -1,3 +1,5 @@
+import { BASE_URL } from "../../../src/globalServices/API";
+
 /// <reference types="cypress" />
 
 describe('HU15 - Registro de datos de tickets comprados', () => {
@@ -84,7 +86,7 @@ describe('HU15 - Registro de datos de tickets comprados', () => {
 
     // CONTINUAR
     cy.contains('button', 'Continuar').click();
-    cy.url({ timeout: 10000 }).should('eq', 'https://api.tuticket.space/ticket-pay');
+    cy.url({ timeout: 10000 }).should('eq', `${BASE_URL}/ticket-pay`);
 
     cy.log('✅ Prueba completada exitosamente');
   });
