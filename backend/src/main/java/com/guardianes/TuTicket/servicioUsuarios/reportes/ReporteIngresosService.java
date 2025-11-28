@@ -13,6 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -32,7 +34,7 @@ public class ReporteIngresosService {
 
         // 2. PREPARAR FECHA (Lógica traída del otro reporte)
         Locale localeEs = new Locale("es", "ES");
-        LocalDate fechaActual = LocalDate.now();
+        LocalDate fechaActual = LocalDate.now(ZoneId.of("America/Lima"));
         String diaSemana = fechaActual.getDayOfWeek().getDisplayName(TextStyle.FULL, localeEs);
         String fechaFormateada = fechaActual.format(DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy", localeEs));
         // Capitalizar primera letra del día
