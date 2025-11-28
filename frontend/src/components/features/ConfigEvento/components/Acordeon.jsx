@@ -38,23 +38,6 @@ const AccordionSection = ({
 
 // Tarjeta genérica de ítem (zona / función / tipo de entrada)
 const ItemCard = ({ name, details, onEdit, onDelete, extraActions }) => {
-  // return (
-  //   <div className="item-card">
-  //     <div className="item-header">
-  //       <div className="item-name">{name}</div>
-  //     </div>
-  //     <div className="item-details">{details}</div>
-  //     <div className="item-actions">
-  //       <button className="item-btn" onClick={onEdit}>
-  //         ✏️ Editar
-  //       </button>
-  //       {extraActions}
-  //       <button className="item-btn" onClick={onDelete}>
-  //         🗑️ Eliminar
-  //       </button>
-  //     </div>
-  //   </div>
-  // );
   return (
     <div className="item-card">
       <div className='compact-content'>
