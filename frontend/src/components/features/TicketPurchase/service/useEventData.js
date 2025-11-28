@@ -6,6 +6,7 @@ import { Tarifa } from '../models/Tarifa';
 import { Zona } from '../models/Zona';
 import { TipoEntrada } from '../models/TipoEntrada';
 
+
 export const useEventData = (idevento) => {
 
     const [periodoActual, setPeriodoActual] = useState(null);
@@ -42,9 +43,13 @@ export const useEventData = (idevento) => {
         if(!selectedFuncion)return;
         const zxf = zonaxfuncion.find(zf => zf.idZona === zona.idZona && zf.idFuncion ===  selectedFuncion?.idFuncion)
         const entradasDisponibles = zona.aforo - zxf.comprasActuales;
-        const maxComprasEvento = evento?.maxComprasTickets
+        const maxComprasEvento = getMaxCantidadTicketsOrden();
         const maxCantidad = maxComprasEvento >= (entradasDisponibles >= 0 ? entradasDisponibles : 0) ? entradasDisponibles : maxComprasEvento //devuelve el menor
         return maxCantidad
+    }
+    
+    const getMaxCantidadTicketsOrden = () => {
+        return evento?.maxComprasTickets || 0;
     }
 
     useEffect(()=>{
@@ -59,12 +64,14 @@ export const useEventData = (idevento) => {
     },[idevento])
 
     const getPeriodoActual = (listaPeriodos) => {
-        if (!listaPeriodos || listaPeriodos.length === 0) return null;
-        const hoy = new Date();
+        if (!listaPeriodos || listaPeriodos.length === 0) return null;                  
+        // Obtener la fecha actual como cadena en la zona horaria de Perú
+        const now = new Date();
+        const hoyPeru = new Date(now.toLocaleString("en-US", { timeZone: "America/Lima" }));
         return listaPeriodos.find((p) => {
             const inicio = new Date(p.fechaInicio);
             const fin = new Date(p.fechaFin);
-            return hoy >= inicio && hoy <= fin;
+            return hoyPeru >= inicio && hoyPeru <= fin;
         }) || null;
     }
 
@@ -118,6 +125,7 @@ export const useEventData = (idevento) => {
         selectedFuncion,
         setSelectedFuncion,
         getMaxCantidadTickets,
+        getMaxCantidadTicketsOrden,
         seleccionarFuncion
     };
 }

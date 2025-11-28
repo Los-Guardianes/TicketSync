@@ -1,22 +1,326 @@
-.min-width-ticket {
-  min-width: 200px;
-  max-width: 250px;
+.mis-tickets-container {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
-.nav-link.active {
-  color: #007bff;
-  border-left: 3px solid #007bff;
-  background-color: #e9f5ff;
+.mis-tickets-wrapper {
+  width: 100%;
+  max-width: 1000px;
 }
 
-.triangle-down {
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid #000;
+/* Header Mejorado */
+.mis-tickets-header {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.mis-tickets-header__content {
+  flex: 1;
+}
+
+.mis-tickets-header__title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--secondary-color);
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mis-tickets-header__subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.mis-tickets-header__stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  min-width: 100px;
+}
+
+.stat-card--upcoming {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-hover) 100%);
+  color: white;
+}
+
+.stat-card--past {
+  background: linear-gradient(135deg, #666 0%, #888 100%);
+  color: white;
+}
+
+.stat-card__number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-card__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.25rem;
+}
+
+/* Tickets Sections */
+.tickets-section {
+  margin-bottom: 3rem;
+}
+
+.tickets-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tickets-section--upcoming .tickets-section__header {
+  border-bottom-color: var(--primary-color);
+}
+
+.tickets-section--past .tickets-section__header {
+  border-bottom-color: #666;
+}
+
+.tickets-section__title-content {
+  flex: 1;
+}
+
+.tickets-section__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin: 0 0 0.5rem 0;
+}
+
+.tickets-section__icon {
+  font-size: 1.5rem;
+}
+
+.tickets-section__description {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.tickets-section__count {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tickets-section--past .tickets-section__count {
+  background: #666;
+}
+
+/* Grid de Tickets */
+.tickets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state__content {
+  text-align: center;
+  position: relative;
+}
+
+.empty-state__image-container {
+  position: relative;
   display: inline-block;
+  margin-bottom: 1rem;
 }
 
-.pagination-like span { cursor: default; user-select: none; }
-.pagination-like .active { font-weight: 600; text-decoration: underline; }
+.empty-state__image {
+  width: 200px;
+  height: 140px;
+}
+
+.empty-state__gradient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(46, 160, 98, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.empty-state__message {
+  color: #666;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Toggle y Paginación */
+.toggle-more {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.toggle-button {
+  background: none;
+  border: 2px solid var(--secondary-color);
+  color: var(--secondary-color);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.toggle-button:hover {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.pagination-button {
+  padding: 0.75rem 1rem;
+  border: 2px solid #ddd;
+  background: white;
+  color: var(--secondary-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 44px;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.pagination-button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #d32f2f;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mis-tickets-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .mis-tickets-header__title {
+    font-size: 2rem;
+  }
+
+  .mis-tickets-header__stats {
+    justify-content: center;
+  }
+
+  .tickets-section__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .tickets-section__title {
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 0.75rem 1rem;
+    min-width: 80px;
+  }
+
+  .stat-card__number {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mis-tickets-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .mis-tickets-header {
+    padding: 1.5rem;
+  }
+
+  .empty-state__image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .empty-state__gradient {
+    width: 140px;
+    height: 140px;
+  }
+}

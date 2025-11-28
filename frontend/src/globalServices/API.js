@@ -1,6 +1,9 @@
-//src/services/API.js
-const BASE_URL = 'http://localhost:8080';
-// const BASE_URL = 'https://api.tuticket.space';
+// src/services/API.js
+
+// Descomenta la que necesites usar:
+export const BASE_URL = 'https://api.tuticket.space';
+//export const BASE_URL = 'https://api.tuticket.space';
+
 export const getAuthHeader = () => {
   try {
     const auth = JSON.parse(localStorage.getItem('auth') || 'null');
@@ -61,8 +64,6 @@ export async function apiDownloadPost(path, body) {
 
   return res.blob();
 }
-
-// --- INICIO DE LA NUEVA FUNCIÓN ---
 
 /**
  * Función genérica para peticiones que envían FormData (ej. subida de archivos).

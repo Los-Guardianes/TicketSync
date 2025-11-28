@@ -20,6 +20,7 @@ export const getUser = (idUsuario, rol) => {
        throw new Error(`Rol desconocido: ${rol}`);
   }
 };
+
 export const updateUser = async (user, id) => {
   const rol = user.rol;
 

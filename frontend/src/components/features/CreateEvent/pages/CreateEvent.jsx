@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../../../context/AuthContext';
 import "./CreateEvent.css";
 import { getCateventos } from '../../../../globalServices/EventoService';
 import { useEventCreation } from "../../../../context/EventCreationContext";
@@ -11,6 +12,27 @@ import { AlertCircle } from 'lucide-react';
 export const CreateEvent = () => {
     const navigate = useNavigate();
     const { eventData, updateEventData } = useEventCreation();
+    const { user } = useAuth();
+
+    // Si el usuario es organizador pero no está verificado, mostrar pantalla de bloqueo
+    if (user && user.rol === "ORGANIZADOR" && !user.verificado) {
+        return (
+            <div className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
+                <div className="text-center p-5 bg-white shadow rounded" style={{ maxWidth: '600px' }}>
+                    <div className="mb-4">
+                        <span style={{ fontSize: '4rem' }}>⚠️</span>
+                    </div>
+                    <h2 className="mb-3">Cuenta no verificada</h2>
+                    <p className="lead text-muted mb-4">
+                        Usted no se encuentra verificado. El equipo de <strong>TuTicket</strong> está trabajando para verificar su cuenta.
+                    </p>
+                    <button className="btn btn-primary btn-lg" onClick={() => navigate('/home')}>
+                        Volver al Inicio
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     const [funciones, setFunciones] = useState([
         { id: 1, inicioD: '', inicioH: '', finD: '', finH: '' }

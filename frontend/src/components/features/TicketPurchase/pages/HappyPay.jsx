@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import { descargarComprobante } from '../../../../globalServices/PDFService'; 
 import "./HappyPay.css";
@@ -19,8 +19,8 @@ export const HappyPay = () => {
         }
     };
 
-    const handleGoHome = () => {
-        navigate("/home");
+    const handleGoTickets = () => {
+        navigate("/MisTickets");
     };
 
     return (
@@ -42,22 +42,15 @@ export const HappyPay = () => {
 
                 <h1 className="hp-title">¡Pago Exitoso!</h1>
                 <p className="hp-message">
-                    Tu compra ha sido procesada correctamente. 
-                    Recibirás un correo de confirmación con los detalles de tu pedido.
+                    Tu compra ha sido procesada correctamente.                   
                 </p>
 
-                <div className="hp-buttons">
-                    <button 
-                        className="btn btn-primary" 
-                        onClick={handleDescarga}
-                    >
-                        Descargar Comprobante
-                    </button>
+                <div className="hp-buttons">                    
                     <button 
                         className="btn btn-secondary" 
-                        onClick={handleGoHome}
+                        onClick={handleGoTickets}
                     >
-                        Volver al Inicio
+                        Ver mis tickets
                     </button>
                     {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
                 </div>

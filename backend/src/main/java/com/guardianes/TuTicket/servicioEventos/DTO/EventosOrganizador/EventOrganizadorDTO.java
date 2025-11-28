@@ -16,6 +16,7 @@ public class EventOrganizadorDTO {
     public String urlImagen;
     public LocalDate fechaReferencia;
     public boolean esPasado;
+    public boolean activo; // Nuevo campo
     public List<FuncionOrganizadorDTO> funciones;
 
     public EventOrganizadorDTO(Evento e, LocalDate fechaReferencia, boolean esPasado, List<FuncionOrganizadorDTO> funciones) {
@@ -27,6 +28,7 @@ public class EventOrganizadorDTO {
         this.urlImagen = e.getUrlImagen();
         this.fechaReferencia = fechaReferencia;
         this.esPasado = esPasado;
+        this.activo = e.getActivo(); // Mapear el campo activo
         this.funciones = funciones;
     }
 }

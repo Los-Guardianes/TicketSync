@@ -30,7 +30,25 @@ export const postTemporada = (temporada) =>
 export const getEventosByOrganizer = (idUsuario) =>
 	apiFetch(`/api/evento/organizer/${idUsuario}`);
 
+// Cancelar evento
 export const cancelarEvento = (idEvento) =>
-	apiFetch(`/api/evento/${idEvento}/cancelar`, {
-		method: 'PUT',
-	});	
+    apiFetch(`/api/evento/${idEvento}/cancelar`, {
+        method: 'PUT',
+    });
+
+// Obtener inscritos por evento
+export const getInscritosByEvento = (idEvento) =>
+    apiFetch(`/api/ticket/evento/${idEvento}`);
+
+// Actualizar periodo
+export const updatePeriodo = (idPeriodo, data) =>
+    apiFetch(`/api/periodo/${idPeriodo}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    });
+
+// Eliminar periodo
+export const deletePeriodo = (idPeriodo) =>
+    apiFetch(`/api/periodo/${idPeriodo}`, {
+        method: 'DELETE',
+    });

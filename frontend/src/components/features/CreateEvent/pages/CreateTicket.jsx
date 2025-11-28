@@ -7,7 +7,7 @@ import { useTemporadas } from "../services/useTemporadas";
 import { useZonas } from "../services/useZonas";
 import { useEntradas } from "../services/useEntradas";
 import { useEvento } from "../services/useEvento";
-
+import { useAuth } from '../../../../context/AuthContext';
 // Components
 import { HeaderEvent } from "./Componentes/HeaderEvent";
 
@@ -20,6 +20,18 @@ import { ModalTipoEntrada } from "../components/CreatTicketComponents/ModalTipoE
 import { ModalTemporada } from "../components/CreatTicketComponents/ModalTemporada/ModalTemporada";
 
 export const CreateTicket = () => {
+    const { user } = useAuth();
+        console.log("Usuario actual:", user);
+        //arreglar para que la verificación sí funcione
+        if (user === false) {
+            return (
+                <div style={{ padding: 16 }}>
+                    <h2>Verificación de Organizador Pendiente</h2>
+                    <p>Tu cuenta de organizador aún no ha sido verificada. Por favor, espera a que un administrador revise y apruebe tu solicitud.</p>
+                    <p>Una vez que tu cuenta sea verificada, podrás crear eventos en la plataforma.</p>
+                </div>
+            );
+        }
     const navigate = useNavigate();
     const { eventData, updateEventData } = useEventCreation();
 

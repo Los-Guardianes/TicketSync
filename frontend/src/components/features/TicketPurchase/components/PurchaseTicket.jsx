@@ -1,4 +1,8 @@
+
+
 export const PurchaseTicket = ({ totalBruto, montoDescuentoPeriodo, montoDescuentoCodigo, periodo, descuentoCodigo,total}) => {    
+
+
 
     const getTipoDescuentoByLabel = (descuento) => {
         if (!descuento) return "";
@@ -17,15 +21,15 @@ export const PurchaseTicket = ({ totalBruto, montoDescuentoPeriodo, montoDescuen
             <ul className="info-event">                
                 <li>
                     <h3>Total Bruto</h3>
-                    <p>S/ {totalBruto || 0}</p>
+                    <p>S/ {totalBruto.toFixed(2) || 0}</p>
                     <h3 >Descuento Periodo {getTipoDescuentoByLabel(periodo)}</h3>
-                    <p className="discount">S/ {montoDescuentoPeriodo || 0}</p>
+                    <p className="discount">S/ {montoDescuentoPeriodo.toFixed(2) || 0}</p>
                     <h3>
                         Descuento Aplicado {getTipoDescuentoByLabel(descuentoCodigo)}
                     </h3>
-                    <p className="discount">S/ {montoDescuentoCodigo || 0}</p>
+                    <p className="discount">S/ {montoDescuentoCodigo.toFixed(2) || 0}</p>
                     <h3>Total</h3>
-                    <p>S/ {total || 0}</p>
+                    <p>S/ {total.toFixed(2) || 0}</p>
                 </li>
             </ul> 
         </article>
