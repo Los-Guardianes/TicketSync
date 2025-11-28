@@ -17,4 +17,5 @@ public class UsuarioBearerDTO {
     private String telefono;
     private String ciudad;
     private String departamento;
+    private Boolean verificado;
 }

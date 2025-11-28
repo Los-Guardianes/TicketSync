@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useCompraTickets = (periodo, descuentoCodigo, tarifas) => {
+export const useCompraTickets = (periodo, descuentoCodigo, tarifas, selectedFuncion) => {
     const [listaDetalles, setListaDetalles] = useState([]); // {tarifa, cantidad, precioDetalle}
 
     const [totalBruto, setTotalBruto] = useState(0);
@@ -26,6 +26,10 @@ export const useCompraTickets = (periodo, descuentoCodigo, tarifas) => {
     };
 
     useEffect(()=>{
+        limpiarDetalles();
+    },[selectedFuncion])
+
+    useEffect(()=>{
         console.log(tarifas)
         if(tarifas && tarifas.length > 0){
             
@@ -34,7 +38,6 @@ export const useCompraTickets = (periodo, descuentoCodigo, tarifas) => {
                 cantidad: 0,
                 precioDetalle: 0
             }))
-            console.log(detallesIniciales)
             setListaDetalles(detallesIniciales)
         }
     },[tarifas])
@@ -58,45 +61,15 @@ export const useCompraTickets = (periodo, descuentoCodigo, tarifas) => {
             detalle.tarifa.idTarifa === idTarifa
         );
     }
-    /*
-    const handleAddDetalle = (setNotification) => {
-        if (!selectedZona || !selectedTipoEntrada || !selectedFuncion) {
-            setNotification({
-                message: "Selecciona una zona, un tipo de entrada y una función antes de agregar.",
-                type: "warning",
-            });
-            return;
-        }
-        const selectedTarifa = obtenerTarifa(tarifas)
-        if (!selectedTarifa) {
-            setNotification({
-                message: "No se encontró una tarifa para la combinación seleccionada de zona y tipo de entrada.",
-                type: "error",
-            });
-            return;
-        }
-        addDetalle(selectedTarifa);         
-    };
-    */
 
-    /*
-    const addDetalle = (tarifa) => {
-        
-        const detalle = buscarDetallePorTarifa(tarifa.idTarifa);
-        if (detalle) {
-            updateCantidad(tarifa.idTarifa, detalle.cantidad + 1);
-            return;
-        }
-        const nuevoDetalle = {
-            tarifa: tarifa,
-            cantidad: 1,
-            precioDetalle: tarifa.precioBase,
-        };
-        const nuevaLista = [...listaDetalles, nuevoDetalle];
-        setListaDetalles(nuevaLista);
+    const limpiarDetalles = () => {
+        const detallesLimpios = listaDetalles.map(det => ({
+            tarifa: det.tarifa,
+            cantidad: 0,
+            precioDetalle: 0
+        }));
+        setListaDetalles(detallesLimpios);        
     }
-    */
-
 
     return {
         listaDetalles,

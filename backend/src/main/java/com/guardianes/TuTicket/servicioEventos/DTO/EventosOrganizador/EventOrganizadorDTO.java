@@ -15,10 +15,12 @@ public class EventOrganizadorDTO {
     public Ciudad ciudad; // CASCO
     public String urlImagen;
     public LocalDate fechaReferencia;
+    public LocalDate fechaReferenciaFin;
     public boolean esPasado;
+    public boolean activo; // Nuevo campo
     public List<FuncionOrganizadorDTO> funciones;
 
-    public EventOrganizadorDTO(Evento e, LocalDate fechaReferencia, boolean esPasado, List<FuncionOrganizadorDTO> funciones) {
+    public EventOrganizadorDTO(Evento e, LocalDate fechaReferencia, LocalDate fechaReferenciaFin,boolean esPasado, List<FuncionOrganizadorDTO> funciones) {
         this.idEvento = e.getIdEvento();
         this.nombre = e.getNombre();
         this.direccion = e.getDireccion();
@@ -26,7 +28,9 @@ public class EventOrganizadorDTO {
         this.ciudad = e.getCiudad(); // CASCO
         this.urlImagen = e.getUrlImagen();
         this.fechaReferencia = fechaReferencia;
+        this.fechaReferenciaFin = fechaReferenciaFin;
         this.esPasado = esPasado;
+        this.activo = e.getActivo(); // Mapear el campo activo
         this.funciones = funciones;
     }
 }

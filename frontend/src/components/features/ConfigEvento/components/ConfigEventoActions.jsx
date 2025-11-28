@@ -51,6 +51,7 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
       label: 'LISTADO DE INSCRITOS',
       onClick: () => {
         console.log('LISTADO DE INSCRITOS', idEvento);
+        navigate(`/organizer/evento/${idEvento}/inscritos`);
         // futuro: navigate(`/organizer/evento/${idEvento}/inscritos`);
       },
     },

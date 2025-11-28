@@ -36,6 +36,10 @@ public class UsuarioService implements UserDetailsService {
         return repo.findById(id).orElse(null);
     }
 
+    public Usuario getUsuarioByEmail(String email) { return repo.findByEmail(email).orElse(null); }
+
+    public Usuario getUsuarioByTelefono(String telefono) { return repo.findByTelefono(telefono).orElse(null); }
+
     public Usuario addUsuario(Usuario usuario) {
         return repo.save(usuario);
     }

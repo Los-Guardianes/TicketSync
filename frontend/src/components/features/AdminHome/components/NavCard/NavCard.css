@@ -1,0 +1,170 @@
+/* New square button design with centered icon, title, and description */
+.nav-card {
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  appearance: none;
+  font-family: inherit;
+}
+
+.nav-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary-color-light), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(46, 160, 98, 0.15);
+  transform: translateY(-6px);
+}
+
+.nav-card:hover::before {
+  opacity: 1;
+}
+
+.nav-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-card-icon-container {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-card:hover .nav-card-icon-container {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 4px 12px rgba(46, 160, 98, 0.3);
+}
+
+.nav-card-icon {
+  font-size: 36px;
+  color: white;
+}
+
+/* Estilos para SVG */
+.nav-card-svg {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.nav-card-svg svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--secondary-color-hover); /* Color blanco por defecto */
+  transition: fill 0.3s ease;
+}
+
+/* En hover, cambiar SVG a color primario */
+.nav-card:hover .nav-card-svg svg {
+  fill: var(--primary-color);
+}
+
+.nav-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin: 0;
+  line-height: 1.3;
+  transition: color 0.3s ease; /* Transición suave para el color */
+}
+
+/* En hover, cambiar título a color primario */
+.nav-card:hover .nav-card-title {
+  color: var(--primary-color);
+}
+
+.nav-card-description {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.4;
+  margin: 0;
+  max-width: 180px;
+}
+
+@media (max-width: 768px) {
+  .nav-card {
+    min-height: 200px;
+    padding: 20px 12px;
+  }
+
+  .nav-card-icon-container {
+    width: 56px;
+    height: 56px;
+  }
+
+  .nav-card-icon {
+    font-size: 28px;
+  }
+
+  .nav-card-svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav-card-title {
+    font-size: 16px;
+  }
+
+  .nav-card-description {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-card {
+    min-height: 180px;
+    padding: 16px;
+  }
+
+  .nav-card-icon-container {
+    width: 48px;
+    height: 48px;
+  }
+
+  .nav-card-icon {
+    font-size: 24px;
+  }
+
+  .nav-card-svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav-card-title {
+    font-size: 14px;
+  }
+}
