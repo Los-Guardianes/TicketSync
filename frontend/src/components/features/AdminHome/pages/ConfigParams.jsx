@@ -6,6 +6,7 @@ import "./ConfigUsers.css";
 export const ConfigParams = () => {
   const navigate = useNavigate();
   const [comisionGlobal, setComisionGlobal] = useState("");
+  const [comisionGlobalActual, setComisionGlobalActual] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export const ConfigParams = () => {
         const data1 = data?.[0];
         if (data1?.comisionGlobal !== undefined) {
           setComisionGlobal(data1.comisionGlobal.toString());
+          setComisionGlobalActual(data1.comisionGlobal.toString());
         }
       } catch (err) {
         console.error("Error al obtener parámetros", err);
@@ -102,7 +104,7 @@ export const ConfigParams = () => {
               type="text"
               id="comisionGlobal"
               className="form-control form-control-sm"
-              placeholder={comisionGlobal}
+              placeholder={comisionGlobalActual}
               readOnly
             />
             <br></br>
