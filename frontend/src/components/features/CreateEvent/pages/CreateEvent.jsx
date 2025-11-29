@@ -13,7 +13,7 @@ export const CreateEvent = () => {
     const navigate = useNavigate();
     const { eventData, updateEventData } = useEventCreation();
     const { user } = useAuth();
-
+    console.log("Usuario en CreateEvent:", user);
     // Si el usuario es organizador pero no está verificado, mostrar pantalla de bloqueo
     if (user && user.rol === "ORGANIZADOR" && !user.verificado) {
         return (

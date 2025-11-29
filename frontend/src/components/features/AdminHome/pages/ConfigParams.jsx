@@ -89,19 +89,34 @@ export const ConfigParams = () => {
         </p>
 
         <form>
+          <h4>Comisión global (%)</h4>
           <div className="mb-2">
             <label
               htmlFor="comisionGlobal"
               className="form-label fw-semibold"
               style={labelStyle}
             >
-              Comisión Global (%)
+              Valor actual
             </label>
             <input
               type="text"
               id="comisionGlobal"
               className="form-control form-control-sm"
               placeholder={comisionGlobal}
+              readOnly
+            />
+            <br></br>
+            <label
+              htmlFor="comisionGlobal"
+              className="form-label fw-semibold"
+              style={labelStyle}
+            >
+              Nuevo valor
+            </label>
+            <input
+              type="text"
+              id="comisionGlobal"
+              className="form-control form-control-sm"
               value={comisionGlobal}
               onChange={(e) => setComisionGlobal(e.target.value)}
             />

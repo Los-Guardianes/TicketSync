@@ -38,6 +38,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { ConfigReportes } from "../components/features/AdminHome/pages/ConfigReportes";
 
 import { ListadoInscritos } from "../components/features/ConfigEvento/pages/ListadoInscritos";
+import { Edit } from "lucide-react";
 
 export const ClienteRoutes = () => {
   return (
@@ -53,49 +54,47 @@ export const ClienteRoutes = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Para testeo del componente de s3 */}
       <Route path="/test-imagen" element={<ImageUploader />} />
-      <Route path="home-admin" element={<AdminHome />} />
+      <Route path="home-admin" element={<ProtectedRoute role="ADMINISTRADOR"> <AdminHome /> </ProtectedRoute>} />
 
       {/* CON Layout */}
       <Route path="/*" element={<Layout />}>
         <Route path="home" element={<Home />} />
-        <Route path="create-event" element={<CreateEvent />} />
-        <Route path="ubicacion-evento" element={<UbicacionEvento />} />
-        <Route path="create-ticket" element={<CreateTicket />} />
+        <Route path="create-event" element={<ProtectedRoute role="ORGANIZADOR"> <CreateEvent /> </ProtectedRoute>} />
+        <Route path="ubicacion-evento" element={<ProtectedRoute role="ORGANIZADOR"> <UbicacionEvento /> </ProtectedRoute>} />
+        <Route path="create-ticket" element={<ProtectedRoute role="ORGANIZADOR"> <CreateTicket /> </ProtectedRoute>} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
         <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<ProtectedRoute> <TicketPay /> </ProtectedRoute>} />
-        <Route path="happy-pay" element={<HappyPay />} />
+        <Route path="happy-pay" element={<ProtectedRoute> <HappyPay /> </ProtectedRoute>} />
         <Route path="mistickets" element={<MisTickets />} />
 
-        //Prueba pantalla para Admin
-        <Route path="admin-dashboard" element={<AdminDashboard />} />
+        <Route path="admin-dashboard" element={<ProtectedRoute role="ADMINISTRADOR"> <AdminDashboard /> </ProtectedRoute>} />
+        <Route path="configusers" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigUsers /> </ProtectedRoute>} />
+        <Route path="configparams" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigParams /> </ProtectedRoute>} />
+        <Route path="configreportes" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigReportes /> </ProtectedRoute>} />
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
         <Route
           path="organizer/evento/:idEvento/editar-detalles"
-          element={<EditEvent />}
+          element={<ProtectedRoute role="ORGANIZADOR"> <EditEvent /> </ProtectedRoute>}
         />
-        <Route path="configusers" element={<ConfigUsers />} />
-        <Route path="configparams" element={<ConfigParams />} />
-        <Route path="configreportes" element={<ConfigReportes/>} />
         <Route
           path="organizer/evento/:idEvento/descuentos/nuevo"
-          element={<CreateDiscount />}
+          element={<ProtectedRoute role="ORGANIZADOR"> <CreateDiscount /> </ProtectedRoute>}
         />
         <Route
           path="organizer/evento/:idEvento/descuentos"
-          element={<DiscountList />}
+          element={<ProtectedRoute role="ORGANIZADOR"> <DiscountList /> </ProtectedRoute>}
         />
         
         <Route
           path="organizer/evento/:idEvento/inscritos"
-          element={<ListadoInscritos />}
+          element={<ProtectedRoute role="ORGANIZADOR"> <ListadoInscritos /> </ProtectedRoute>}
         />
 
         <Route path="mis-tickets/evento/:idEvento" element={<DetalleTickets />} />
-        <Route path="perfil" element={<MiPerfil />} />
+        <Route path="perfil" element={<ProtectedRoute> <MiPerfil /> </ProtectedRoute>} />
 
       </Route>
     </Routes>
