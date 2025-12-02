@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 
@@ -32,7 +33,7 @@ public class OrdenCompraDTO {
     public OrdenCompra toModel(Usuario u, Funcion f) {
         return new OrdenCompra(
                 null,               //id como nulo
-                LocalDateTime.now(),             //hora actual
+                LocalDateTime.now(ZoneId.of("America/Lima")),             //hora actual
                 this.metodoPago,
                 EstadoOrdenCompra.PENDIENTE,    //pendiente ya que se verificará conexión a la API
                 this.totalBruto,

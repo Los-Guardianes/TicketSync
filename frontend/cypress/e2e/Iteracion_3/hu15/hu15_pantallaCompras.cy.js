@@ -34,7 +34,7 @@ describe('HU2 - Compra de tickets y pasarela (integración con backend)', () => 
     // Nota: usamos .contains para ubicar el título del evento y luego buscamos el botón dentro del mismo contenedor.
     cy.contains('Teatro Clásico Arequipa', { timeout: 10000 })
       .should('be.visible')
-      .parents() // sube en el DOM para encontrar el botón relacionado
+      .closest('.event-card')
       .contains(/VER MÁS|Ver más|Ver Más/) // tolerante a variantes de mayúsculas
       .click();
 
