@@ -32,6 +32,13 @@ public class TipoEntradaService {
     }
 
     public void deleteTipoEntrada(Integer id) {
+        // First, find and delete all tarifas associated with this tipo entrada
+        TipoEntrada tipoEntrada = repo.findById(id).orElse(null);
+        if (tipoEntrada != null) {
+            // Delete associated tarifas using a native query to avoid loading them
+            repo.deleteTarifasByTipoEntrada(id);
+        }
+        // Then delete the tipo entrada
         repo.deleteById(id);
     }
 
