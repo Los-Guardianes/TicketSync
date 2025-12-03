@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor  
 public class DetalleCompraDTO {
     private Integer idDetalleCompra;
     private Integer cantidad;

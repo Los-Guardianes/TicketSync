@@ -24,7 +24,7 @@ export const NavBarAdmin = () => {
                 <>
                     <li className="nav-item">
                         <NavLink to="/perfil" className={({isActive}) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
-                            <span className="nav-link">¡Hola, {user.nombre}!</span>
+                            <span className="nav-link">¡Hola, {user?.nombre}!</span>
                         </NavLink>
                     </li>
                     <li className="nav-item ms-2">

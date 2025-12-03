@@ -7,14 +7,17 @@ import com.guardianes.TuTicket.servicioPedidos.model.OrdenCompra;
 import com.guardianes.TuTicket.servicioUsuarios.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrdenCompraDTO {
     private Integer idOrdenCompra;
     private String metodoPago;
@@ -30,7 +33,7 @@ public class OrdenCompraDTO {
     public OrdenCompra toModel(Usuario u, Funcion f) {
         return new OrdenCompra(
                 null,               //id como nulo
-                LocalDateTime.now(),             //hora actual
+                LocalDateTime.now(ZoneId.of("America/Lima")),             //hora actual
                 this.metodoPago,
                 EstadoOrdenCompra.PENDIENTE,    //pendiente ya que se verificará conexión a la API
                 this.totalBruto,

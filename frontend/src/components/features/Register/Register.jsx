@@ -90,7 +90,7 @@ export const Register = () => {
                                     id='inpFechaNac'
                                     name='fechaNacimiento'
                                     value={formUsuario.fechaNacimiento}
-                                    max={new Date()}
+                                    max={new Date().toLocaleString("es-PE", {timeZone: "America/Lima"})}
                                     style={{ background: "#EBF5EB" }}
                                     onChange={handleUserForm}
                                 />

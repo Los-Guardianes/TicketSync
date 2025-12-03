@@ -19,21 +19,27 @@ export const getTicketByFuncionUser = (userId, idFuncion) =>
 
 const toDate = (s) => {
   if (!s) return null;
-  const str = String(s);
-  let d = new Date(str);
-  if (!isNaN(d)) return d;
-  let m = str.match(/^(\d{2})[\/-](\d{2})[\/-](\d{4})/);
+  const str = String(s).trim();
+
+  // 1) Formato YYYY-MM-DD o YYYY/MM/DD → parsear como fecha LOCAL
+  let m = str.match(/^(\d{4})[\/-](\d{2})[\/-](\d{2})$/);
   if (m) {
-    d = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-    if (!isNaN(d)) return d;
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return isNaN(d) ? null : d;
   }
-  m = str.match(/^(\d{4})[\/-](\d{2})[\/-](\d{2})/);
+
+  // 2) Formato DD-MM-YYYY o DD/MM/YYYY → también como fecha LOCAL
+  m = str.match(/^(\d{2})[\/-](\d{2})[\/-](\d{4})$/);
   if (m) {
-    d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-    if (!isNaN(d)) return d;
+    const d = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+    return isNaN(d) ? null : d;
   }
-  return null;
+
+  // 3) Otros formatos (con hora, etc.) → usar Date normal
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
 };
+
 
 /** Construye filas por EVENTO (agrupando tickets del usuario por idEvento) */
 export const buildEventRowsFromTickets = (tickets) => {
@@ -61,12 +67,16 @@ export const buildEventRowsFromTickets = (tickets) => {
     if (fn?.fechaInicio) entry.funciones.add(String(fn.fechaInicio));
   });
 
-  const today = new Date();
+  /*
+  REVISAR ANTES ESTABA COMO toda.toDateString()
+  */
+
+  const today = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
   const rows = Array.from(map.values()).map(r => {
     const fechas = Array.from(r.funciones).map(toDate).filter(Boolean);
-    const futuras = fechas.filter(d => d >= new Date(today.toDateString())); // hoy incluido
+    const futuras = fechas.filter(d => d >= new Date(today.toString())); // hoy incluido
     futuras.sort((a, b) => a - b);
-    const pasadas = fechas.filter(d => d < new Date(today.toDateString()));
+    const pasadas = fechas.filter(d => d < new Date(today.toString()));
     pasadas.sort((a, b) => b - a);
 
     return {

@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TuTicketApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TuTicketApplication.class, args);
+		SpringApplication.run(TuTicketApplication.class, args); 
 	}
 
 }

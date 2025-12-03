@@ -77,6 +77,11 @@ public class TicketController {
             @PathVariable Integer idFuncion) {
         return ResponseEntity.ok(service.getTicketsDTOByUsuarioAndFuncion(idUsuario, idFuncion));
     }
+    //Nuevo
+    @GetMapping("/ticket/evento/{idEvento}")
+    public ResponseEntity<List<TicketDTO>> getTicketsByEvento(@PathVariable Integer idEvento) {
+        return ResponseEntity.ok(service.getTicketsDTOByEvento(idEvento));
+    }
 
 
 }

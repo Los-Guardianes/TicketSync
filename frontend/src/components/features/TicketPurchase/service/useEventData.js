@@ -66,7 +66,7 @@ export const useEventData = (idevento) => {
     const getPeriodoActual = (listaPeriodos) => {
         if (!listaPeriodos || listaPeriodos.length === 0) return null;                  
         // Obtener la fecha actual como cadena en la zona horaria de Perú
-        const now = new Date();
+        const now = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
         const hoyPeru = new Date(now.toLocaleString("en-US", { timeZone: "America/Lima" }));
         return listaPeriodos.find((p) => {
             const inicio = new Date(p.fechaInicio);

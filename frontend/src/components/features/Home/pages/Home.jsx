@@ -46,10 +46,10 @@ export const Home = () => {
       const images = eventos
         .map((evento) => evento.urlImagen)
         .filter((url) => url && url.trim() !== "") // Filtra nulos y strings vacíos
-      console.log("Imágenes para el carrusel:", images)
       setHeroImages(images)
     }
   }, [eventos])
+  
   // Valida fecha
   const inRange = (dateStr) => {
     if (!dateStr) return false
@@ -132,10 +132,9 @@ export const Home = () => {
         )}
       </div>
 
-    <div className="events-container">     
-        <div className="section-header">
-          <h2 className="section-title">Eventos Recomendados</h2>          
-          <div className="title-underline"></div>
+      <div className="events-container">     
+        <div className="mis-tickets-header__content">
+          <h1 className="mis-tickets-header__title">Eventos Recomendados</h1>
         </div>
       </div>
 

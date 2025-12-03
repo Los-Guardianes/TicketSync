@@ -28,7 +28,7 @@ export const useRegister = (rol, onSuccessRedirect = "/home") => {
   // Campos según rol
   const roleSpecificData = {
     CLIENTE: { dni: "", fechaNacimiento: "" },
-    ORGANIZADOR: { razonSocial: "", ruc: "" },
+    ORGANIZADOR: { razonSocial: "", ruc: "", verificado: false},
   };
 
   const [formUsuario, setFormUsuario] = useState({
@@ -90,7 +90,7 @@ export const useRegister = (rol, onSuccessRedirect = "/home") => {
 
   const isFechaNacimientoValida = (fecha) => {
     if (!fecha) return false;
-    const hoy = new Date();
+    const hoy = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
     const fechaNac = new Date(fecha);
     hoy.setHours(0, 0, 0, 0);
     fechaNac.setHours(0, 0, 0, 0);

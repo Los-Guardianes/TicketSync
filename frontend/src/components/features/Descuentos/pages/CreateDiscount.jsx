@@ -88,7 +88,7 @@ export const CreateDiscount = () => {
 
     const fechaInicio = new Date(startDate);
     const fechaFin = new Date(endDate);
-    const fechaHoy = new Date();
+    const fechaHoy = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
     fechaHoy.setHours(0, 0, 0, 0);
 
     const fechasOk = fechaFin >= fechaInicio;

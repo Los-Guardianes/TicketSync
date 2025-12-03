@@ -47,7 +47,13 @@ public interface TicketRepo extends JpaRepository<Ticket, Integer> {
     })
     List<Ticket> findByUsuarioAndEvento(@Param("idUsuario") Integer idUsuario,
                                         @Param("idEvento") Integer idEvento);
-
+    @Query("SELECT t FROM Ticket t " +
+            "JOIN t.detalleCompra dc " +
+            "JOIN dc.ordenCompra oc " +
+            "JOIN oc.funcion f " +
+            "JOIN f.evento e " +
+            "WHERE e.idEvento = :idEvento")
+    List<Ticket> findByEvento(@Param("idEvento") Integer idEvento);
 
 }
 

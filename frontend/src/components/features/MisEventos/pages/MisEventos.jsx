@@ -24,6 +24,7 @@ const buildEventCards = (eventos) => {
       direccion: ev.direccion,
       imagen: ev.urlImagen,
       fecha: ev.fechaReferencia,
+      fechaFin: ev.fechaFin,
       categoria: ev.categoriaEvento,
       activo: ev.activo,
       dpto: ev.ciudad,
@@ -67,6 +68,7 @@ export const MisEventos = () => {
       try {
         if (!user?.idUsuario) return
         const data = await getEventosByOrganizer(user.idUsuario)
+        console.log("Eventos organizador:", data)
         const eventosArray = Array.isArray(data) ? data : []
         const eventosFiltrados = applyFiltersToEvents(eventosArray, filters)
         setEventos(eventosFiltrados)
@@ -162,6 +164,7 @@ export const MisEventos = () => {
                     idEvento={it.idEvento}
                     titulo={it.titulo}
                     fecha={it.fecha}
+                    fechaFin={it.fechaFin}
                     direccion={it.direccion}
                     imagen={it.imagen}
                     actionLabel="Configurar"

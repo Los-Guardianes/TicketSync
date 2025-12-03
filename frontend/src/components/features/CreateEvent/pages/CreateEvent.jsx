@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../../../context/AuthContext';
 import "./CreateEvent.css";
 import { getCateventos } from '../../../../globalServices/EventoService';
 import { useEventCreation } from "../../../../context/EventCreationContext";
-import { useAuth } from "../../../../context/AuthContext";
 import { HeaderEvent } from "./Componentes/HeaderEvent";
 import { ImageUploader } from "./Componentes/ImageUploader";
 import { FunctionsSection } from "./Componentes/Funciones";
@@ -13,7 +13,7 @@ export const CreateEvent = () => {
     const navigate = useNavigate();
     const { eventData, updateEventData } = useEventCreation();
     const { user } = useAuth();
-
+    console.log("Usuario en CreateEvent:", user);
     // Si el usuario es organizador pero no está verificado, mostrar pantalla de bloqueo
     if (user && user.rol === "ORGANIZADOR" && !user.verificado) {
         return (
@@ -125,7 +125,7 @@ export const CreateEvent = () => {
             // Validar que la fecha de inicio no sea en el pasado
             if (funcion.inicioD && funcion.inicioH) {
                 const fechaHoraInicio = new Date(`${funcion.inicioD}T${funcion.inicioH}`);
-                const ahora = new Date();
+                const ahora = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
 
                 if (fechaHoraInicio < ahora) {
                     erroresFunciones[`funcion-${index}-fechaPasado`] = "La fecha/hora de inicio no puede ser en el pasado";
