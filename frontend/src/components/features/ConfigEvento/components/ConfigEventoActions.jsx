@@ -21,13 +21,7 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
         // futuro: navigate(`/organizer/evento/${idEvento}/editar-ubicacion`);
       },
     },
-    {
-      label: 'EDITAR ENTRADAS',
-      onClick: () => {
-        console.log('EDITAR ENTRADAS', idEvento);
-        // futuro: navigate(`/organizer/evento/${idEvento}/editar-entradas`);
-      },
-    },
+
     {
       label: 'GENERADOR DE DESCUENTOS',
       onClick: () => {

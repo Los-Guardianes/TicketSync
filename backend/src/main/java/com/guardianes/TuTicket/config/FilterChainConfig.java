@@ -82,11 +82,12 @@ public class FilterChainConfig {
                             "/api/dpto/**",
                             "/api/funcion/**",
                             "/api/catevento/**",
-                            "/api/periodo/**"
+                            "/api/periodo/**",
+                            "/api/tipoentrada/**"
                     ).hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.PUT, "/api/evento/**", "/api/periodo/**")
+                    .requestMatchers(HttpMethod.PUT, "/api/evento/**", "/api/periodo/**", "/api/tipoentrada/**", "/api/zona/**", "/api/funcion/**")
                     .hasRole(Rol.ORGANIZADOR.name())
-                    .requestMatchers(HttpMethod.DELETE, "/api/periodo/**")
+                    .requestMatchers(HttpMethod.DELETE, "/api/periodo/**", "/api/tipoentrada/**", "/api/zona/**", "/api/funcion/**")
                     .hasRole(Rol.ORGANIZADOR.name())
                     .requestMatchers(HttpMethod.PUT, "/api/cliente/{id}", "/api/admin/{id}", "/api/organizador/{id}", "/api/params/**")
                     .hasRole(Rol.ADMINISTRADOR.name())
