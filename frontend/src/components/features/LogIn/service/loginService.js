@@ -8,11 +8,12 @@ export const loginService = () => {
     // NOTA: La URL se gestiona desde el archivo API.js importado arriba
 
     const { login } = useAuth(); //Obtenemos la función login del contexto
-    
+
     // --- ESTADOS DEL FORMULARIO ---
     const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        password: '',
+        rememberMe: false
     });
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -91,13 +92,13 @@ export const loginService = () => {
                 rol: result.rol,
                 nombre: result.nombre,
                 apellido: result.apellido,
-                telefono: result.telefono,        
-                ciudad: result.ciudad,            
-                departamento: result.departamento, 
-                verificado: result.verificado     
+                telefono: result.telefono,
+                ciudad: result.ciudad,
+                departamento: result.departamento,
+                verificado: result.verificado
             };
 
-            login(user, result.token, decoded.exp);
+            login(user, result.token, decoded.exp, formData.rememberMe);
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
             return user;
 
@@ -147,7 +148,7 @@ export const loginService = () => {
                 verificado: result.verificado
             };
 
-            login(user, result.token, decoded.exp);
+            login(user, result.token, decoded.exp, true); // Google login siempre es "remember me"
             showMessage(result.message || '¡Inicio de sesión exitoso!', 'success');
             return user;
 
