@@ -67,12 +67,16 @@ export const buildEventRowsFromTickets = (tickets) => {
     if (fn?.fechaInicio) entry.funciones.add(String(fn.fechaInicio));
   });
 
-  const today = new Date();
+  /*
+  REVISAR ANTES ESTABA COMO toda.toDateString()
+  */
+
+  const today = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
   const rows = Array.from(map.values()).map(r => {
     const fechas = Array.from(r.funciones).map(toDate).filter(Boolean);
-    const futuras = fechas.filter(d => d >= new Date(today.toDateString())); // hoy incluido
+    const futuras = fechas.filter(d => d >= new Date(today.toString())); // hoy incluido
     futuras.sort((a, b) => a - b);
-    const pasadas = fechas.filter(d => d < new Date(today.toDateString()));
+    const pasadas = fechas.filter(d => d < new Date(today.toString()));
     pasadas.sort((a, b) => b - a);
 
     return {
