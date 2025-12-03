@@ -21,9 +21,6 @@ export const Home = () => {
   // Filtros que vienen de Layout/NavBar
   const { search, ubicacion, fechaInicio, fechaFin, categoria } = useOutletContext()
 
-  // Fecha de hoy
-  const today = new Date().toISOString().slice(0, 10)
-
   // 1. Cargar eventos de la API
   useEffect(() => {
     const fetchEventos = async () => {
@@ -49,14 +46,28 @@ export const Home = () => {
       setHeroImages(images)
     }
   }, [eventos])
-  
-  // Valida fecha
-  const inRange = (dateStr) => {
-    if (!dateStr) return false
-    const d = String(dateStr).slice(0, 10)
-    if (d < today) return false
-    if (fechaInicio && d < fechaInicio) return false
-    if (fechaFin && d > fechaFin) return false
+
+  // ✅ FIX: Valida si una función todavía no ha terminado (compara con hora de fin)
+  const isEventoActivo = (funcion) => {
+    if (!funcion?.fechaInicio) return false
+
+    const ahora = new Date()
+
+    // Usar fechaFin/horaFin si existen, sino usar fechaInicio/horaInicio
+    const fechaFinFunc = funcion.fechaFin || funcion.fechaInicio
+    const horaFinFunc = funcion.horaFin || funcion.horaInicio
+
+    // Construir DateTime de fin
+    const fechaHoraFin = new Date(`${fechaFinFunc}T${horaFinFunc}`)
+
+    // El evento sigue activo si su hora de fin es futura
+    if (fechaHoraFin < ahora) return false
+
+    // Aplicar filtros de usuario
+    const fechaInicioStr = String(funcion.fechaInicio).slice(0, 10)
+    if (fechaInicio && fechaInicioStr < fechaInicio) return false
+    if (fechaFin && fechaInicioStr > fechaFin) return false
+
     return true
   }
 
@@ -69,9 +80,9 @@ export const Home = () => {
       categoria === "Todas" ||
       (evento?.categoria?.nombre && evento.categoria.nombre.toLowerCase() === String(categoria).toLowerCase()) ||
       (evento?.categoria?.idCategoria && String(evento.categoria.idCategoria) === String(categoria))
-    
+
     const funciones = Array.isArray(evento?.funciones) ? evento.funciones : []
-    const matchFecha = funciones.some((fn) => inRange(fn?.fechaInicio))
+    const matchFecha = funciones.some((fn) => isEventoActivo(fn))
 
     return matchActivo && matchSearch && matchUbicacion && matchCategoria && matchFecha
   })
@@ -82,10 +93,10 @@ export const Home = () => {
         {heroImages.length > 0 ? (
           <Swiper
             // 1. Quitamos Navigation de los modulos
-            modules={[Autoplay, Pagination]} 
-            
+            modules={[Autoplay, Pagination]}
+
             // 2. IMPORTANTE: Esto activa la lógica de "Imagen central principal"
-            centeredSlides={true} 
+            centeredSlides={true}
             loop={heroImages.length > 1}
             speed={800}
             autoplay={{
@@ -95,12 +106,12 @@ export const Home = () => {
             // 3. Quitamos navigation={true}
             pagination={{ clickable: true }}
             className="heroSwiper"
-            
+
             // 4. Configuración Responsive
             breakpoints={{
               // Móvil: mostramos un poco de los lados para invitar a deslizar
               0: {
-                slidesPerView: 1.2, 
+                slidesPerView: 1.2,
                 spaceBetween: 5,
                 centeredSlides: true, // IMPORTANTE: Forzamos centrado aquí también
               },
@@ -126,13 +137,13 @@ export const Home = () => {
             ))}
           </Swiper>
         ) : (
-           <div className="hero-loading" style={{height: '100%', background: '#eee', display:'flex', alignItems:'center', justifyContent:'center'}}>
-              <p>Cargando eventos destacados...</p>
-           </div>
+          <div className="hero-loading" style={{ height: '100%', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <p>Cargando eventos destacados...</p>
+          </div>
         )}
       </div>
 
-      <div className="events-container">     
+      <div className="events-container">
         <div className="mis-tickets-header__content">
           <h1 className="mis-tickets-header__title">Eventos Recomendados</h1>
         </div>
