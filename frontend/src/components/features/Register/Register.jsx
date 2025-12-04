@@ -70,7 +70,7 @@ export const Register = () => {
                             <div className='col'>
                                 <label htmlFor="inpDNI" className='text-start'>DNI</label>
                                 <input className='form-control border-0' type="text"
-                                    id='inpDNI' placeholder='Ingrese su número de indetidad' name='dni'
+                                    id='inpDNI' placeholder='Ingrese su número de DNI' name='dni'
                                     value={formUsuario.dni} style={{ background: "#EBF5EB" }} onChange={handleUserForm} />
                             </div>
                             <div className='col'>

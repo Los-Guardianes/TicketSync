@@ -8,7 +8,6 @@ import { RegisterOptions } from "../components/features/Register/RegisterOptions
 import { RegisterOrganizer } from "../components/features/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/features/CreateEvent/pages/CreateEvent";
 import { UbicacionEvento } from "../components/features/CreateEvent/pages/UbicacionEvento";
-import { ComprobanteTest } from "../components/features/ComprobanteTest/pages/ComprobanteTest";
 import { CreateTicket } from "../components/features/CreateEvent/pages/CreateTicket";
 import { TicketPay } from "../components/features/TicketPurchase/pages/TicketPay";
 import { TicketPurchase } from "../components/features/TicketPurchase/pages/TicketPurchase";
