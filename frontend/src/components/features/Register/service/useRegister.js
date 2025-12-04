@@ -90,12 +90,17 @@ export const useRegister = (rol, onSuccessRedirect = "/home") => {
 
   const isFechaNacimientoValida = (fecha) => {
     if (!fecha) return false;
-    const hoy = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
+
+    const ahora = new Date();
+    const hoy = new Date(ahora.toLocaleString("en-US", { timeZone: "America/Lima" }));
+
     const fechaNac = new Date(fecha);
     hoy.setHours(0, 0, 0, 0);
     fechaNac.setHours(0, 0, 0, 0);
+
     return fechaNac <= hoy;
   };
+
 
   /** ---- SUBMIT ---- */
   const handleSubmit = async (event) => {
