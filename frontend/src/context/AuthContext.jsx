@@ -40,12 +40,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth');
     sessionStorage.removeItem('auth');
 
-    // Guardar en el storage apropiado según rememberMe
-    if (rememberMe) {
-      localStorage.setItem('auth', JSON.stringify(payload));
-    } else {
-      sessionStorage.setItem('auth', JSON.stringify(payload));
-    }
+    // ✅ FIX: Siempre guardar en localStorage para evitar pérdida de sesión en reportes
+    localStorage.setItem('auth', JSON.stringify(payload));
 
     setAuth(payload);
   };

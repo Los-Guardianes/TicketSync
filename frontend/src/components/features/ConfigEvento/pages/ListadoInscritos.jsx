@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { getInscritosByEvento } from "../../../../globalServices/EventoService";
+import { apiDownload } from "../../../../globalServices/API";
 import "./ListadoInscritos.css";
 
 export const ListadoInscritos = () => {
@@ -66,7 +67,29 @@ export const ListadoInscritos = () => {
 
     const goToPage = (page) => {
         if (page >= 0 && page < totalPages) {
-            setCurrentPage(page);
+            setCurrentpage(page);
+        }
+    };
+
+    const handleExportExcel = async () => {
+        try {
+            setLoading(true);
+
+            const blob = await apiDownload(`/api/evento/${idEvento}/inscritos/reporte/excel`);
+
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `inscritos_evento_${idEvento}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error al exportar:', error);
+            alert('Error al exportar la lista de participantes: ' + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -100,6 +123,18 @@ export const ListadoInscritos = () => {
                         ))}
                     </select>
                 </div>
+            </div>
+
+            {/* Botón de exportar */}
+            <div className="export-section">
+                <button
+                    className="btn-export"
+                    onClick={handleExportExcel}
+                    disabled={loading}
+                >
+                    <i className="bi bi-file-earmark-excel"></i>
+                    {loading ? ' Generando...' : ' Exportar Lista de Participantes'}
+                </button>
             </div>
 
             {loading ? (

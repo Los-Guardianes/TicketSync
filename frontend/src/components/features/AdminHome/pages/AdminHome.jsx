@@ -19,11 +19,14 @@ export const AdminHome = () => {
       case "Reportes":
         navigate("/configreportes");
         break
-      case "Gestionar Roles":
+      case "Gestionar Usuarios":
         navigate("/configusers")
         break
       case "Configurar Comisión":
         navigate("/configparams")
+        break
+      case "Modificar Categorías":
+        navigate("/configcategorias")
         break
       default:
         break
@@ -79,11 +82,11 @@ export const AdminHome = () => {
 
                 <div className="admin-home-nav-grid">
                   <NavCard
-                        icon="person-rolodex"
-                        title="Gestionar Roles"
-                        description="Administra roles y permisos de usuarios."
-                        onClick={() => handleNavCardClick("Gestionar Roles")}
-                      />
+                    icon="person-rolodex"
+                    title="Gestionar Usuarios"
+                    description="Administra usuarios y sus permisos."
+                    onClick={() => handleNavCardClick("Gestionar Usuarios")}
+                  />
                   <NavCard
                     icon="percent"
                     title="Configurar Comisión"

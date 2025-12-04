@@ -40,8 +40,16 @@ export const useEventData = (idevento) => {
 
     const getMaxCantidadTickets = (zona) => {
         //Aquí se calcula el máximo de tickets por zona que se pueden comprar, limitado a su vez por la cantidad máxima de compra de tickets que el evento permite
-        if (!selectedFuncion) return;
+        if (!selectedFuncion) return 0;
         const zxf = zonaxfuncion.find(zf => zf.idZona === zona.idZona && zf.idFuncion === selectedFuncion?.idFuncion)
+
+        // ✅ FIX: Si no hay datos de zonaxfuncion, asumir capacidad completa (aforo)
+        if (!zxf) {
+            console.warn(`⚠️ No hay datos de zonaxfuncion para zona ${zona.idZona} y función ${selectedFuncion?.idFuncion}. Usando aforo completo.`);
+            const maxComprasEvento = getMaxCantidadTicketsOrden();
+            return Math.min(zona.aforo, maxComprasEvento);
+        }
+
         const entradasDisponibles = zona.aforo - zxf.comprasActuales;
         const maxComprasEvento = getMaxCantidadTicketsOrden();
         const maxCantidad = maxComprasEvento >= (entradasDisponibles >= 0 ? entradasDisponibles : 0) ? entradasDisponibles : maxComprasEvento //devuelve el menor

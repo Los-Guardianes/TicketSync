@@ -11,4 +11,6 @@ import java.util.List;
 public interface FuncionRepo extends JpaRepository<Funcion, Integer> {
 
     List<Funcion> findByEventoOrderByFechaInicioAscHoraInicioAsc(Evento evento);
+
+    List<Funcion> findByEventoAndActivoTrueOrderByFechaInicioAscHoraInicioAsc(Evento evento);
 }

@@ -32,7 +32,7 @@ public class ZonaXFuncionService {
         return repo.save(zonaxfuncion);
     }
 
-    public void deleteZonaXFuncion(ZonaXFuncionId  id) {
+    public void deleteZonaXFuncion(ZonaXFuncionId id) {
         repo.deleteById(id);
     }
 
@@ -41,22 +41,37 @@ public class ZonaXFuncionService {
         return zonaxfuncion.stream().map(ZonaXFuncionDTO::new).toList();
     }
 
-    public Boolean reservarEntradaEnZonaFuncion(Zona zona, Funcion funcion, Integer cantidadRequest){
-        ZonaXFuncion zxf = verificarDisponibilidadZonaFuncion(zona,funcion,cantidadRequest);
-        if(zxf==null)return false;
-        zxf.setComprasActuales(zxf.getComprasActuales()+cantidadRequest);
+    public Boolean reservarEntradaEnZonaFuncion(Zona zona, Funcion funcion, Integer cantidadRequest) {
+        ZonaXFuncion zxf = verificarDisponibilidadZonaFuncion(zona, funcion, cantidadRequest);
+        if (zxf == null)
+            return false;
+        zxf.setComprasActuales(zxf.getComprasActuales() + cantidadRequest);
         repo.save(zxf);
         return true;
     }
 
-    private ZonaXFuncion verificarDisponibilidadZonaFuncion(Zona zona, Funcion funcion, Integer cantidadRequest){
+    private ZonaXFuncion verificarDisponibilidadZonaFuncion(Zona zona, Funcion funcion, Integer cantidadRequest) {
+        // ✅ FIX: Buscar o crear zonaxfuncion si no existe (para eventos viejos)
         ZonaXFuncion zonaXFuncion = repo
                 .findById_IdZonaAndId_IdFuncion(zona.getIdZona(), funcion.getIdFuncion())
-                .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "No se encontró que una zona: " + zona.getNombre() +
-                        " tenga entradas para la función " + funcion.getFechaInicio()
-                ));
-        if(cantidadRequest + zonaXFuncion.getComprasActuales() > zona.getAforo())return null;
+                .orElseGet(() -> {
+                    // Si no existe, crear un nuevo registro con comprasActuales = 0
+                    System.out.println("⚠️ ZonaXFuncion no existe para zona " + zona.getNombre() +
+                            " y función " + funcion.getFechaInicio() + ". Creando nuevo registro.");
+                    ZonaXFuncion nuevoZxf = new ZonaXFuncion();
+                    ZonaXFuncionId id = new ZonaXFuncionId();
+                    id.setIdZona(zona.getIdZona());
+                    id.setIdFuncion(funcion.getIdFuncion());
+                    nuevoZxf.setId(id);
+                    nuevoZxf.setComprasActuales(0);
+                    nuevoZxf.setZona(zona);
+                    nuevoZxf.setFuncion(funcion);
+                    return repo.save(nuevoZxf);
+                });
+
+        // Validar que hay capacidad disponible
+        if (cantidadRequest + zonaXFuncion.getComprasActuales() > zona.getAforo())
+            return null;
         System.out.println(zona.getAforo());
         return zonaXFuncion;
     }
