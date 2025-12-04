@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { apiFetch } from "../../../../globalServices/API";
-import { useNotification } from "../../../../context/NotificationContext"
+import { useNotification } from "../../../../context/NotificationContext";
+import { PasswordStrengthIndicator, validatePassword } from '../../../common/PasswordStrengthIndicator/PasswordStrengthIndicator';
 import "./ResetPassword.css";
 
 export const ResetPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { 
-        showNotification 
+    const {
+        showNotification
     } = useNotification()
     // Obtener el token del query param
     const searchParams = new URLSearchParams(location.search);
@@ -35,10 +36,17 @@ export const ResetPassword = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();        
+        e.preventDefault();
+
+        // ✅ Validar criterios de seguridad antes de verificar coincidencia
+        const validation = validatePassword(form.newPassword);
+        if (!validation.isValid) {
+            showNotification(validation.errors[0], "error");
+            return;
+        }
 
         if (form.newPassword !== form.confirmPassword) {
-            showNotification("Las contraseñas debe de coincidr", "error")
+            showNotification("Las contraseñas deben coincidir", "error");
             return;
         }
 
@@ -80,7 +88,7 @@ export const ResetPassword = () => {
                 setTimeout(() => navigate("/login"), 2500);
             }
             */
-           showNotification("Contraseña actualizada correctamente", "success")
+            showNotification("Contraseña actualizada correctamente", "success")
             setTimeout(() => {
                 navigate("/login");
             }, 2000);
@@ -114,6 +122,9 @@ export const ResetPassword = () => {
                         required
                         disabled={isLoading}
                     />
+                    {/* ✅ Indicador visual de requisitos de seguridad */}
+                    {form.newPassword && <PasswordStrengthIndicator password={form.newPassword} />}
+
                     <input
                         type="password"
                         name="confirmPassword"

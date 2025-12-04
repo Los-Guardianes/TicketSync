@@ -1,7 +1,7 @@
 import "./Login.css";
 // 1. Importa 'useLocation'
 import { useNavigate, useLocation } from 'react-router-dom';
-import { loginService } from '../service/loginService'; 
+import { loginService } from '../service/loginService';
 import { GoogleLogin } from '@react-oauth/google';
 
 export const Login = () => {
@@ -20,28 +20,28 @@ export const Login = () => {
         handleGoogleLogin,
     } = loginService();
 
-    const handleNavigation = (rol) => {    
+    const handleNavigation = (rol) => {
         /*
             De Rodrigo: Recordar que ProtectedRoute manda a login cuando no esta autenticado
             A su vez manda un state con los datos de a que página trataba de ir y de donde llegaba
             En caso la ruta la no este protegida (si se va al login manualmente) entonces ignorará todos los states
             Esto fue implementado para mejorar la usabilidad, ya que antes cuando el login siempre te enviaba al home si o si
         */
-        const state = location.state || {};        
+        const state = location.state || {};
         const fromPath = state.from || null;
-        const fromData = state.data || {};        
+        const fromData = state.data || {};
         const returnTo = fromData.returnTo || null; // ej: "/ticket-purchase/123"
 
         if (returnTo) {
             // Prioridad #1: Si existe un 'returnTo', volvemos a la página de selección.
             // (Usamos 'replace' para que el login no quede en el historial)
             navigate(returnTo, { replace: true });
-        
+
         } else if (fromPath) {
             // Prioridad #2: Si no había 'returnTo' (ej: un usuario fue a /profile)
             // lo mandamos a 'fromPath'.
             navigate(fromPath, { replace: true });
-        
+
         } else {
             // Prioridad #3: Si no había 'state' (el usuario fue a /login directamente)
             // usamos la lógica de roles.
@@ -108,6 +108,19 @@ export const Login = () => {
                             disabled={isLoading}
                         />
                         {errors.password && <div className="error-form">{errors.password}</div>}
+
+                        <div className="remember-me-container">
+                            <label className="remember-me-label">
+                                <input
+                                    type="checkbox"
+                                    name="rememberMe"
+                                    checked={formData.rememberMe}
+                                    onChange={(e) => handleInputChange({ target: { name: 'rememberMe', value: e.target.checked } })}
+                                    disabled={isLoading}
+                                />
+                                <span>Recordarme</span>
+                            </label>
+                        </div>
 
                         <a className="link-form forgot-password" onClick={() => navigate('/forgot-password')}>¿Olvidaste tu contraseña?</a>
 

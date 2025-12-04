@@ -29,6 +29,9 @@ import { DiscountList } from "../components/features/Descuentos/pages/DiscountLi
 import { AdminHome } from "../components/features/AdminHome/pages/AdminHome";
 import { ConfigUsers } from "../components/features/AdminHome/pages/ConfigUsers";
 import { ConfigParams } from "../components/features/AdminHome/pages/ConfigParams";
+import { EditarUbicacion } from "../components/features/ConfigEvento/pages/EditarUbicacion";
+import { GestionTarifas } from "../components/features/ConfigEvento/pages/GestionTarifas";
+import { ConfigCategorias } from "../components/features/AdminHome/pages/ConfigCategorias";
 import DetalleTickets from "../components/features/MisTickets/pages/DetalleTickets";
 import { ForgotPassword } from "../components/features/LogIn/pages/ForgotPassword";
 import { ResetPassword } from "../components/features/LogIn/pages/ResetPassword";
@@ -72,9 +75,26 @@ export const ClienteRoutes = () => {
         <Route path="admin-dashboard" element={<ProtectedRoute role="ADMINISTRADOR"> <AdminDashboard /> </ProtectedRoute>} />
         <Route path="configusers" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigUsers /> </ProtectedRoute>} />
         <Route path="configparams" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigParams /> </ProtectedRoute>} />
+        <Route path="configcategorias" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigCategorias /> </ProtectedRoute>} />
         <Route path="configreportes" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigReportes /> </ProtectedRoute>} />
         <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
         <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
+        <Route
+          path="organizer/evento/:idEvento/editar-ubicacion"
+          element={
+            <ProtectedRoute role="ORGANIZADOR">
+              <EditarUbicacion />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="organizer/evento/:idEvento/tarifas"
+          element={
+            <ProtectedRoute role="ORGANIZADOR">
+              <GestionTarifas />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="organizer/evento/:idEvento/editar-detalles"
           element={<ProtectedRoute role="ORGANIZADOR"> <EditEvent /> </ProtectedRoute>}
@@ -87,7 +107,7 @@ export const ClienteRoutes = () => {
           path="organizer/evento/:idEvento/descuentos"
           element={<ProtectedRoute role="ORGANIZADOR"> <DiscountList /> </ProtectedRoute>}
         />
-        
+
         <Route
           path="organizer/evento/:idEvento/inscritos"
           element={<ProtectedRoute role="ORGANIZADOR"> <ListadoInscritos /> </ProtectedRoute>}

@@ -6,6 +6,7 @@ import "./ConfigUsers.css";
 export const ConfigParams = () => {
   const navigate = useNavigate();
   const [comisionGlobal, setComisionGlobal] = useState("");
+  const [comisionGlobalActual, setComisionGlobalActual] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export const ConfigParams = () => {
         const data1 = data?.[0];
         if (data1?.comisionGlobal !== undefined) {
           setComisionGlobal(data1.comisionGlobal.toString());
+          setComisionGlobalActual(data1.comisionGlobal.toString());
         }
       } catch (err) {
         console.error("Error al obtener parámetros", err);
@@ -40,96 +42,111 @@ export const ConfigParams = () => {
 
       await putParams(payload, 1);
       alert("Parámetros guardados correctamente.");
-      navigate("/home-admin");
+      // Actualizar el valor actual después de guardar
+      setComisionGlobalActual(comisionGlobal);
     } catch (err) {
       console.error("Error al guardar parámetros", err);
       alert("No se pudieron guardar los parámetros.");
     }
   };
 
-  // Estilos embebidos
-  const wrapperStyle = {
-    minHeight: "100vh",
-    backgroundColor: "#f3f4f6",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: "40px 20px",
-    gap: "20px",
-  };
-
-  const cardStyle = {
-    background: "#B6E6C9",
-    border: "1px solid #B6E6C9",
-    borderRadius: "8px",
-    maxWidth: "500px",
-    width: "100%",
-    padding: "24px 28px",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-  };
-
-  const labelStyle = {
-    fontSize: "0.9rem",
-  };
-
   return (
-    <div style={wrapperStyle}>
-      <div className="d-flex justify-content-start mt-3">
-        <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
-          ← Volver
-        </button>
-      </div>
-      <div style={cardStyle}>
-        <h6 className="fw-bold">
-          <i className="bi bi-gear-fill me-2"></i>Parámetros de la plataforma
-        </h6>
-        <p className="mb-3" style={{ fontSize: "0.9rem" }}>
+    <div className="config-users-wrapper">
+      <div className="config-users-container" style={{ maxWidth: '700px', margin: '0 auto', backgroundColor: 'transparent', boxShadow: 'none', padding: '20px' }}>
+        <div className="d-flex justify-content-start mb-3">
+          <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
+            ← Volver
+          </button>
+        </div>
+
+        <h3 className="mb-2">Parámetros de la Plataforma</h3>
+        <p className="mb-4" style={{ fontSize: '0.95rem', color: '#6c757d' }}>
           Configura los ajustes principales del sistema.
         </p>
 
-        <form>
-          <h4>Comisión global (%)</h4>
-          <div className="mb-2">
-            <label
-              htmlFor="comisionGlobal"
-              className="form-label fw-semibold"
-              style={labelStyle}
-            >
-              Valor actual
-            </label>
-            <input
-              type="text"
-              id="comisionGlobal"
-              className="form-control form-control-sm"
-              placeholder={comisionGlobal}
-              readOnly
-            />
-            <br></br>
-            <label
-              htmlFor="comisionGlobal"
-              className="form-label fw-semibold"
-              style={labelStyle}
-            >
-              Nuevo valor
-            </label>
-            <input
-              type="text"
-              id="comisionGlobal"
-              className="form-control form-control-sm"
-              value={comisionGlobal}
-              onChange={(e) => setComisionGlobal(e.target.value)}
-            />
+        {loading ? (
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </div>
           </div>
+        ) : (
+          <div className="card shadow-sm">
+            <div className="card-body p-4">
+              <h5 className="card-title mb-4">
+                <i className="bi bi-percent me-2"></i>
+                Comisión Global
+              </h5>
 
-          <button
-            type="button"
-            className="btn btn-primary w-100 mt-3"
-            onClick={handleGuardarParametros}
-          >
-            Guardar configuración
-          </button>
-        </form>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="comisionActual" className="form-label fw-semibold">
+                    Valor Actual
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      id="comisionActual"
+                      className="form-control"
+                      value={comisionGlobalActual}
+                      readOnly
+                      style={{ backgroundColor: '#e9ecef', cursor: 'not-allowed' }}
+                    />
+                    <span className="input-group-text">%</span>
+                  </div>
+                  <small className="text-muted">Este es el valor actualmente activo</small>
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="comisionNueva" className="form-label fw-semibold">
+                    Nuevo Valor
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type="number"
+                      id="comisionNueva"
+                      className="form-control"
+                      value={comisionGlobal}
+                      onChange={(e) => setComisionGlobal(e.target.value)}
+                      min="0"
+                      max="100"
+                      step="0.1"
+                      placeholder="0-100"
+                    />
+                    <span className="input-group-text">%</span>
+                  </div>
+                  <small className="text-muted">Ingresa un valor entre 0 y 100</small>
+                </div>
+              </div>
+
+              <div className="alert alert-info d-flex align-items-start" role="alert">
+                <i className="bi bi-info-circle me-2 mt-1"></i>
+                <div>
+                  <strong>Información:</strong> La comisión global se aplica a todas las transacciones de la plataforma.
+                  Los cambios son efectivos inmediatamente.
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-end gap-2 mt-4">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => navigate("/home-admin")}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleGuardarParametros}
+                  disabled={comisionGlobal === comisionGlobalActual}
+                >
+                  <i className="bi bi-check-circle me-2"></i>
+                  Guardar Configuración
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

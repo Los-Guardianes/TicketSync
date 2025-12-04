@@ -18,14 +18,13 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
       label: 'EDITAR UBICACIÓN',
       onClick: () => {
         console.log('EDITAR UBICACIÓN', idEvento);
-        // futuro: navigate(`/organizer/evento/${idEvento}/editar-ubicacion`);
+        navigate(`/organizer/evento/${idEvento}/editar-ubicacion`);
       },
     },
     {
-      label: 'EDITAR ENTRADAS',
+      label: 'CONFIGURAR TARIFAS',
       onClick: () => {
-        console.log('EDITAR ENTRADAS', idEvento);
-        // futuro: navigate(`/organizer/evento/${idEvento}/editar-entradas`);
+        navigate(`/organizer/evento/${idEvento}/tarifas`);
       },
     },
     {
@@ -38,13 +37,6 @@ export const ConfigEventoActions = ({ idEvento, onCancelar }) => {
       label: 'GESTIÓN DE DESCUENTOS',
       onClick: () => {
         navigate(`/organizer/evento/${idEvento}/descuentos`);
-      },
-    },
-    {
-      label: 'CONFIGURAR POLÍTICAS DE DEVOLUCIÓN',
-      onClick: () => {
-        console.log('POLÍTICAS DEVOLUCIÓN', idEvento);
-        // futuro: navigate(`/organizer/evento/${idEvento}/politicas-devolucion`);
       },
     },
     {

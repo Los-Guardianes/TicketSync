@@ -82,6 +82,33 @@
     text-align: right;
 }
 
+/* Remember Me Checkbox */
+.remember-me-container {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.remember-me-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+}
+
+.remember-me-label input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.remember-me-label span {
+    user-select: none;
+}
+
 .digit-code{
     display: flex;
     flex-direction: column;

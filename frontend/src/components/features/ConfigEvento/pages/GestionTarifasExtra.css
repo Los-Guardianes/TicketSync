@@ -1,0 +1,54 @@
+/* Filtros */
+.filtros-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filtro label {
+    font-weight: 500;
+    color: #333;
+}
+
+.filtro select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.filtro select:focus {
+    outline: none;
+    border-color: #219653;
+}
+
+/* Badges de estado */
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-activo {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-inactivo {
+    background: #f8d7da;
+    color: #721c24;
+}
+/* Botón activar */
+.btn-activar {background: transparent; border: none; font-size: 1.2rem; cursor: pointer; padding: 0.3rem 0.6rem; border-radius: 4px; transition: all 0.2s ease; color: #219653;}
+.btn-activar:hover {background: #d4edda;}

@@ -1,0 +1,396 @@
+.gestion-tarifas-container {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    padding: 40px 20px;
+}
+
+.header-tarifas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.header-tarifas h2 {
+    color: #00833E;
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.header-tarifas h2::before {
+    content: "💰";
+    font-size: 1.8rem;
+}
+
+.btn-volver {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Filtros */
+.filtros-container {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.filtro label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.95rem;
+}
+
+.filtro select {
+    padding: 0.6rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.filtro select:focus {
+    outline: none;
+    border-color: #00833E;
+    box-shadow: 0 0 0 3px rgba(0, 131, 62, 0.1);
+}
+
+.tarifas-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.btn-agregar {
+    background: #00833E;
+    color: white;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 131, 62, 0.2);
+}
+
+.btn-agregar:hover {
+    background: #006b33;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 131, 62, 0.3);
+}
+
+.tarifas-table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.tarifas-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tarifas-table thead {
+    background: #f9fafb;
+}
+
+.tarifas-table th {
+    padding: 1.2rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.tarifas-table td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+}
+
+.tarifas-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.tarifas-table tbody tr:hover {
+    background: #f9fafb;
+    transform: scale(1.001);
+}
+
+.acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-editar,
+.btn-eliminar,
+.btn-activar {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-editar:hover {
+    background: #dbeafe;
+    transform: scale(1.1);
+}
+
+.btn-eliminar:hover {
+    background: #fee2e2;
+    transform: scale(1.1);
+}
+
+.btn-activar {
+    color: #00833E;
+    font-weight: bold;
+}
+
+.btn-activar:hover {
+    background: #d1fae5;
+    transform: scale(1.1);
+}
+
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 1.1rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+    color: #6b7280;
+}
+
+/* Badges de estado */
+.badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.badge-activo {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-inactivo {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h3 {
+    margin: 0 0 1.5rem 0;
+    color: #00833E;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 1.4rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 0.9rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: #00833E;
+    box-shadow: 0 0 0 3px rgba(0, 131, 62, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.btn-cancelar,
+.btn-guardar,
+.btn-eliminar-confirm {
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-cancelar:hover {
+    background: #e5e7eb;
+}
+
+.btn-guardar {
+    background: #00833E;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 131, 62, 0.2);
+}
+
+.btn-guardar:hover:not(:disabled) {
+    background: #006b33;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 131, 62, 0.3);
+}
+
+.btn-guardar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-eliminar-confirm {
+    background: #dc2626;
+    color: white;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+}
+
+.btn-eliminar-confirm:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-eliminar-confirm:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.modal-warning {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    color: #92400e;
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gestion-tarifas-container {
+        padding: 20px 10px;
+    }
+
+    .header-tarifas {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .filtros-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tarifas-table {
+        font-size: 0.9rem;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+    }
+}

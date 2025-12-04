@@ -50,8 +50,10 @@ public class PDFService {
         PdfWriter.getInstance(document, baos);
         document.open();
 
-        //Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
-        Image logo = Image.getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png");
+        // Image logo =
+        // Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+        Image logo = Image
+                .getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png");
         logo.scaleToFit(100, 100);
         logo.setAlignment(Image.ALIGN_CENTER);
         document.add(logo);
@@ -63,7 +65,7 @@ public class PDFService {
         document.add(titulo);
         document.add(new Paragraph(" ")); // espacio
 
-        //Obtener atributos
+        // Obtener atributos
         Usuario user = orden.getUsuario();
         List<DetalleCompra> detalles = dcService.getDetallesByOrdenCompra(orden.getIdOrdenCompra());
 
@@ -72,15 +74,18 @@ public class PDFService {
                 .sum();
 
         double total = detalles.stream()
-                    .mapToDouble(detalle -> detalle.getTarifa().getPrecioBase().doubleValue() * detalle.getCantidad())
-                    .sum();
+                .mapToDouble(detalle -> detalle.getTarifa().getPrecioBase().doubleValue() * detalle.getCantidad())
+                .sum();
 
         document.add(new Paragraph("Nombre del usuario: " + user.getNombre() + " " + user.getApellido()));
         document.add(new Paragraph("Total de entradas: " + totalTickets));
         document.add(new Paragraph("Precio total: S/ " + total));
 
         // Fecha al final, alineada a la derecha
-        String fecha = new SimpleDateFormat("dd/MM/yyyy").format(LocalDate.now(ZoneId.of("America/Lima")));
+        // ✅ FIX: Convertir LocalDate a Date para SimpleDateFormat
+        LocalDate localDate = LocalDate.now(ZoneId.of("America/Lima"));
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.of("America/Lima")).toInstant());
+        String fecha = new SimpleDateFormat("dd/MM/yyyy").format(date);
         Paragraph fechaParrafo = new Paragraph("Fecha: " + fecha);
         fechaParrafo.setAlignment(Element.ALIGN_RIGHT);
         document.add(new Paragraph(" "));
@@ -101,9 +106,9 @@ public class PDFService {
         Font fontNormal = FontFactory.getFont(FontFactory.HELVETICA, 9);
         Font fontSmall = FontFactory.getFont(FontFactory.HELVETICA, 8);
 
-        for (int i=0; i< idsTickets.size(); i++){
+        for (int i = 0; i < idsTickets.size(); i++) {
             Integer id = idsTickets.get(i);
-            //Obtener objetos
+            // Obtener objetos
             Ticket ticket = tktService.getTicketById(id);
             OrdenCompra orden = ticket.getDetalleCompra().getOrdenCompra();
             Usuario user = orden.getUsuario();
@@ -115,10 +120,12 @@ public class PDFService {
 
             PdfPTable header = new PdfPTable(2);
             header.setWidthPercentage(100);
-            header.setWidths(new float[]{1, 3});
+            header.setWidths(new float[] { 1, 3 });
 
-            //Image logo = Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
-            Image logo = Image.getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png");
+            // Image logo =
+            // Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
+            Image logo = Image
+                    .getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png");
             logo.scaleToFit(84, 35);
             PdfPCell logoCell = new PdfPCell(logo);
             logoCell.setBorder(Rectangle.NO_BORDER);
@@ -140,19 +147,21 @@ public class PDFService {
 
             PdfPTable mainTable = new PdfPTable(3);
             mainTable.setWidthPercentage(100);
-            mainTable.setWidths(new float[]{3, 0.05f, 1});
+            mainTable.setWidths(new float[] { 3, 0.05f, 1 });
 
             PdfPCell left = new PdfPCell();
             left.setBorder(Rectangle.NO_BORDER);
             left.setPadding(8);
 
-            left.addElement(new Paragraph("Usuario: " + user.getNombre().toUpperCase() + " " + user.getApellido().toUpperCase(), fontNormal));
+            left.addElement(new Paragraph(
+                    "Usuario: " + user.getNombre().toUpperCase() + " " + user.getApellido().toUpperCase(), fontNormal));
             left.addElement(new Paragraph("Tipo de entrada: " + tipoEntrada.getNombre(), fontNormal));
-            //left.addElement(new Paragraph("Asiento: PRE-IZQ-C01", fontNormal));
+            // left.addElement(new Paragraph("Asiento: PRE-IZQ-C01", fontNormal));
             left.addElement(new Paragraph("Zona: " + zona.getNombre(), fontNormal));
             left.addElement(new Paragraph("Fecha: " + fc.getFechaInicio(), fontNormal));
             left.addElement(new Paragraph("Hora: " + fc.getHoraInicio(), fontNormal));
-            //left.addElement(new Paragraph("Precio: " + tarifa.getPrecioBase(), fontNormal));
+            // left.addElement(new Paragraph("Precio: " + tarifa.getPrecioBase(),
+            // fontNormal));
             left.addElement(new Paragraph("\n\n " + event.getDescripcion(), fontSmall));
             left.addElement(new Paragraph("* " + event.getInformAdic(), fontSmall));
             left.addElement(new Paragraph("* " + event.getRestricciones(), fontSmall));
@@ -177,7 +186,7 @@ public class PDFService {
             right.setHorizontalAlignment(Element.ALIGN_CENTER);
             right.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-            Image qr = generarQR(id.toString()); //Cambiar a hash
+            Image qr = generarQR(id.toString()); // Cambiar a hash
             qr.scaleToFit(90, 90);
             right.addElement(qr);
 
@@ -189,7 +198,9 @@ public class PDFService {
             canvas.saveState();
             canvas.beginText();
             canvas.setFontAndSize(bf, 9);
-            canvas.showTextAligned(Element.ALIGN_LEFT, user.getNombre().toUpperCase() + " " + user.getApellido().toUpperCase() + " — " + tipoEntrada.getNombre(),
+            canvas.showTextAligned(Element.ALIGN_LEFT,
+                    user.getNombre().toUpperCase() + " " + user.getApellido().toUpperCase() + " — "
+                            + tipoEntrada.getNombre(),
                     ticketSize.getWidth() - 10, 90, 90);
             canvas.endText();
             canvas.restoreState();

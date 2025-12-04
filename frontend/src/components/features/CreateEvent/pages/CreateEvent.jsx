@@ -125,7 +125,7 @@ export const CreateEvent = () => {
             // Validar que la fecha de inicio no sea en el pasado
             if (funcion.inicioD && funcion.inicioH) {
                 const fechaHoraInicio = new Date(`${funcion.inicioD}T${funcion.inicioH}`);
-                const ahora = new Date();
+                const ahora = new Date().toLocaleString("es-PE", { timeZone: "America/Lima" });
 
                 if (fechaHoraInicio < ahora) {
                     erroresFunciones[`funcion-${index}-fechaPasado`] = "La fecha/hora de inicio no puede ser en el pasado";
@@ -404,11 +404,13 @@ export const CreateEvent = () => {
                             onChange={handleChange}
                         >
                             <option value="" disabled>Selecciona una categoría</option>
-                            {catEvento.map((categoria) => (
-                                <option key={categoria.idCategoria} value={categoria.idCategoria}>
-                                    {categoria.nombre}
-                                </option>
-                            ))}
+                            {catEvento
+                                .filter(cat => cat.activo == true)
+                                .map((categoria) => (
+                                    <option key={categoria.idCategoria} value={categoria.idCategoria}>
+                                        {categoria.nombre}
+                                    </option>
+                                ))}
                         </select>
                         {errores.idCategoria && (
                             <div className="error-message">{errores.idCategoria}</div>

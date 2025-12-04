@@ -28,8 +28,8 @@ public class EventoService {
     public List<EventoDTO> getAllEventos() {
         List<Evento> eventos = repo.findAll();
         return eventos.stream().map(
-                evento -> new EventoDTO(evento, funcionService.getFuncionByEvento(evento.getIdEvento()))
-        ).collect(Collectors.toList());
+                evento -> new EventoDTO(evento, funcionService.getFuncionByEvento(evento.getIdEvento())))
+                .collect(Collectors.toList());
     }
 
     public Evento getEventoById(Integer id) {
@@ -40,9 +40,9 @@ public class EventoService {
         return repo.save(evento);
     }
 
-    //public Evento updateEvento(Evento evento) {
-    //    return repo.save(evento);
-    //}
+    // public Evento updateEvento(Evento evento) {
+    // return repo.save(evento);
+    // }
     public Evento updateEvento(Evento datos) {
 
         // 1. Buscar el evento real
@@ -54,6 +54,17 @@ public class EventoService {
         evento.setInformAdic(datos.getInformAdic());
         evento.setRestricciones(datos.getRestricciones());
         evento.setDescripcion(datos.getDescripcion());
+        evento.setNombre(datos.getNombre());
+        evento.setInformAdic(datos.getInformAdic());
+        evento.setRestricciones(datos.getRestricciones());
+        evento.setDescripcion(datos.getDescripcion());
+
+        if (datos.getDireccion() != null) {
+            evento.setDireccion(datos.getDireccion());
+        }
+        if (datos.getCiudad() != null) {
+            evento.setCiudad(datos.getCiudad());
+        }
 
         if (datos.getCategoria() != null) {
             evento.setCategoria(datos.getCategoria());
@@ -67,44 +78,47 @@ public class EventoService {
         repo.deleteById(id);
     }
 
-//    public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer idUsuario) {
-//        try{
-//            LocalDate hoy = LocalDate.now();
-//            List<Evento> eventos = repo.findByOrganizador_IdUsuario(idUsuario);
-//            return eventos.stream().map(ev -> {
-//
-//                List<Funcion> funcionesActivas =
-//                        funcionService.getFuncionByEvento(ev.getIdEvento())
-//                                .stream()
-//                                .filter(f -> Boolean.TRUE.equals(f.getActivo()))
-//                                .toList();
-//                boolean anyFutureFunc = funcionesActivas
-//                        .stream()
-//                        .anyMatch(f -> !f.getFechaInicio().isBefore(hoy));
-//                LocalDate fechaRef = funcionesActivas.stream()
-//                        .map(Funcion::getFechaInicio)
-//                        .filter(d -> anyFutureFunc != d.isBefore(hoy))
-//                        .min(anyFutureFunc ? Comparator.naturalOrder() : Comparator.reverseOrder())
-//                        .orElse(null);
-//                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesActivas.stream().map(FuncionOrganizadorDTO::new).toList();
-//                return new EventOrganizadorDTO(ev,fechaRef,!anyFutureFunc,funcionesFiltradas);
-//            }).collect(Collectors.toList());
-//        }catch (Exception e){
-//            throw new GenericException("Error al listar eventos del organizador" + e.getMessage());
-//        }
-//
-//    }
+    // public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer
+    // idUsuario) {
+    // try{
+    // LocalDate hoy = LocalDate.now();
+    // List<Evento> eventos = repo.findByOrganizador_IdUsuario(idUsuario);
+    // return eventos.stream().map(ev -> {
+    //
+    // List<Funcion> funcionesActivas =
+    // funcionService.getFuncionByEvento(ev.getIdEvento())
+    // .stream()
+    // .filter(f -> Boolean.TRUE.equals(f.getActivo()))
+    // .toList();
+    // boolean anyFutureFunc = funcionesActivas
+    // .stream()
+    // .anyMatch(f -> !f.getFechaInicio().isBefore(hoy));
+    // LocalDate fechaRef = funcionesActivas.stream()
+    // .map(Funcion::getFechaInicio)
+    // .filter(d -> anyFutureFunc != d.isBefore(hoy))
+    // .min(anyFutureFunc ? Comparator.naturalOrder() : Comparator.reverseOrder())
+    // .orElse(null);
+    // List<FuncionOrganizadorDTO> funcionesFiltradas =
+    // funcionesActivas.stream().map(FuncionOrganizadorDTO::new).toList();
+    // return new
+    // EventOrganizadorDTO(ev,fechaRef,!anyFutureFunc,funcionesFiltradas);
+    // }).collect(Collectors.toList());
+    // }catch (Exception e){
+    // throw new GenericException("Error al listar eventos del organizador" +
+    // e.getMessage());
+    // }
+    //
+    // }
 
     public List<EventOrganizadorDTO> getEventoDTOByIOrganizador(Integer idUsuario) {
-        try{
+        try {
             LocalDateTime ahoraMismo = LocalDateTime.now(ZoneId.of("America/Lima"));
             List<Evento> eventos = repo.findByOrganizador_IdUsuario(idUsuario);
             return eventos.stream().map(ev -> {
-                List<Funcion> funcionesActivas =
-                        funcionService.getFuncionByEvento(ev.getIdEvento())
-                                .stream()
-                                .filter(f -> Boolean.TRUE.equals(f.getActivo()))
-                                .toList();
+                List<Funcion> funcionesActivas = funcionService.getFuncionByEvento(ev.getIdEvento())
+                        .stream()
+                        .filter(f -> Boolean.TRUE.equals(f.getActivo()))
+                        .toList();
 
                 List<Funcion> funcionesOrdenadas = funcionesActivas.stream()
                         .sorted((f1, f2) -> {
@@ -114,14 +128,24 @@ public class EventoService {
                         })
                         .toList();
 
-                LocalDateTime fechaRef = LocalDateTime.of(funcionesOrdenadas.getFirst().getFechaInicio(), funcionesOrdenadas.getFirst().getHoraInicio());
-                LocalDateTime fechaReferenciaFin = LocalDateTime.of(funcionesOrdenadas.getLast().getFechaInicio(), funcionesOrdenadas.getLast().getHoraInicio());
+                LocalDateTime fechaRef = LocalDateTime.of(funcionesOrdenadas.getFirst().getFechaInicio(),
+                        funcionesOrdenadas.getFirst().getHoraInicio());
+                // ✅ FIX: Usar fechaFin/horaFin con fallback a fechaInicio/horaInicio si son
+                // null
+                Funcion ultimaFuncion = funcionesOrdenadas.getLast();
+                LocalDateTime fechaReferenciaFin = LocalDateTime.of(
+                        ultimaFuncion.getFechaFin() != null ? ultimaFuncion.getFechaFin()
+                                : ultimaFuncion.getFechaInicio(),
+                        ultimaFuncion.getHoraFin() != null ? ultimaFuncion.getHoraFin()
+                                : ultimaFuncion.getHoraInicio());
                 boolean esPasado = ahoraMismo.isAfter(fechaReferenciaFin);
 
-                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesOrdenadas.stream().map(FuncionOrganizadorDTO::new).toList();
-                return new EventOrganizadorDTO(ev,fechaRef.toLocalDate(), fechaReferenciaFin.toLocalDate(),esPasado,funcionesFiltradas);
+                List<FuncionOrganizadorDTO> funcionesFiltradas = funcionesOrdenadas.stream()
+                        .map(FuncionOrganizadorDTO::new).toList();
+                return new EventOrganizadorDTO(ev, fechaRef.toLocalDate(), fechaReferenciaFin.toLocalDate(), esPasado,
+                        funcionesFiltradas);
             }).collect(Collectors.toList());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new GenericException("Error al listar eventos del organizador" + e.getMessage());
         }
 
