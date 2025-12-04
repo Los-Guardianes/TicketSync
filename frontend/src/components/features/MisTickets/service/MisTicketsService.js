@@ -11,7 +11,7 @@ export const getTicketsByEvent = async (userId, idEvento) => {
 */
 
 export const getOrdenByEvent = (userId, idEvento) =>
-   apiFetch(`/api/orden/usuario/${userId}/evento/${idEvento}`);
+  apiFetch(`/api/orden/usuario/${userId}/evento/${idEvento}`);
 
 export const getTicketByFuncionUser = (userId, idFuncion) =>
   apiFetch(`/api/miticket/usuario/${userId}/funcion/${idFuncion}`);
@@ -58,25 +58,58 @@ export const buildEventRowsFromTickets = (tickets) => {
         titulo: ev?.nombre ?? 'Evento',
         direccion: ev?.direccion ?? '',
         imagen: ev?.urlImagen ?? '',
-        funciones: new Set(), // guardamos string crudo para deduplicar
+        funciones: [], // ✅ FIX: array de objetos con fechaInicio y fechaFin/horaFin
         ticketsCount: 0,
       });
     }
     const entry = map.get(evId);
     entry.ticketsCount += 1;
-    if (fn?.fechaInicio) entry.funciones.add(String(fn.fechaInicio));
+
+    // ✅ FIX: Guardar tanto fecha de inicio como fecha/hora de fin
+    if (fn?.fechaInicio) {
+      entry.funciones.push({
+        fechaInicio: fn.fechaInicio,
+        fechaFin: fn.fechaFin || fn.fechaInicio,
+        horaFin: fn.horaFin || fn.horaInicio
+      });
+    }
   });
 
-  /*
-  REVISAR ANTES ESTABA COMO toda.toDateString()
-  */
+  // ✅ FIX: Usar hora actual del navegador (timezone local)
+  const ahora = new Date();
 
-  const today = new Date().toLocaleString("es-PE", {timeZone: "America/Lima"});
   const rows = Array.from(map.values()).map(r => {
-    const fechas = Array.from(r.funciones).map(toDate).filter(Boolean);
-    const futuras = fechas.filter(d => d >= new Date(today.toString())); // hoy incluido
+    // Deduplicar funciones por fechaInicio
+    const funcionesUnicas = [];
+    const seen = new Set();
+    r.funciones.forEach(fn => {
+      const key = String(fn.fechaInicio);
+      if (!seen.has(key)) {
+        seen.add(key);
+        funcionesUnicas.push(fn);
+      }
+    });
+
+    // ✅ FIX: Clasificar funciones como futuras o pasadas basado en su HORA DE FIN
+    const futuras = [];
+    const pasadas = [];
+
+    funcionesUnicas.forEach(fn => {
+      const fechaInicioDate = toDate(fn.fechaInicio);
+      if (!fechaInicioDate) return;
+
+      // Construir DateTime de fin
+      const fechaHoraFin = new Date(`${fn.fechaFin}T${fn.horaFin}`);
+
+      // Comparar con hora de FIN, no solo fecha de inicio
+      if (fechaHoraFin >= ahora) {
+        futuras.push(fechaInicioDate);
+      } else {
+        pasadas.push(fechaInicioDate);
+      }
+    });
+
     futuras.sort((a, b) => a - b);
-    const pasadas = fechas.filter(d => d < new Date(today.toString()));
     pasadas.sort((a, b) => b - a);
 
     return {
