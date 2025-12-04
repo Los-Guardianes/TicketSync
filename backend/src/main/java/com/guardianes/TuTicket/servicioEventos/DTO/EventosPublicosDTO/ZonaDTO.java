@@ -4,9 +4,11 @@ import com.guardianes.TuTicket.servicioEventos.model.Evento;
 import com.guardianes.TuTicket.servicioEventos.model.Zona;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class ZonaDTO {
     private Integer idZona;
     private String nombre;
@@ -26,7 +28,6 @@ public class ZonaDTO {
                 this.nombre,
                 this.aforo,
                 true,
-                evento
-        );
+                evento);
     }
 }

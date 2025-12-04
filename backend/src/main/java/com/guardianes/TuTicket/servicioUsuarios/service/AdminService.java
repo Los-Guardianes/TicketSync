@@ -1,6 +1,7 @@
 package com.guardianes.TuTicket.servicioUsuarios.service;
 
 import com.guardianes.TuTicket.servicioUsuarios.model.Admin;
+import com.guardianes.TuTicket.servicioUsuarios.model.Rol;
 import com.guardianes.TuTicket.servicioUsuarios.repo.AdminRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,10 @@ public class AdminService {
     }
 
     public Admin addAdministrador(Admin admin) {
+        // ✅ FIX: Asegurar que el rol sea ADMINISTRADOR antes de guardar
+        if (admin.getRol() == null) {
+            admin.setRol(Rol.ADMINISTRADOR);
+        }
         return repo.save(admin);
     }
 

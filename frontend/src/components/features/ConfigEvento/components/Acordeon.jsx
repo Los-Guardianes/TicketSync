@@ -16,7 +16,7 @@ const AccordionSection = ({
       console.warn('onToggle no es una función para el acordeón:', id);
     }
   };
-  
+
   return (
     <div className="accordion">
       <div
@@ -64,16 +64,16 @@ const ItemCard = ({ name, details, onEdit, onDelete, extraActions }) => {
             <span className="item-details">{details}</span>
           )}
         </div>
-        
+
         <div className="item-actions">
-          <button 
+          <button
             className="item-btn"
             onClick={onEdit}
             title="Editar"
           >
             ✏️ Editar
           </button>
-          <button 
+          <button
             className="item-btn"
             onClick={onDelete}
             title="Eliminar"
@@ -176,7 +176,7 @@ export const EntradasAccordion = ({
   editItem,
   deleteItem,
   addItem,
-  entradas 
+  entradas
 }) => {
   return (
     <AccordionSection
@@ -238,6 +238,7 @@ export const PeriodosAccordion = ({
                 <>
                   Fecha Inicio: {periodo.fechaInicio}<br />
                   Fecha Fin: {periodo.fechaFin}<br />
+                  Descuento: {periodo.tipoDesc === 'PORCENTAJE' ? `${periodo.valorDescuento}%` : `S/ ${periodo.valorDescuento}`}<br />
                 </>
               }
               onEdit={() => editItem("periodo", periodo.idPeriodo)}

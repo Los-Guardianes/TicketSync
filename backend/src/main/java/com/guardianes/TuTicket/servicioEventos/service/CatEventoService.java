@@ -31,6 +31,10 @@ public class CatEventoService {
     }
 
     public void deleteCategoria(Integer id) {
-        repo.deleteById(id);
+        // ✅ Soft delete: marcar como inactivo en lugar de eliminar físicamente
+        CategoriaEvento categoria = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+        categoria.setActivo(false);
+        repo.save(categoria);
     }
 }
