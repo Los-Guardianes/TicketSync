@@ -17,36 +17,36 @@ export const useDetalleTickets = (idEvento, idUsuario) => {
     const [periodos, setPeriodos] = useState([]);
 
     const seleccionarFuncion = (idSeleccionado) => {
-        const funcion = funciones.find(
-            (f) => f.idFuncion === parseInt(idSeleccionado)
-        );
+    const funcion = funciones.find(
+        (f) => f.idFuncion === parseInt(idSeleccionado)
+    );
         setSelectedFuncion(funcion);
     };
 
-    useEffect(() => {
+    useEffect(()=>{
         fetchOrdenCompraUsuario(idEvento, idUsuario);
         fetchEvento(idEvento);
         fetchFunciones(idEvento);
         fetchCliente(idUsuario);
         fetchPeriodo(idEvento);
-        fetchTarifas(idEvento);
-    }, [idEvento, idUsuario])
+        fetchTarifas(idEvento);      
+    },[idEvento, idUsuario])
 
-    useEffect(() => {
-        if (funciones.length === 0) return;
-        if (!selectedFuncion) setSelectedFuncion(funciones[0]);
-    }, [funciones])
+    useEffect(()=>{
+        if(funciones.length === 0) return;
+        if(!selectedFuncion)setSelectedFuncion(funciones[0]);
+    },[funciones])
 
-    useEffect(() => {
-        if (!selectedFuncion) setOrdenCompra(listaOrdenes[0] || null);
+    useEffect(()=>{
+        if(!selectedFuncion)setOrdenCompra(listaOrdenes[0] || null);
         const ordenesFiltradas = listaOrdenes.filter(oc => oc.idFuncion === selectedFuncion?.idFuncion);
         setOrdenCompra(ordenesFiltradas[0] || null);
-    }, [selectedFuncion, listaOrdenes])
+    },[selectedFuncion, listaOrdenes])
 
     const obtenerNombre = (idTarifa, idPeriodo) => {
         const tarifa = tarifas.find(t => t.idTarifa === idTarifa);
         const periodo = periodos.find(p => p.idPeriodo === idPeriodo);
-        if (!tarifa || !periodo) return "—";
+        if(!tarifa || !periodo) return "—";
         return `${tarifa.zonaDTO.nombre} - ${tarifa.tipoEntradaDTO.nombre} - ${periodo.nombre}`;
     }
 
@@ -62,18 +62,18 @@ export const useDetalleTickets = (idEvento, idUsuario) => {
     }
 
     const fetchFunciones = async (idEvento) => {
-        const data = await apiFetch(`/api/funcion/evento/${idEvento}`);
+        const data = await apiFetch(`/api/funcion/evento/${idEvento}`);  
         setFunciones(data || []);
     }
 
     const fetchCliente = async (idUsuario) => {
-        const data = await apiFetch(`/api/usuario/${idUsuario}`);
+        const data = await apiFetch(`/api/usuario/${idUsuario}`);  
         setCliente(data);
-    }
+    }    
 
     const fetchPeriodo = async () => {
         const data = await apiFetch(`/api/periodo/evento/${idEvento}`);
-        console.log("Periodos del evento:", data);
+        console.log("Periodos del evento:", data);        
         setPeriodos(data || []);
     };
 
@@ -84,7 +84,7 @@ export const useDetalleTickets = (idEvento, idUsuario) => {
         setTarifas(tarifasParseadas);
     };
 
-    const obtenerTickets = (idUsuario) => {
+    const obtenerTickets = (idUsuario, idFuncion) => {
         return getTicketByFuncionUser(idUsuario, selectedFuncion?.idFuncion);
     }
 
