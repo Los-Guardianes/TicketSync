@@ -804,6 +804,33 @@ export const ConfigEvento = () => {
                   required
                 />
               </div>
+              <div className="form-group">
+                <label className="form-label">Tipo de Descuento</label>
+                <select
+                  className="form-input"
+                  value={editingPeriodo.tipoDesc}
+                  onChange={e => setEditingPeriodo({ ...editingPeriodo, tipoDesc: e.target.value })}
+                  required
+                >
+                  <option value="PORCENTAJE">Porcentaje (%)</option>
+                  <option value="MONTO">Monto Fijo (S/)</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  Valor de Descuento {editingPeriodo.tipoDesc === 'PORCENTAJE' ? '(%)' : '(S/)'}
+                </label>
+                <input
+                  type="number"
+                  className="form-input"
+                  value={editingPeriodo.valorDescuento}
+                  onChange={e => setEditingPeriodo({ ...editingPeriodo, valorDescuento: parseFloat(e.target.value) || 0 })}
+                  min="0"
+                  max={editingPeriodo.tipoDesc === 'PORCENTAJE' ? '100' : undefined}
+                  step="0.01"
+                  required
+                />
+              </div>
               <div className="modal-actions">
                 <button type="button" className="btn-cancel" onClick={() => setEditingPeriodo(null)}>
                   Cancelar

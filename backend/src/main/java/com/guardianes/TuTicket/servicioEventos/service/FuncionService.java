@@ -34,13 +34,16 @@ public class FuncionService {
     }
 
     public void deleteFuncion(Integer id) {
-        repo.deleteById(id);
+        Funcion funcion = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Función no encontrada"));
+        funcion.setActivo(false);
+        repo.save(funcion);
     }
 
     public List<Funcion> getFuncionByEvento(Integer idEvento) {
         Evento e = new Evento();
         e.setIdEvento(idEvento);
-        return repo.findByEventoOrderByFechaInicioAscHoraInicioAsc(e);
+        return repo.findByEventoAndActivoTrueOrderByFechaInicioAscHoraInicioAsc(e);
     }
 
     public List<Funcion> addListFuncion(List<FuncionDTO> funcionDTO, Evento evento) {

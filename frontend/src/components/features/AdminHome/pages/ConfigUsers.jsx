@@ -161,11 +161,11 @@ export const ConfigUsers = () => {
       (estadoFilter !== "" ? u.activo === estadoFilter : true) &&
       (search
         ? u.nombre.toLowerCase().includes(search.toLowerCase()) ||
-        u.email.toLowerCase().includes(search.toLowerCase())
+        u.apellido.toLowerCase().includes(search.toLowerCase())
         : true)
     );
   })
-  .sort((a, b) => {
+    .sort((a, b) => {
       if (sortOrder === "asc") {
         return a.nombre.localeCompare(b.nombre);
       } else if (sortOrder === "desc") {
@@ -176,22 +176,22 @@ export const ConfigUsers = () => {
 
   // Filtro para organizadores pendientes (inactivos)
   const pendingOrganizers = usersData
-  .filter((u) => {
-    return (
-      u.rol === "ORGANIZADOR" &&
-      !u.verificado &&
-      (search2
-        ? u.nombre.toLowerCase().includes(search2.toLowerCase()) ||
+    .filter((u) => {
+      return (
+        u.rol === "ORGANIZADOR" &&
+        !u.verificado &&
+        (search2
+          ? u.nombre.toLowerCase().includes(search2.toLowerCase()) ||
           u.email.toLowerCase().includes(search2.toLowerCase()) ||
           u.razonSocial?.toLowerCase().includes(search2.toLowerCase())
-        : true)
-    );
-  })
-  .sort((a, b) => {
-    if (sortOrder2 === "asc") return a.nombre.localeCompare(b.nombre);
-    if (sortOrder2 === "desc") return b.nombre.localeCompare(a.nombre);
-    return 0;
-  });
+          : true)
+      );
+    })
+    .sort((a, b) => {
+      if (sortOrder2 === "asc") return a.nombre.localeCompare(b.nombre);
+      if (sortOrder2 === "desc") return b.nombre.localeCompare(a.nombre);
+      return 0;
+    });
 
   const construirPayloadUsuario = (usuario, cambios = {}) => {
     let payload = {
@@ -265,7 +265,7 @@ export const ConfigUsers = () => {
   };
 
   const handleEdit = (user) => {
-    setUsuarioSeleccionado(user); 
+    setUsuarioSeleccionado(user);
     setShowEditUserModal(true);
   }
 
@@ -274,7 +274,7 @@ export const ConfigUsers = () => {
     if (!confirm) return;
     try {
       const usuario = await getUser(user.idUsuario, user.rol);
-      const payload = construirPayloadUsuario(usuario, {verificado: true}); // marcar como aprobado
+      const payload = construirPayloadUsuario(usuario, { verificado: true }); // marcar como aprobado
       console.log(payload);
       await updateUser(payload, usuario.idUsuario);
       alert("Organizador aprobado correctamente.");
@@ -293,107 +293,112 @@ export const ConfigUsers = () => {
 
   return (
     <>
-    <div className="config-users-wrapper">
-      <div className="config-users-container">
-        <div className="d-flex justify-content-start mt-3">
-          <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
-            ← Volver
-          </button>
-        </div>
-
-        {/* Filtros */}
-        <div className="filters">
-          <div className="filters-left">
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder2(e.target.value)}
-            >
-              <option value="">Ordenar</option>
-              <option value="asc">Nombre A-Z</option>
-              <option value="desc">Nombre Z-A</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={search2}
-              onChange={(e) => setSearch2(e.target.value)}
-            />
-          </div>
-        </div>
-        {/* --- SECCIÓN ORGANIZADORES PENDIENTES --- */}
-        {pendingOrganizers.length > 0 && (
-          <OrgTable
-            users={pendingOrganizers}
-            onApprove={handleApprove}
-          />
-        )}
-
-        <h3 className="mb-3">Gestión de Usuarios</h3>
-
-        {/* Filtros */}
-        <div className="filters">
-          <div className="filters-left">
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="">Ordenar</option>
-              <option value="asc">Nombre A-Z</option>
-              <option value="desc">Nombre Z-A</option>
-            </select>
-            <select
-              value={rolFilter}
-              onChange={(e) => setRolFilter(e.target.value)}
-            >
-              <option value="">Rol</option>
-              <option value="CLIENTE">CLIENTE</option>
-              <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-              <option value="ORGANIZADOR">ORGANIZADOR</option>
-            </select>
-
-            <select
-              value={estadoFilter}
-              onChange={(e) => setEstadoFilter(e.target.value === "" ? "" : e.target.value === "true")}
-            >
-              <option value="">Estado</option>
-              <option value="true">Activo</option>
-              <option value="false">Inactivo</option>
-            </select>
-
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <button className="add-user-button" onClick={() => setShowAddUserModal(true)}>
-            AGREGAR USUARIO
-          </button>
-        </div>
-
-        {/* Tabla */}
-        <UserTable
-          users={paginatedUsers}
-          onToggleActivo={toggleActivo}
-          onEditUser={handleEdit}
-        />
-
-        {/* Paginación */}
-        <div className="pagination">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
+      <div className="config-users-wrapper">
+        <div className="config-users-container">
+          <div className="d-flex justify-content-start mt-3">
+            <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
+              ← Volver
             </button>
-          ))}
+          </div>
+
+          {/* Filtros */}
+          <div className="filters">
+            <div className="filters-left">
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder2(e.target.value)}
+              >
+                <option value="">Ordenar</option>
+                <option value="asc">Nombre A-Z</option>
+                <option value="desc">Nombre Z-A</option>
+              </select>
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={search2}
+                onChange={(e) => setSearch2(e.target.value)}
+              />
+            </div>
+          </div>
+          {/* --- SECCIÓN ORGANIZADORES PENDIENTES --- */}
+          {pendingOrganizers.length > 0 && (
+            <OrgTable
+              users={pendingOrganizers}
+              onApprove={handleApprove}
+            />
+          )}
+
+          <h3 className="mb-3">Gestión de Usuarios</h3>
+
+          {/* Filtros */}
+          <div className="filters">
+            <div className="filters-left">
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+              >
+                <option value="">Ordenar</option>
+                <option value="asc">Nombre A-Z</option>
+                <option value="desc">Nombre Z-A</option>
+              </select>
+              <select
+                value={rolFilter}
+                onChange={(e) => setRolFilter(e.target.value)}
+              >
+                <option value="">Rol</option>
+                <option value="CLIENTE">CLIENTE</option>
+                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                <option value="ORGANIZADOR">ORGANIZADOR</option>
+              </select>
+
+              <select
+                value={estadoFilter}
+                onChange={(e) => setEstadoFilter(e.target.value === "" ? "" : e.target.value === "true")}
+              >
+                <option value="">Estado</option>
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <button className="add-user-button" onClick={() => setShowAddUserModal(true)}>
+              AGREGAR USUARIO
+            </button>
+          </div>
+
+          {/* ✅ Mensaje informativo sobre activación/desactivación */}
+          <p className="mb-2" style={{ fontSize: '0.9rem', color: '#6c757d', fontStyle: 'italic' }}>
+            💡 Usa el checkbox en la columna "Estado" para activar/desactivar usuarios
+          </p>
+
+          {/* Tabla */}
+          <UserTable
+            users={paginatedUsers}
+            onToggleActivo={toggleActivo}
+            onEditUser={handleEdit}
+          />
+
+          {/* Paginación */}
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={currentPage === i + 1 ? "active" : ""}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-    {showAddUserModal && (
+      {showAddUserModal && (
         <div className="add-user-modal-overlay">
           <div className="add-user-modal">
             <h4>Agregar nuevo usuario (administrador)</h4>
@@ -542,5 +547,5 @@ export const ConfigUsers = () => {
           </div>
         </div>
       )}
-  </>);
+    </>);
 };

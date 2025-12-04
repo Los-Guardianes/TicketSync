@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import "./MiPerfil.css";
 import { useAuth } from "../../../../context/AuthContext";
 import { BASE_URL } from '../../../../globalServices/API';
+import { PasswordStrengthIndicator, validatePassword } from '../../../common/PasswordStrengthIndicator/PasswordStrengthIndicator';
+
 export const MiPerfil = () => {
     const { user, token } = useAuth();
 
@@ -54,8 +56,10 @@ export const MiPerfil = () => {
             return;
         }
 
-        if (pwdForm.nueva.length < 6) {
-            setPwdError("La nueva contraseña debe tener al menos 6 caracteres.");
+        // ✅ Validación mejorada con criterios de seguridad
+        const validation = validatePassword(pwdForm.nueva);
+        if (!validation.isValid) {
+            setPwdError(validation.errors[0]); // Mostrar el primer error
             return;
         }
 
@@ -120,7 +124,6 @@ export const MiPerfil = () => {
     };
 
 
-
     return (
         <div className="perfil-page">
 
@@ -136,7 +139,7 @@ export const MiPerfil = () => {
                     <div className="perfil-avatar-wrapper">
                         <div className="perfil-avatar">
                             <svg viewBox="0 0 24 24" fill="white">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                             </svg>
                         </div>
                     </div>
@@ -259,6 +262,8 @@ export const MiPerfil = () => {
                                     onChange={handlePwdInputChange}
                                     disabled={pwdLoading}
                                 />
+                                {/* ✅ Indicador visual de requisitos de seguridad */}
+                                {pwdForm.nueva && <PasswordStrengthIndicator password={pwdForm.nueva} />}
                             </div>
 
                             <div className="perfil-modal-field">

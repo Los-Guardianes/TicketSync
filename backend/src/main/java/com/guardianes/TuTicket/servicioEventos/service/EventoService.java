@@ -54,6 +54,17 @@ public class EventoService {
         evento.setInformAdic(datos.getInformAdic());
         evento.setRestricciones(datos.getRestricciones());
         evento.setDescripcion(datos.getDescripcion());
+        evento.setNombre(datos.getNombre());
+        evento.setInformAdic(datos.getInformAdic());
+        evento.setRestricciones(datos.getRestricciones());
+        evento.setDescripcion(datos.getDescripcion());
+
+        if (datos.getDireccion() != null) {
+            evento.setDireccion(datos.getDireccion());
+        }
+        if (datos.getCiudad() != null) {
+            evento.setCiudad(datos.getCiudad());
+        }
 
         if (datos.getCategoria() != null) {
             evento.setCategoria(datos.getCategoria());

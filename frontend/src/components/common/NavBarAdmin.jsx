@@ -15,15 +15,16 @@ export const NavBarAdmin = () => {
 
     return (
         <nav className="navbar navbar-expand navbar-light bg-light border-bottom border-success px-3">
-                <img
-                    src="/tuticket_logo_name.png"
-                    alt="tuticketLogo"
-                    style={{ width: "7rem" }}
-                />
+            <img
+                src="/tuticket_logo_name.png"
+                alt="tuticket Logo"
+                style={{ width: "7rem", cursor: "pointer" }}
+                onClick={() => navigate("/home-admin")}
+            />
             <ul className={`navbar-nav ms-auto d-flex align-items-center`}>
                 <>
                     <li className="nav-item">
-                        <NavLink to="/perfil" className={({isActive}) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
+                        <NavLink to="/perfil" className={({ isActive }) => isActive ? 'nav-link active fw-bold' : 'nav-link'}>
                             <span className="nav-link">¡Hola, {user?.nombre}!</span>
                         </NavLink>
                     </li>

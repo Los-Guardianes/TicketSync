@@ -1,15 +1,18 @@
 import { useLocation, Outlet } from 'react-router-dom';
 import { NavBar } from './NavBar';
+import { NavBarAdmin } from './NavBarAdmin';
 import { Header } from '../common/Header/Header';
 import { Footer } from '../common/Footer/Footer';
 import { useState, useEffect } from 'react';
 import { getDepartamentos } from '../../globalServices/UbicacionService';
 import { EventCreationProvider } from '../../context/EventCreationContext';
 import { BASE_URL } from '../../globalServices/API';
+import { useAuth } from '../../context/AuthContext';
 
 const Layout = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/home';
+  const { user } = useAuth();
 
   // Filtros compartidos con Home
   const [search, setSearch] = useState('');
@@ -38,7 +41,7 @@ const Layout = () => {
     try {
       // Uso correcto de BASE_URL importada
       const resp = await fetch(`${BASE_URL}/api/catevento`);
-      
+
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       const data = await resp.json();
       // Normaliza a un arreglo de strings (nombres) o de objetos {id, nombre}
@@ -69,7 +72,10 @@ const Layout = () => {
 
   return (
     <div>
-      {isHomePage ? (
+      {/* Renderizar NavBarAdmin para administradores en TODAS las páginas */}
+      {user?.rol === "ADMINISTRADOR" ? (
+        <NavBarAdmin />
+      ) : isHomePage ? (
         <NavBar
           search={search} setSearch={setSearch}
           ubicacion={ubicacion} setUbicacion={setUbicacion}
