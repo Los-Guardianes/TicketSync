@@ -25,8 +25,8 @@ export const ConfigCategorias = () => {
                 setCategorias(data);
                 setFilteredCategorias(data);
             } catch (err) {
-                console.error("Error al obtener categorias", err);
-                alert("No se pudieron cargar las categorias.");
+                console.error("Error al obtener categorías", err);
+                alert("No se pudieron cargar las categorías.");
             }
         };
         fetchCategorias();
@@ -66,18 +66,18 @@ export const ConfigCategorias = () => {
             };
 
             if (payload.comision !== null && (payload.comision < 0 || payload.comision > 100)) {
-                alert("La comision debe estar entre 0 y 100.");
+                alert("La comisión debe estar entre 0 y 100.");
                 return;
             }
 
             await postCategoria(payload);
-            alert("Categoria creada correctamente.");
+            alert("Categoría creada correctamente.");
             setShowAddModal(false);
             setFormData({ nombre: "", comision: "" });
             setReloadTrigger(prev => prev + 1);
         } catch (err) {
-            console.error("Error al crear categoria", err);
-            alert("No se pudo crear la categoria.");
+            console.error("Error al crear categoría", err);
+            alert("No se pudo crear la categoría.");
         }
     };
 
@@ -95,19 +95,19 @@ export const ConfigCategorias = () => {
             };
 
             if (payload.comision !== null && (payload.comision < 0 || payload.comision > 100)) {
-                alert("La comision debe estar entre 0 y 100.");
+                alert("La comisión debe estar entre 0 y 100.");
                 return;
             }
 
             await putCategoria(payload, categoriaSeleccionada.idCategoria);
-            alert("Categoria actualizada correctamente.");
+            alert("Categoría actualizada correctamente.");
             setShowEditModal(false);
             setCategoriaSeleccionada(null);
             setFormData({ nombre: "", comision: "" });
             setReloadTrigger(prev => prev + 1);
         } catch (err) {
-            console.error("Error al actualizar categoria", err);
-            alert("No se pudo actualizar la categoria.");
+            console.error("Error al actualizar categoría", err);
+            alert("No se pudo actualizar la categoría.");
         }
     };
 
@@ -116,8 +116,8 @@ export const ConfigCategorias = () => {
         const action = isActivating ? 'Activar' : 'Desactivar';
 
         const confirm = window.confirm(
-            action + ' la categoria "' + categoria.nombre + '"?' +
-            (isActivating ? '' : '\n\nNota: La categoria seguira visible en la lista pero marcada como inactiva.')
+            action + ' la categoría "' + categoria.nombre + '"?' +
+            (isActivating ? '' : '\n\nNota: La categoría seguirá visible en la lista pero marcada como inactiva.')
         );
         if (!confirm) return;
 
@@ -129,11 +129,11 @@ export const ConfigCategorias = () => {
             };
 
             await putCategoria(payload, categoria.idCategoria);
-            alert("Categoria " + (isActivating ? "activada" : "desactivada") + " correctamente.");
+            alert("Categoría " + (isActivating ? "activada" : "desactivada") + " correctamente.");
             setReloadTrigger(prev => prev + 1);
         } catch (err) {
-            console.error("Error al " + (isActivating ? "activar" : "desactivar") + " categoria", err);
-            alert("No se pudo " + (isActivating ? "activar" : "desactivar") + " la categoria.");
+            console.error("Error al " + (isActivating ? "activar" : "desactivar") + " categoría", err);
+            alert("No se pudo " + (isActivating ? "activar" : "desactivar") + " la categoría.");
         }
     };
 
@@ -157,13 +157,13 @@ export const ConfigCategorias = () => {
             }}>
                 <div className="d-flex justify-content-start mb-3">
                     <button className="btn btn-outline-primary w-auto" onClick={() => navigate("/home-admin")}>
-                        Volver
+                        ← Volver
                     </button>
                 </div>
 
-                <h3 className="mb-2">Gestion de Categorias</h3>
+                <h3 className="mb-2">Gestión de Categorías</h3>
                 <p className="mb-4" style={{ fontSize: '0.95rem', color: '#6c757d' }}>
-                    Administra las categorias de eventos y sus comisiones.
+                    Administra las categorías de eventos y sus comisiones.
                 </p>
 
                 <div className="card shadow-sm mb-3">
@@ -188,13 +188,13 @@ export const ConfigCategorias = () => {
                                     style={{ width: 'auto', minWidth: '150px' }}
                                 >
                                     <option value="">Todas las comisiones</option>
-                                    <option value="con">Con comision</option>
-                                    <option value="sin">Sin comision</option>
+                                    <option value="con">Con comisión</option>
+                                    <option value="sin">Sin comisión</option>
                                 </select>
                             </div>
                             <button className="btn btn-success btn-sm" onClick={() => setShowAddModal(true)}>
                                 <i className="bi bi-plus-circle me-2"></i>
-                                Agregar Categoria
+                                Agregar Categoría
                             </button>
                         </div>
                     </div>
@@ -207,7 +207,7 @@ export const ConfigCategorias = () => {
                                 <thead style={{ backgroundColor: '#f8f9fa' }}>
                                     <tr>
                                         <th className="px-4 py-3 fw-semibold border-bottom">Nombre</th>
-                                        <th className="px-4 py-3 fw-semibold border-bottom">Comision</th>
+                                        <th className="px-4 py-3 fw-semibold border-bottom">Comisión</th>
                                         <th className="px-4 py-3 fw-semibold border-bottom text-center">Estado</th>
                                         <th className="px-4 py-3 fw-semibold border-bottom text-center" style={{ minWidth: '220px' }}>Acciones</th>
                                     </tr>
@@ -218,7 +218,7 @@ export const ConfigCategorias = () => {
                                             <td colSpan="4" className="text-center py-5">
                                                 <div className="text-muted">
                                                     <i className="bi bi-inbox fs-1 d-block mb-2 text-secondary opacity-50"></i>
-                                                    <span className="fs-6">No hay categorias para mostrar</span>
+                                                    <span className="fs-6">No hay categorías para mostrar</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -233,7 +233,7 @@ export const ConfigCategorias = () => {
                                                         ? <span className="badge bg-success px-3 py-2" style={{ fontSize: '0.875rem' }}>
                                                             <i className="bi bi-percent me-1"></i>{cat.comision}%
                                                         </span>
-                                                        : <span className="text-muted fst-italic" style={{ fontSize: '0.9rem' }}>Sin comision</span>}
+                                                        : <span className="text-muted fst-italic" style={{ fontSize: '0.9rem' }}>Sin comisión</span>}
                                                 </td>
                                                 <td className="px-4 py-3 text-center">
                                                     <span className={`badge ${cat.activo ? 'bg-success' : 'bg-secondary'} px-3 py-2`} style={{ fontSize: '0.875rem' }}>
@@ -273,7 +273,7 @@ export const ConfigCategorias = () => {
             {showAddModal && (
                 <div className="add-user-modal-overlay">
                     <div className="add-user-modal">
-                        <h4>Agregar Nueva Categoria</h4>
+                        <h4>Agregar Nueva Categoría</h4>
                         <div className="add-user-form">
                             <input
                                 type="text"
@@ -291,7 +291,7 @@ export const ConfigCategorias = () => {
                                 step="0.01"
                             />
                             <small className="text-muted">
-                                La comision es opcional. Dejar vacio para categorias sin comision.
+                                La comisión es opcional. Dejar vacío para categorías sin comisión.
                             </small>
                         </div>
                         <div className="add-user-modal-actions">
@@ -302,7 +302,7 @@ export const ConfigCategorias = () => {
                                 Cancelar
                             </button>
                             <button className="btn-confirmar" onClick={handleAddCategoria}>
-                                Crear Categoria
+                                Crear Categoría
                             </button>
                         </div>
                     </div>
@@ -312,7 +312,7 @@ export const ConfigCategorias = () => {
             {showEditModal && categoriaSeleccionada && (
                 <div className="add-user-modal-overlay">
                     <div className="add-user-modal">
-                        <h4>Editar Categoria</h4>
+                        <h4>Editar Categoría</h4>
                         <div className="add-user-form">
                             <input
                                 type="text"
@@ -330,7 +330,7 @@ export const ConfigCategorias = () => {
                                 step="0.01"
                             />
                             <small className="text-muted">
-                                La comision es opcional. Dejar vacio para categorias sin comision.
+                                La comisión es opcional. Dejar vacío para categorías sin comisión.
                             </small>
                         </div>
                         <div className="add-user-modal-actions">
