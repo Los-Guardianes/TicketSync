@@ -8,7 +8,6 @@ import { RegisterOptions } from "../components/features/Register/RegisterOptions
 import { RegisterOrganizer } from "../components/features/Register/RegisterOrganizer";
 import { CreateEvent } from "../components/features/CreateEvent/pages/CreateEvent";
 import { UbicacionEvento } from "../components/features/CreateEvent/pages/UbicacionEvento";
-import { ComprobanteTest } from "../components/features/ComprobanteTest/pages/ComprobanteTest";
 import { CreateTicket } from "../components/features/CreateEvent/pages/CreateTicket";
 import { TicketPay } from "../components/features/TicketPurchase/pages/TicketPay";
 import { TicketPurchase } from "../components/features/TicketPurchase/pages/TicketPurchase";
@@ -67,18 +66,17 @@ export const ClienteRoutes = () => {
         <Route path="ubicacion-evento" element={<ProtectedRoute role="ORGANIZADOR"> <UbicacionEvento /> </ProtectedRoute>} />
         <Route path="create-ticket" element={<ProtectedRoute role="ORGANIZADOR"> <CreateTicket /> </ProtectedRoute>} />
         <Route path="ticket-purchase/:id" element={<TicketPurchase />} />
-        <Route path="comprobante" element={<ComprobanteTest />} />
         <Route path="ticket-pay" element={<ProtectedRoute> <TicketPay /> </ProtectedRoute>} />
         <Route path="happy-pay" element={<ProtectedRoute> <HappyPay /> </ProtectedRoute>} />
-        <Route path="mistickets" element={<MisTickets />} />
+        <Route path="mistickets" element={<ProtectedRoute> <MisTickets /> </ProtectedRoute>} />
 
         <Route path="admin-dashboard" element={<ProtectedRoute role="ADMINISTRADOR"> <AdminDashboard /> </ProtectedRoute>} />
         <Route path="configusers" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigUsers /> </ProtectedRoute>} />
         <Route path="configparams" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigParams /> </ProtectedRoute>} />
         <Route path="configcategorias" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigCategorias /> </ProtectedRoute>} />
         <Route path="configreportes" element={<ProtectedRoute role="ADMINISTRADOR"> <ConfigReportes /> </ProtectedRoute>} />
-        <Route path="organizer/mis-eventos" element={<OrgMisEventos />} />
-        <Route path="organizer/evento/:idEvento/config" element={<ConfigEvento />} />
+        <Route path="organizer/mis-eventos" element={<ProtectedRoute role="ORGANIZADOR"> <OrgMisEventos /> </ProtectedRoute>} />
+        <Route path="organizer/evento/:idEvento/config" element={<ProtectedRoute role="ORGANIZADOR"> <ConfigEvento /> </ProtectedRoute>} />
         <Route
           path="organizer/evento/:idEvento/editar-ubicacion"
           element={
@@ -113,7 +111,7 @@ export const ClienteRoutes = () => {
           element={<ProtectedRoute role="ORGANIZADOR"> <ListadoInscritos /> </ProtectedRoute>}
         />
 
-        <Route path="mis-tickets/evento/:idEvento" element={<DetalleTickets />} />
+        <Route path="mis-tickets/evento/:idEvento" element={<ProtectedRoute> <DetalleTickets /> </ProtectedRoute>} />
         <Route path="perfil" element={<ProtectedRoute> <MiPerfil /> </ProtectedRoute>} />
 
       </Route>

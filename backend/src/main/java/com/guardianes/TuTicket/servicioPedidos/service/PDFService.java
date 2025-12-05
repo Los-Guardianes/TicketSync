@@ -45,7 +45,7 @@ public class PDFService {
 
     public byte[] generarComprobantePDF(OrdenCompra orden) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Rectangle customSize = new Rectangle(400, 300);
+        Rectangle customSize = new Rectangle(450, 325);
         Document document = new Document(customSize);
         PdfWriter.getInstance(document, baos);
         document.open();
@@ -79,7 +79,8 @@ public class PDFService {
 
         document.add(new Paragraph("Nombre del usuario: " + user.getNombre() + " " + user.getApellido()));
         document.add(new Paragraph("Total de entradas: " + totalTickets));
-        document.add(new Paragraph("Precio total: S/ " + total));
+        document.add(new Paragraph("Precio base: S/ " + total));
+        document.add(new Paragraph("Precio pagado: S/ " + orden.getTotal()));
 
         // Fecha al final, alineada a la derecha
         // ✅ FIX: Convertir LocalDate a Date para SimpleDateFormat
