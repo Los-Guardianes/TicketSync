@@ -53,7 +53,7 @@ public class PDFService {
         // Image logo =
         // Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
         Image logo = Image
-                .getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png");
+                .getInstance("https://ticketsync.s3.us-east-1.amazonaws.com/tuticket_logo_name.png");
         logo.scaleToFit(100, 100);
         logo.setAlignment(Image.ALIGN_CENTER);
         document.add(logo);
@@ -126,7 +126,7 @@ public class PDFService {
             // Image logo =
             // Image.getInstance("src/main/resources/TUTICKET_PNG_SIN_ESPACIOS.png");
             Image logo = Image
-                    .getInstance("https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png");
+                    .getInstance("https://ticketsync.s3.us-east-1.amazonaws.com/tuticket_logo_name.png");
             logo.scaleToFit(84, 35);
             PdfPCell logoCell = new PdfPCell(logo);
             logoCell.setBorder(Rectangle.NO_BORDER);
