@@ -137,7 +137,7 @@ export const Register = () => {
 
             </div>
             <div className='p-0 m-0 col-6'>
-                <img className='h-100 w-100' src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/wallhaven-4gjdrd.jpg"
+                <img className='h-100 w-100' src="https://ticketsync.s3.us-east-1.amazonaws.com/Background.jpg"
                     alt="tuticketLogo" style={{ height: "100%", minHeight: "100vh", objectFit: "cover" }} />
             </div>
         </div>
