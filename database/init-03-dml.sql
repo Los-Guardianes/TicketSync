@@ -62,7 +62,7 @@ SELECT tuticket.crear_cliente('Diego', 'Mendoza', 'diego9@mail.com', 'hash19', '
 SELECT tuticket.crear_cliente('Ana', 'Rojas', 'ana10@mail.com', 'hash20', '11223344', '1994-04-04', 10, TRUE, '999111120', TRUE);
 
 -- =====================
--- 6) ADMINS (11) -> usuarios 11..21
+-- 6) ADMINS (11) -> usuarios 11..20
 -- =====================
 SELECT tuticket.crear_admin('Sofia', 'Aguilar', 'sofia1@mail.com', 'hash21', 1, TRUE, '999222111', TRUE);
 SELECT tuticket.crear_admin('Ricardo', 'Campos', 'ricardo2@mail.com', 'hash22', 2, TRUE, '999222112', TRUE);
@@ -74,10 +74,9 @@ SELECT tuticket.crear_admin('Paola', 'Morales', 'paola7@mail.com', 'hash27', 7, 
 SELECT tuticket.crear_admin('Daniel', 'Herrera', 'daniel8@mail.com', 'hash28', 8, TRUE, '999222118', TRUE);
 SELECT tuticket.crear_admin('Rosa', 'Flores', 'rosa9@mail.com', 'hash29', 9, TRUE, '999222119', TRUE);
 SELECT tuticket.crear_admin('Alberto', 'Reyes', 'alberto10@mail.com', 'hash30', 10, TRUE, '999222120', TRUE);
-SELECT tuticket.crear_admin('Luis', 'Flores', 'luis.flores@pucp.edu.pe', 'pwd43210', 1, TRUE, '000000000', TRUE);
 
 -- =====================
--- 7) ORGANIZADORES (10) -> usuarios 22..30
+-- 7) ORGANIZADORES (10) -> usuarios 21..30
 -- =====================
 SELECT tuticket.crear_organizador('Clara', 'Vega', 'clara1@mail.com', 'hash31', '20123456781', 'Eventos Clara SAC', 1, TRUE, '999333111', TRUE);
 SELECT tuticket.crear_organizador('Pedro', 'Santos', 'pedro2@mail.com', 'hash32', '20456789123', 'Producciones Santos', 2, TRUE, '999333112', TRUE);
@@ -89,7 +88,7 @@ SELECT tuticket.crear_organizador('Natalia', 'Ramos', 'natalia7@mail.com', 'hash
 SELECT tuticket.crear_organizador('Oscar', 'Jimenez', 'oscar8@mail.com', 'hash38', '20911223344', 'OJ Producciones', 8, TRUE, '999333118', TRUE);
 SELECT tuticket.crear_organizador('Veronica', 'Salazar', 'vero9@mail.com', 'hash39', '20199887766', 'Salazar Music SAC', 9, TRUE, '999333119', TRUE);
 SELECT tuticket.crear_organizador('Andres', 'Torres', 'andres10@mail.com', 'hash40', '20222334455', 'Torres Eventos SAC', 10, TRUE, '999333120', TRUE);
-
+SELECT tuticket.crear_admin('Luis', 'Flores', 'luis.flores@pucp.edu.pe', 'pwd43210', 1, TRUE, '000000000', TRUE);
 -- =====================
 -- 8) EVENTOS (10) -> eventos 1..10
 --   * evento 1 = pasado (2025)
