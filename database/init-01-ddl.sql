@@ -1,14 +1,11 @@
 -- ===========================================
 -- PostgreSQL schema: tuticket
 -- ===========================================
-SET search_path TO tuticket;
 DROP SCHEMA IF EXISTS tuticket CASCADE;
 CREATE SCHEMA tuticket;
 SET search_path TO tuticket;
-
 -- ===========================================
 -- Enums
--- ===========================================
 CREATE TYPE tipoDescuento AS ENUM ('MONTO', 'PORCENTAJE');
 CREATE TYPE rolUsuario AS ENUM ('CLIENTE', 'ORGANIZADOR', 'ADMINISTRADOR');
 CREATE TYPE tipoMoneda AS ENUM ('SOL', 'DOLAR');
@@ -22,7 +19,6 @@ CREATE TABLE IF NOT EXISTS dpto (
     nombre VARCHAR(100) NOT NULL,
     activo BOOLEAN DEFAULT TRUE
 );
-
 -- ===========================================
 -- Table: ciudad
 -- ===========================================
@@ -53,7 +49,6 @@ CREATE TABLE IF NOT EXISTS usuario (
     CONSTRAINT fk_usuario_ciudad FOREIGN KEY (idCiudad)
         REFERENCES ciudad (idCiudad)
 );
-
 -- ===========================================
 -- Table: Parametros globales
 -- ===========================================
@@ -61,7 +56,6 @@ CREATE TABLE IF NOT EXISTS parametros_globales(
     idParametro INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     comisionGlobal DECIMAL(5,2) NOT NULL
 );
-
 -- ===========================================
 -- Table: administrador
 -- ===========================================
@@ -70,14 +64,13 @@ CREATE TABLE IF NOT EXISTS admint (
     CONSTRAINT fk_admint_usuario FOREIGN KEY (idUsuario)
         REFERENCES usuario (idUsuario)
 );
-
 -- ===========================================
 -- Table: cliente
 -- ===========================================
 CREATE TABLE IF NOT EXISTS cliente (
     idUsuario INT PRIMARY KEY,
     DNI CHAR(8) NOT NULL UNIQUE,
-    fechaNacimiento DATE NOT NULL,
+	    fechaNacimiento DATE NOT NULL,
     CONSTRAINT fk_cliente_usuario FOREIGN KEY (idUsuario)
         REFERENCES usuario (idUsuario)
 );
@@ -104,7 +97,7 @@ CREATE TABLE IF NOT EXISTS categoria_evento (
 );
 
 -- ===========================================
--- Table: evento
+-- Table: evento (Depende de ciudad, catevento)
 -- ===========================================
 CREATE TABLE IF NOT EXISTS evento (
     idEvento INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -171,8 +164,8 @@ CREATE TABLE IF NOT EXISTS tipo_entrada (
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     activo BOOLEAN DEFAULT FALSE,
-    idEvento INT NOT NULL,
-    CONSTRAINT fk_tipoentrada_evento FOREIGN KEY (idEvento)
+	idEvento INT NOT NULL,
+	CONSTRAINT fk_tipoentrada_evento FOREIGN KEY (idEvento)
         REFERENCES evento (idEvento)
 );
 
@@ -188,7 +181,6 @@ CREATE TABLE IF NOT EXISTS zona (
     CONSTRAINT fk_zona_evento FOREIGN KEY (idEvento)
         REFERENCES evento (idEvento)
 );
-
 -- ===========================================
 -- Table: zona_funcion
 -- ===========================================
@@ -196,7 +188,7 @@ CREATE TABLE IF NOT EXISTS zona_funcion (
     idZona      INT NOT NULL,
     idFuncion   INT NOT NULL,
     comprasActuales INT NOT NULL DEFAULT 0,
-    activo BOOLEAN DEFAULT TRUE,
+	activo BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (idZona, idFuncion),
     CONSTRAINT fk_zonafuncion_zona
         FOREIGN KEY (idZona) REFERENCES zona (idZona) ON DELETE CASCADE,
@@ -206,10 +198,10 @@ CREATE TABLE IF NOT EXISTS zona_funcion (
 );
 
 -- ===========================================
--- Table: periodo
+-- Table: temporada
 -- ===========================================
 CREATE TABLE IF NOT EXISTS periodo (
-    idPeriodo INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    idPeriodo INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Corregido: AS IDENTITY
     nombre VARCHAR(100),
     fechaInicio DATE NOT NULL,
     fechaFin DATE NOT NULL,
@@ -218,22 +210,21 @@ CREATE TABLE IF NOT EXISTS periodo (
     activo BOOLEAN DEFAULT FALSE,
     idEvento INT NOT NULL,
     CONSTRAINT fk_periodo_evento FOREIGN KEY (idEvento)
-        REFERENCES evento (idEvento)
+    	REFERENCES evento (idEvento)
 );
-
 -- ===========================================
 -- Table: tarifa
 -- ===========================================
 CREATE TABLE IF NOT EXISTS tarifa (
-    idTarifa INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    precioBase DECIMAL(10,2),
-    activo BOOLEAN DEFAULT FALSE,
-    idZona INT NOT NULL,
-    idTipoEntrada INT NOT NULL,
-    CONSTRAINT fk_tarifa_zona FOREIGN KEY (idZona)
-        REFERENCES zona (idZona),
-    CONSTRAINT fk_tarifa_tipoentrada FOREIGN KEY (idTipoEntrada)
-        REFERENCES tipo_entrada (idTipoEntrada)
+	idTarifa INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	precioBase DECIMAL(10,2),
+	activo BOOLEAN DEFAULT FALSE,
+	idZona INT NOT NULL,
+	idTipoEntrada INT NOT NULL,
+  	CONSTRAINT fk_tarifa_zona FOREIGN KEY (idZona)
+		REFERENCES zona (idZona),
+	CONSTRAINT fk_tarifa_tipoentrada FOREIGN KEY (idTipoEntrada)
+		REFERENCES tipo_entrada (idTipoEntrada)
 );
 
 -- ===========================================
@@ -245,9 +236,9 @@ CREATE TABLE IF NOT EXISTS orden_compra (
     metodoPago VARCHAR(50) NOT NULL,
     estado estadoOrdenCompra NOT NULL,
     activo BOOLEAN DEFAULT TRUE,
-    totalBruto DECIMAL(10,2) NOT NULL,
-    descuentoAplicado DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
+	totalBruto DECIMAL(10,2) NOT NULL,
+	descuentoAplicado DECIMAL(10,2) NOT NULL,
+	total DECIMAL(10,2) NOT NULL,
     idUsuario INT NOT NULL,
     idFuncion INT NOT NULL,
     CONSTRAINT fk_ordencompra_usuario FOREIGN KEY (idUsuario)
@@ -255,9 +246,8 @@ CREATE TABLE IF NOT EXISTS orden_compra (
     CONSTRAINT fk_ordencompra_funcion FOREIGN KEY (idFuncion)
         REFERENCES funcion (idFuncion)
 );
-
 -- ===========================================
--- Table: detallecompra
+-- Table: detallecompra (Depende de ordencompra, entrada)
 -- ===========================================
 CREATE TABLE IF NOT EXISTS detalle_compra (
     idDetalleCompra INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -273,24 +263,22 @@ CREATE TABLE IF NOT EXISTS detalle_compra (
     CONSTRAINT fk_detallecompra_periodo FOREIGN KEY (idPeriodo)
         REFERENCES periodo (idPeriodo)
 );
-
 -- ===========================================
--- Table: ticket
+-- Table: ticket (Depende de detallecompra)
 -- ===========================================
 CREATE TABLE IF NOT EXISTS ticket (
-    idTicket INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    idTicket INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Corregido: AS IDENTITY
     usado BOOLEAN DEFAULT FALSE,
     hashTicket VARCHAR NOT NULL,
     precioUnitario DECIMAL(5,2) NOT NULL,
     conceptoDevolucion DECIMAL(5,2) DEFAULT NULL,
     activo BOOLEAN DEFAULT TRUE,
-    idDetalleCompra INT NOT NULL,
-    CONSTRAINT fk_ticket_detallecompra FOREIGN KEY (idDetalleCompra)
+	idDetalleCompra INT NOT NULL,
+	CONSTRAINT fk_ticket_detallecompra FOREIGN KEY (idDetalleCompra)
         REFERENCES detalle_compra (idDetalleCompra)
 );
-
 -- ===========================================
--- Table: devolucion
+-- Table: devolucion (Depende de detallecompra)
 -- ===========================================
 CREATE TABLE IF NOT EXISTS devolucion (
     idDevolucion INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
