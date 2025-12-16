@@ -18,7 +18,7 @@ export const Register = () => {
         <div className='row min-vh-100 w-100 mx-0'>
             <div className='col-6 px-5 py-4 bg-light shadow rounded'>
                 <div className='w-100 m-0 p-0 d-flex justify-content-center'>
-                    <img src="https://tuticket-bucket.s3.us-east-1.amazonaws.com/TUTICKET_PNG_SIN_ESPACIOS.png"
+                    <img src="https://ticketsync.s3.us-east-1.amazonaws.com/TuTicket_Sin_Palabras-BaovxDWo.png"
                         alt="tuticketLogo" style={{ width: "10rem" }} />
                 </div>
                 <h2 className='text-center mt-4 mb-4' style={{ color: "#2EA062" }}>Bienvenidos a tu ticket</h2>
